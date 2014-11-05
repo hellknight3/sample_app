@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+	belongs_to :profile, polymorphic: true
 	before_save { self.email = email.downcase}
 	before_create :create_remember_token
 	validates :name, presence: true, length:{maximum: 50}
@@ -7,6 +8,8 @@ class User < ActiveRecord::Base
 		uniqueness: { case_sensitive: false }
 	has_secure_password
 	validates :password, length: { minimum: 6 }
+	
+
 	def User.new_remember_token
 		SecureRandom.urlsafe_base64
 	end

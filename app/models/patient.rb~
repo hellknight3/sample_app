@@ -1,0 +1,4 @@
+class Patient < ActiveRecord::Base
+	has_one :user, as: :profile, dependant: :destroy
+	has_many :appointments
+end
