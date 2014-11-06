@@ -1,29 +1,21 @@
 require 'spec_helper'
 
-describe Administrator do
-	before { @administrator = Administrator.new(name: "Example administrator", email: "administrator@example.com", 
-				 password: "foobar", password_confirmation: "foobara", isFirstLogin:false)}
+describe Admin do
+	before { @administrator = Admin.new(name: "Example administrator", email: "administrator@example.com", 
+				 password: "foobar", password_confirmation: "foobara"
+				 #, isFirstLogin:false
+				 )}
 	subject{ administrator}
 #test variables specific to administrator
-	it { should respond_to(:index)}
-	it { should respond_to(:controlsManyPools)}
-	
-	describe "when index is not present" do
-		before { @administrator.index = " "}
-		it {should_not be_valid}
 
-	end
-	describe "when controlsManyPools is not present" do
-		before { @administrator.controlsManyPools= " " }
-		it {should_not be_valid}
 #test polymorphic variables
-	end
+
 	it { should respond_to(:name)}
 	it { should respond_to(:email)}
 	it { should respond_to(:password_digest)}
 	it {should respond_to(:password)}
 	it {should respond_to(:hasInstitution)}
-	it {should respond_to(:isFirstLogin)}
+	#it {should respond_to(:isFirstLogin)}
 	it { should respond_to(:password_confirmation)}
 	it { should respond_to(:remember_token)}
 	it { should respond_to(:authenticate)}
@@ -49,11 +41,11 @@ describe Administrator do
 		it {should_not be_valid}
 		
 	end
-	describe "when isFirstLogin is not present" do
-		before { @administrator.isFirstLogin = " "}
-		it {should_not be_valid}
+	#describe "when isFirstLogin is not present" do
+	#	before { @administrator.isFirstLogin = " "}
+#		it {should_not be_valid}
 		
-	end
+#	end
 	describe "when email format is invalid" do
 		it "should be invalid" do
 			addresses= %w[administrator@foo,com administrator_at_foo.org example.administrator@foo. 
