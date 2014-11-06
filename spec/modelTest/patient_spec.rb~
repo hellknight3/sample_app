@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Patient do
 	before { @patient = Patient.new(name: "Example patient", email: "patient@example.com", 
-				 password: "foobar", password_confirmation: "foobar"
-	#,isFirstLogin:false
-	#)}
+				 password: "foobar", password_confirmation: "foobar",isFirstLogin:false)}
 	subject{ patient}
 #testing variables specific to patient
 	

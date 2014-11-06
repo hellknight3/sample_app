@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Admin do
+describe Administrator do
 	before { @administrator = Admin.new(name: "Example administrator", email: "administrator@example.com", 
 				 password: "foobar", password_confirmation: "foobar")}
 	subject{ @administrator}

@@ -6,7 +6,6 @@ class DoctorsController < ApplicationController
 		#will need to figure out how to restrict the information
 		#this will make it so a list of users is created and displayed similar to how facebook displays users
 		#paginate restricts the amount that is returned in the result, i believe the default is 30 rows/users
-		#this also would not function since i have removed it in the before filter.
 		@users=User.paginate(page: params[:page])
 	end
 	def show

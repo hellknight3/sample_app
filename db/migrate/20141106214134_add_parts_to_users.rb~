@@ -1,0 +1,4 @@
+class AddPartsToUsers < ActiveRecord::Migration
+  def change
+  end
+end
