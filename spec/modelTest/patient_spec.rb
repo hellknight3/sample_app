@@ -2,7 +2,9 @@ require 'spec_helper'
 
 describe Patient do
 	before { @patient = Patient.new(name: "Example patient", email: "patient@example.com", 
-				 password: "foobar", password_confirmation: "foobar",isFirstLogin:false)}
+				 password: "foobar", password_confirmation: "foobar"
+				 #,isFirstLogin:false
+				 )}
 	subject{ patient}
 #testing variables specific to patient
 	
@@ -11,7 +13,7 @@ describe Patient do
 	it { should respond_to(:email)}
 	it { should respond_to(:password_digest)}
 	it {should respond_to(:password)}
-	it {should respond_to(:isFirstLogin)}
+#	it {should respond_to(:isFirstLogin)}
 	it { should respond_to(:password_confirmation)}
 	it { should respond_to(:remember_token)}
 	it { should respond_to(:authenticate)}
@@ -33,11 +35,11 @@ describe Patient do
 		
 	end
 
-	describe "when isFirstLogin is not present" do
-		before { @patient.isFirstLogin = " "}
-		it {should_not be_valid}
-		
-	end
+#	describe "when isFirstLogin is not present" do
+#		before { @patient.isFirstLogin = " "}
+#		it {should_not be_valid}
+#		
+#	end
 	describe "when email format is invalid" do
 		it "should be invalid" do
 			addresses= %w[patient@foo,com patient_at_foo.org example.patient@foo. 
@@ -103,5 +105,4 @@ describe Patient do
 		its(:remember_token){ should_not be_blank}
 	end
 	
-end
 end
