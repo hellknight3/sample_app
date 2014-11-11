@@ -1,16 +1,11 @@
 require 'spec_helper'
 
 describe Admin do
-	before { @administrator = Admin.new(name: "Example administrator", email: "administrator@example.com", 
-<<<<<<< HEAD
-				 password: "foobar", password_confirmation: "foobar")}
-	subject{ @administrator}
-=======
+	before { @administrator = Admin.new(name: "Example administrator", email: "administrator@example.com",
 				 password: "foobar", password_confirmation: "foobara"
 				 #, isFirstLogin:false
 				 )}
 	subject{ administrator}
->>>>>>> 8b09db1e2752fb4ec6ca6041baef34ce5097135c
 #test variables specific to administrator
 
 #test polymorphic variables
