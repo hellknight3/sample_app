@@ -7,6 +7,6 @@ describe "Static pages" do
 		it{should have_selector('h1', text 'Welcome to the Sample App')}
 		it{should_not have_title()}
 		
-	en
+	end
 	
 end 
