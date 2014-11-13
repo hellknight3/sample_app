@@ -53,19 +53,18 @@ describe User do
 	end
 	
 	describe"return value of the authenticate method" do
-		let(:testUser){create(:user, email:"foo@gmail.com")}
+#@testUser = create(:user, email:"foo@gmail.com")
 		
-		let(:found_user){User.find_by(email: "foo@gmail.com")}
-		
-		describe "with valid password" do
-			it{should eq found_user.authenticate(testUser.password)}
+	#	let(:found_user){User.find_by(email: "foo@gmail.com")}
+		it "with valid password" do
+			testUser = create(:user, password: "foobar",password_confirmation:"foobar")
+			testUser.authenticate("foobar").should be_true
 		end
-		let(:user_for_invalid_password){found_user.authenticate("invalid")}
-		describe "with invalid password" do
-			it{should_not eq user_for_invalid_password}
-			specify { expect(user_for_invalid_password).to be_false}
-		
+		it "with valid password" do
+			testUser = create(:user, password: "foobar",password_confirmation:"foobar")
+			testUser.authenticate("notfoobar").should_not be_true
 		end
+		
 	end
 	
 	it "remember token" do

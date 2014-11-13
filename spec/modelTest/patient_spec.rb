@@ -17,24 +17,18 @@ describe User do
 		build(:patient, password_confirmation: nil).should_not be_valid
 	end
 	
-	describe "when email format is invalid" do
-		it "should be invalid" do
-			addresses= %w[user@foo,com user_at_foo.org example.user@foo. 
-			foo@bar_baz.com foo@bar+baz.com]
-			addresses.each do |invalid_address|
-				build(:patient, email: invalid_address).should_not be_valid
-			end
-		end
+	it "when email format is invalid" do
+		build(:patient, email: "user@foo,com").should_not be_valid
+		build(:patient, email: "user_at_foo.org").should_not be_valid
+		build(:patient, email: "example.user@foo.").should_not be_valid
 	end
 	
 	it "when email format is valid" do
-		it "should be valid" do
-			addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
-			addresses.each do |valid_address|
-				build(:patient, email: valid_address).should be_valid
-			end
-
-		end
+		build(:patient, email: "user@foo.COM").should be_valid
+		build(:patient, email: "A_US-ER@f.b.org").should be_valid
+		build(:patient, email: "frst.lst@foo.jp").should be_valid
+		build(:patient, email: "a+b@baz.cn").should be_valid
+	
 	end
 
 	it "when email address is already taken" do
@@ -58,26 +52,25 @@ describe User do
 		build(:patient, password: "foo000", password_confirmation: "foo000").should be_valid
 	end
 	
-	it "return value of the authenticate method" do
-		@testUser = Factory(:patient, password: "foobar", password_confirmation: "foobar")
+	describe"return value of the authenticate method" do
+#@testUser = create(:patient, email:"foo@gmail.com")
 		
-		before {@testUser.save}
-		let(:found_user){User.find_by(email: @user.email)}
-		let(:patient_for_invalid_password){found_user.authenticate("invalid")}
-		describe "with valid password" do
-			it{should eq found_user.authenticate(@testUser.password)}
+	#	let(:found_user){User.find_by(email: "foo@gmail.com")}
+		it "with valid password" do
+			testUser = create(:patient, password: "foobar",password_confirmation:"foobar")
+			testUser.authenticate("foobar").should be_true
 		end
-		describe "with invalid password" do
-			it{should_not eq user_for_invalid_password}
-			specify { expect(user_for_invalid_password).to be_false}
+		it "with valid password" do
+			testUser = create(:patient, password: "foobar",password_confirmation:"foobar")
+			testUser.authenticate("notfoobar").should_not be_true
 		end
+		
 	end
 	
 	it "remember token" do
-		testUser = Factory(:patient)
+		testUser = create(:patient)
 		testUser.remember_token{should_not be_blank}
 		
 	end
-	
 	
 end
