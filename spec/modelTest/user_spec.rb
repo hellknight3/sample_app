@@ -17,24 +17,18 @@ describe User do
 		build(:user, password_confirmation: nil).should_not be_valid
 	end
 	
-	describe "when email format is invalid" do
-		it "should be invalid" do
-			addresses= %w[user@foo,com user_at_foo.org example.user@foo. 
-			foo@bar_baz.com foo@bar+baz.com]
-			addresses.each do |invalid_address|
-				build(:user, email: invalid_address).should_not be_valid
-			end
-		end
+	it "when email format is invalid" do
+		build(:user, email: "user@foo,com").should_not be_valid
+		build(:user, email: "user_at_foo.org").should_not be_valid
+		build(:user, email: "example.user@foo.").should_not be_valid
 	end
 	
 	it "when email format is valid" do
-		it "should be valid" do
-			addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
-			addresses.each do |valid_address|
-				build(:user, email: valid_address).should be_valid
-			end
-
-		end
+		build(:user, email: "user@foo.COM").should be_valid
+		build(:user, email: "A_US-ER@f.b.org").should be_valid
+		build(:user, email: "frst.lst@foo.jp").should be_valid
+		build(:user, email: "a+b@baz.cn").should be_valid
+	
 	end
 
 	it "when email address is already taken" do
@@ -58,26 +52,26 @@ describe User do
 		build(:user, password: "foo000", password_confirmation: "foo000").should be_valid
 	end
 	
-	it "return value of the authenticate method" do
-		@testUser = Factory(:user, password: "foobar", password_confirmation: "foobar")
+	describe"return value of the authenticate method" do
+		let(:testUser){create(:user, email:"foo@gmail.com")}
 		
-		before {@testUser.save}
-		let(:found_user){User.find_by(email: @user.email)}
-		let(:user_for_invalid_password){found_user.authenticate("invalid")}
+		let(:found_user){User.find_by(email: "foo@gmail.com")}
+		
 		describe "with valid password" do
-			it{should eq found_user.authenticate(@testUser.password)}
+			it{should eq found_user.authenticate(testUser.password)}
 		end
+		let(:user_for_invalid_password){found_user.authenticate("invalid")}
 		describe "with invalid password" do
 			it{should_not eq user_for_invalid_password}
 			specify { expect(user_for_invalid_password).to be_false}
+		
 		end
 	end
 	
 	it "remember token" do
-		testUser = Factory(:user)
+		testUser = create(:user)
 		testUser.remember_token{should_not be_blank}
 		
 	end
-	
 	
 end
