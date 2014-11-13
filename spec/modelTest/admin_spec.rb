@@ -72,5 +72,4 @@ describe User do
 		testUser.remember_token{should_not be_blank}
 		
 	end
-	
 end
