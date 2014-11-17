@@ -10,31 +10,18 @@ FactoryGirl.define do
 
 		
 	end
-	factory :patient do |f|
-
-		f.name{Faker::Name.name}
-		f.password 'foobar'
-		f.email{Faker::Internet.email}
-		f.password_confirmation 'foobar'
-
-		
+	factory :patient do 
+		user
 	end
 	factory :doctor do |f|
 
-		f.name{Faker::Name.name}
-		f.password 'foobar'
-		f.email{Faker::Internet.email}
-		f.password_confirmation 'foobar'
+		user
 
 		
 	end
 	factory :admin do |f|
 
-		f.name{Faker::Name.name}
-		f.password 'foobar'
-		f.email{Faker::Internet.email}
-		f.password_confirmation 'foobar'
-
+		user
 		
 	end
 end
