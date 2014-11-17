@@ -1,5 +1,23 @@
+<% provide(:title, 'New patient') %>
 <h1>New patient</h1>
+<div class="row">
+	<div class="span6 offset3">
+		<%= form_for(@patient) do |f| %>
+			<%= render 'shared/error_messages' %>
+			<%=label :user, :name %>
+			<%=text_field :user, :name %>
 
-<%= render 'form' %>
+			<%= label :user, :email %>
+			<%= text_field :user, :email%>
 
+			<%=label :user, :password %>
+			<%=password_field :user, :password%>
+
+			<%= label :user, :password_confirmation, "Confirmation"%>
+			<%= password_field :user, :password_confirmation%>
+			
+			<%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
+		<% end %>
+	</div>
+</div>
 <%= link_to 'Back', patients_path %>

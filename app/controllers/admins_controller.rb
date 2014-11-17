@@ -1,27 +1,46 @@
 class AdminsController < ApplicationController
-	before_action :signed_in_admin, only: [:index,:edit, :update]
-	before_action :correct_user, only: [:edit, :update]
-	#see doctor controller for comments
-	def index
-		@users=User.paginate(page: params[:page])
-	end
+	#before_action :signed_in_admin, only: [:index,:edit, :update]
+	#before_action :correct_user, only: [:edit, :update]
 	def show
-		@user = User.find(params[:id])
+		@admin = Admin.find(params[:id])
+		@user = @admin.user
+	end
+	def index
+	#puts all of the admins into a browsable list
+		@admins =Admin.paginate(page: params[:page])
 	end
 	def new
+		#creates temp variables for the new form to use for the views
+		@admin =Admin.new
 		@user = User.new
 	end
 	def create
-		@user = User.create(admin_params)
+		#creates the admin based on the allowed admin parameters
+		@admin =Admin.new(admin_params)
+		#creates a user and attaches it to the admin with the user parameter restrictions required
+		@user = @admin.build_user(user_params)
+		#tries to save the admin to the database
+		if  @admin.save
+			flash[:success]
+			redirect_to @admin
+		else
+			render 'new'
+		end
 	end
 	def edit
+		@admin = Admin.find(params[:id])
+		@user = @admin.user
 	end
 	def update
-		@user.update(admin_params)
+		@admin.update_attributes(admin_params)
+		@user.update_attributes(user_params)
 	end
 	private
+		def user_params
+			params.require(:user).permit(:name, :email, :password, :password_confirmation)
+		end
 		def admin_params
-			params.require(:admin).permit(:name, :email, :password, :password_confirmation)
+			
 		end
 		#before filters
 		def signed_in_admin

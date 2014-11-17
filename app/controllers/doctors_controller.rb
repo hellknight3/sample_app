@@ -1,29 +1,51 @@
 class DoctorsController < ApplicationController
 
-	before_action :signed_in_doctor, only: [:edit, :update]
-	before_action :correct_user, only: [:edit, :update]
+	#before_action :signed_in_doctor, only: [:edit, :update]
+	#before_action :signed_in_admin, only: [:new, :create]
+	#before_action :correct_user, only: [:edit, :update]
 	def index
 		#will need to figure out how to restrict the information
 		#this will make it so a list of users is created and displayed similar to how facebook displays users
 		#paginate restricts the amount that is returned in the result, i believe the default is 30 rows/users
 		#this also would not function since i have removed it in the before filter.
-		@users=User.paginate(page: params[:page])
+		@doctor=Doctor.find(params[:id])
+		@patients=@doctor.patients.paginate(page: params[:page])
 	end
 	def show
 		#looks up the user that has the id in the params hash
-		@user = User.find(params[:id])
+		@doctor = Doctor.find(params[:id])
+		@user = @doctor.user
+	end
+	def new
+		#creates variables for the views to initialize
+		@doctor = Doctor.new
+		@user = User.new
 	end
 	def create
 		#this should call the create function from the user controller, i don't know if i have to do anything special to make it work though. can't get fully functional implementation until the Views are set up.
-		@user = User.create
+		@doctor =Doctor.new(doctor_params)
+		@user = @doctor.build_user(user_params)
+		if @doctor.save			
+			flash[:success]
+			redirect_to @doctor
+		else
+			render 'new'
+		end
 	end
 	def edit
-		@user.edit
+		@doctor = Doctor.find(params[:id])
+		@user = @doctor.user
 	end
 	def update
-		@user.update
+		@doctor.update(patient_params)
+		@user.update(user_params)
 	end
 	private
+		def user_params
+			params.require(:user).permit(:name, :email, :password, :password_confirmation)
+		end
+		def doctor_params
+		end
 		#before filters
 		def signed_in_doctor
 			unless signed_in?
