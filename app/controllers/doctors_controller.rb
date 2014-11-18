@@ -1,7 +1,7 @@
 class DoctorsController < ApplicationController
 
 	#before_action :signed_in_doctor, only: [:edit, :update]
-	#before_action :signed_in_admin, only: [:new, :create]
+	before_action :signed_in_admin, only: [:new, :create]
 	#before_action :correct_user, only: [:edit, :update]
 	def index
 		#will need to figure out how to restrict the information
@@ -49,6 +49,17 @@ class DoctorsController < ApplicationController
 		#before filters
 		def signed_in_doctor
 			unless signed_in?
+				store_location
+				redirect_to signin_url, notice: "Please sign in."
+			end
+		end
+		def signed_in_admin
+			if signed_in?
+				if current_user.profile_type=="Admin"
+				else
+				redirect_to signin_url, notice: "You do not have permission to do that."
+				end
+			else
 				store_location
 				redirect_to signin_url, notice: "Please sign in."
 			end

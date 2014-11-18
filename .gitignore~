@@ -14,5 +14,3 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-# Ignores the application.html.erb file due to compatibility issues on the java line
-/app/views/layouts/application.html.erb

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<!--IF THIS CHANGES NEED TO UPLOAD TO GIT! THIS IS IN THE GITIGNORE FILE-->
 <title><%= full_title(yield(:title)) %></title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "default", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
 </head>

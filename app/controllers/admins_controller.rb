@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
-	#before_action :signed_in_admin, only: [:index,:edit, :update]
-	#before_action :correct_user, only: [:edit, :update]
+	before_action :signed_in_admin, only: [:new,:create,:index,:edit, :update]
+	before_action :correct_user, only: [:edit, :update]
 	def show
 		@admin = Admin.find(params[:id])
 		@user = @admin.user
@@ -44,11 +44,18 @@ class AdminsController < ApplicationController
 		end
 		#before filters
 		def signed_in_admin
-			unless signed_in?
+			if signed_in?
+				if current_user.profile_type=="Admin"
+				else
+				redirect_to signin_url, notice: "You do not have permission to do that."
+				end
+			else
 				store_location
 				redirect_to signin_url, notice: "Please sign in."
 			end
 		end
+		
+		
 		def correct_user
 			@user = User.find(params[:id])
 			redirect_to(root_url) unless current_user?(@user)

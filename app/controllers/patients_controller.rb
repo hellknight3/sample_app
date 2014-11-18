@@ -1,6 +1,6 @@
 class PatientsController < ApplicationController
-	#before_action :signed_in_patient, only: [:edit, :update]
-	#before_action :signed_in_admin, only: [:new, :create]
+	before_action :signed_in_patient, only: [:edit, :update]
+	before_action :signed_in_admin, only: [:new, :create]
 	#before_action :correct_user, only: [:edit, :update]
 
 	def show
@@ -42,6 +42,17 @@ class PatientsController < ApplicationController
 		#before filters
 		def signed_in_patient
 			unless signed_in?
+				store_location
+				redirect_to signin_url, notice: "Please sign in."
+			end
+		end
+		def signed_in_admin
+			if signed_in?
+				if current_user.profile_type=="Admin"
+				else
+				redirect_to signin_url, notice: "You do not have permission to do that."
+				end
+			else
 				store_location
 				redirect_to signin_url, notice: "Please sign in."
 			end
