@@ -2,13 +2,13 @@ require 'spec_helper'
 
 
 #RSpec.describe User do
-describe UsersController, type: :controller do
+describe PatientsController, type: :controller do
 	describe "index" do
 		it "populates an array of users" do
-			user = create(:user)
+			user = create(:patient)
 		#	user = User.create
 			get:index
-			assigns(:users).should eq([user])
+			assigns(:patients).should eq([user])
 		end
 		it "renders the: index view" do 
 			get :index
@@ -18,12 +18,12 @@ describe UsersController, type: :controller do
 
 	describe "show" do
 		it "assigns the request user to @user" do
-			user = create(:user)
-			get :show, {'id' => "1"}
-			assigns(:user).should eq(user)
+			user = create(:patient)
+			get :show, id: user.id
+			assigns(:patient).should eq(user)
 		end
 		it "rends show view" do
-			user = create(:user)
+			user = create(:patient)
 			get :show, {'id' => "1"}
 			response.should render_template :show
 		end
@@ -32,7 +32,7 @@ describe UsersController, type: :controller do
 	describe "new" do
 		it "assigns a new user to @user" do
 		#	get :new
-		#	assigns(:user).should be_valid
+		#	assigns(:patient).should be_valid
 		end
 		it "renders the : new template" do
 			get :new
@@ -65,12 +65,12 @@ describe UsersController, type: :controller do
 
 	describe "edit" do
 		it "request user to @user" do
-			user = create(:user)
+			user = create(:patient)
 			get :edit, {'id' => "1"}
-			assigns(:user).should eq(user)
+			assigns(:patient).should eq(user)
 		end
 		it "rends show view" do
-			user = create(:user)
+			user = create(:patient)
 			get :edit, {'id' => "1"}
 			response.should render_template :edit
 		end
@@ -81,13 +81,13 @@ describe UsersController, type: :controller do
 	
 		context "valid attribute" do 
 			it "locate requested @user" do
-				@user = create(:user)
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user)
+				@user = create(:patient)
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient)
 		
 			end
 			it "changes user attributes" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:"Bob", email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:"Bob", email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
 				@user.reload
 				@user.name.should eq("Bob")
 				@user.email.should eq("something@gmail.com")
@@ -98,8 +98,8 @@ describe UsersController, type: :controller do
 		end
 		context "invalid attributes" do
 			it "doesnt changes attribute" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:"Bob", email:"somethinggmail.com", password:"barfoo",password_confirmation:"barfoo")
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:"Bob", email:"somethinggmail.com", password:"barfoo",password_confirmation:"barfoo")
 				@user.reload
 				@user.name.should eq("Joe")
 				@user.email.should eq("me@gmail.com")
@@ -110,8 +110,8 @@ describe UsersController, type: :controller do
 				@user.password_confirmation.should_not eq("barfoo")
 			end
 			it "doesnt changes attribute" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
 				@user.reload
 				@user.name.should eq("Joe")
 				@user.email.should eq("me@gmail.com")
@@ -122,8 +122,8 @@ describe UsersController, type: :controller do
 				@user.password_confirmation.should_not eq("barfoo")
 			end
 			it "doesnt changes attribute" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:"Bob", email:"something@gmail.com", password:"bar",password_confirmation:"bar")
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:"Bob", email:"something@gmail.com", password:"bar",password_confirmation:"bar")
 				@user.reload
 				@user.name.should eq("Joe")
 				@user.email.should eq("me@gmail.com")
@@ -135,8 +135,8 @@ describe UsersController, type: :controller do
 				@user.password_confirmation.should_not eq("bar")
 			end
 			it "doesnt changes attribute" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:nil, email:"something@gmail.com", password:"barfo1",password_confirmation:"barfoo")
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:nil, email:"something@gmail.com", password:"barfo1",password_confirmation:"barfoo")
 				@user.reload
 				@user.name.should eq("Joe")
 				@user.email.should eq("me@gmail.com")
@@ -148,8 +148,8 @@ describe UsersController, type: :controller do
 				@user.password_confirmation.should_not eq("barfoo")
 			end
 			it "doesnt changes attribute" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:nil, email:"something@gmail.com", password:nil,password_confirmation:"barfoo")
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:nil, email:"something@gmail.com", password:nil,password_confirmation:"barfoo")
 				@user.reload
 				@user.name.should eq("Joe")
 				@user.email.should eq("me@gmail.com")
@@ -160,8 +160,8 @@ describe UsersController, type: :controller do
 				@user.password_confirmation.should_not eq("barfoo")
 			end
 			it "doesnt changes attribute" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:nil)
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:nil)
 				@user.reload
 				@user.name.should eq("Joe")
 				@user.email.should eq("me@gmail.com")
@@ -172,19 +172,19 @@ describe UsersController, type: :controller do
 				@user.name.should_not eq("Bob")
 			end
 			it "re-renders the edit method" do
-				@user = create(:user, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:nil)
+				@user = create(:patient, name: "Joe", email: "me@gmail.com", password: "foobar", password_confirmation: "foobar")
+				put :update, id: @user, user: FactoryGirl.attributes_for(:patient, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:nil)
 				response.should render_template :edit
 			end
 		end
 	end
 	describe "delete method" do
 		it "deletes user" do
-			@user = create(:user)
+			@user = create(:patient)
 			expect{delete :destroy, id: @user}.to change(User,:count).by(-1)
 		end
 		it "redirect to users" do
-			@user = create(:user)
+			@user = create(:patient)
 			delete :destroy, id: @user
 			response.should redirect_to user
 		end
