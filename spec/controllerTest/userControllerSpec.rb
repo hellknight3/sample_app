@@ -31,9 +31,9 @@ describe UsersController, type: :controller do
 
 	describe "new" do
 		it "assigns a new user to @user" do
-		#	get :new
-		#	assigns(:user).should be_valid
-		end
+			get :new
+			expect(assigns(:user)).to be_a_new(User)
+			end
 		it "renders the : new template" do
 			get :new
 			response.should render_template :new
