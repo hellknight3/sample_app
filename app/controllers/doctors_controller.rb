@@ -13,8 +13,9 @@ class DoctorsController < ApplicationController
 	end
 	def show
 		#looks up the user that has the id in the params hash
-		@doctor = Doctor.find(params[:id])
-		@user = @doctor.user
+		
+		@user = User.find(params[:id])
+		@doctor = Doctor.find(@user.profile_id)
 	end
 	def new
 		#creates variables for the views to initialize
@@ -33,8 +34,8 @@ class DoctorsController < ApplicationController
 		end
 	end
 	def edit
-		@doctor = Doctor.find(params[:id])
-		@user = @doctor.user
+		@user = User.find(params[:id])
+		@doctor = Doctor.find(@user.profile_id)
 	end
 	def update
 		@doctor.update(patient_params)
