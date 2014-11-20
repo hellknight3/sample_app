@@ -20,8 +20,27 @@ FactoryGirl.define do
 		
 	end
 	factory :admin do |f|
-
 		user
+	end
+	factory :userInvalid, parent: :user do 
+
+		name{Faker::Name.name}
+		password'foo'
+		email{Faker::Internet.email}
+		password_confirmation'bar'
+
 		
+	end
+	factory :patientInvalid do 
+		userInvalid
+	end
+	factory :doctorInvalid do |f|
+
+		userInvalid
+
+		
+	end
+	factory :adminInvalid do |f|
+		userInvalid
 	end
 end
