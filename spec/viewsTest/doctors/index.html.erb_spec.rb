@@ -1,15 +1,15 @@
 require 'spec_helper'
 
-describe "patients/show",  type: :view do
-
-
+describe "doctors/index" do
   before(:each) do
-    @patient = create(:patient)
+    assign(:doctors, [
+      stub_model(Doctor),
+      stub_model(Doctor)
+    ])
   end
 
-  it "renders attributes in <p>" do
+  it "renders a list of doctors" do
     render
     # Run the generator again with the --webrat flag if you want to use webrat matchers
   end
-
 end
