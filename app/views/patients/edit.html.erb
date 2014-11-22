@@ -1,5 +1,6 @@
 <% provide(:title, "Edit patient") %>
 <h1>Update your profile</h1>
+<%if current_user.profile_type =="Patient"%>
 <div class="row">
 	<div class="span6 offset3">
 		<%=form_for(@patient) do |f| %>
@@ -20,5 +21,47 @@
 		<%end%>
 	</div>
 </div>
+<%elsif current_user.profile_type =="Admin"%>
+<table>
+	<thead>
+		<tr>
+			<th>name</th>
+			<th>user id</th>
+			<th>profile id</th>
+			<th>profile type</th>
+
+		</tr>
+	</thead>
+
+	<tbody>	
+		<% @doctors.each do |doctor| %>
+		
+			
+				<tr>
+				
+					<td><%=doctor.name%></td>
+					<%if @patient.doctor.nil?%>
+					<td>
+						<%=form_for(@patient) do |f| %> 
+						<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
+						<%= f.hidden_field :func, :value => "add" %>
+						<%= f.submit "add doctor", class: "btn" %>
+						<%end%>
+					</td>
+					<%elsif @patient.doctor_id == doctor.profile_id%>
+					<td>
+						<%=form_for(@patient) do |f| %> 
+						<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
+						<%= f.hidden_field :func, :value => "remove" %>
+						<%= f.submit "remove doctor", class: "btn" %>
+						<%end%>
+					</td>
+					<%end%>
+				</tr>
+			
+		<%end%>
+	</tbody>
+</table>		
+<%end%>
 <%= link_to 'Show', @patient %> |
 <%= link_to 'Back', patients_path %>

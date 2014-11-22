@@ -3,20 +3,37 @@
 <table>
   <thead>
     <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
+      <th>name</th>
+      <th>user id</th>
+      <th>profile id</th>
+      <th>profile type</th>
+
+      </tr>
   </thead>
 
-  <tbody>
-    <% @admins.each do |admin| %>
+  <tbody>	
+    <% @users.each do |user| %>
+    <%unless user.profile_type.nil?%>
       <tr>
-	<td><%= unless admin.user.nil?; admin.user.name end%></td>
-        <td><%= link_to 'Show', admin %></td>
-        <td><%= link_to 'Edit', edit_admin_path(admin) %></td>
-        <td><%= link_to 'Destroy', admin, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	<td><%= user.name%></td>
+	<td><%= user.id%></td>
+	<td><%= user.profile_id%></td>
+	<td><%= user.profile_type%></td>
+	
+        <td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id) %></td>
+	<%if user.profile_type =="Admin"%>
+		<td><%= link_to 'Edit', edit_admin_path(user.profile_id) %></td>
+	<%elsif user.profile_type =="Patient"%>
+		<td><%= link_to 'Edit', edit_patient_path(user.profile_id) %></td>
+		<td><%= user.profile_type.constantize.find(user.profile_id).doctor%></td>
+	<%elsif user.profile_type =="Doctor"%>
+			<td><%= link_to 'Edit', edit_doctor_path(user.profile_id) %></td>
+	<%end%>
+        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
+      <%else%>
+      
+      <%end%>
     <% end %>
   </tbody>
 </table>

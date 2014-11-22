@@ -7,7 +7,7 @@ class AdminsController < ApplicationController
 	end
 	def index
 	#puts all of the admins into a browsable list
-		@admins =Admin.paginate(page: params[:page])
+		@users =User.all
 	end
 	def new
 		#creates temp variables for the new form to use for the views

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141122191810) do
+ActiveRecord::Schema.define(version: 20141122231338) do
 
   create_table "admins", force: true do |t|
   end
@@ -27,7 +27,11 @@ ActiveRecord::Schema.define(version: 20141122191810) do
   end
 
   create_table "patients", force: true do |t|
+    t.integer "doctor_id"
+    t.boolean "accepted"
   end
+
+  add_index "patients", ["doctor_id"], name: "index_patients_on_doctor_id"
 
   create_table "pools", force: true do |t|
     t.string   "name"

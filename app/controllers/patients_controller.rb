@@ -1,6 +1,6 @@
 class PatientsController < ApplicationController
 	before_action :signed_in_patient, only: [:edit, :update]
-	before_action :signed_in_admin, only: [:new, :create]
+	before_action :signed_in_admin, only: [:new, :create,:edit,:update]
 	#before_action :correct_user, only: [:edit, :update]
 
 	def show
@@ -27,11 +27,27 @@ class PatientsController < ApplicationController
 	def edit
 		@patient = Patient.find(params[:id])
 		@user = @patient.user
+		if(current_user.profile_type=="Admin")
+			@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
+		end		
 	end
 	def update
 		#updates the patient with the provided form data
+		@patient = Patient.find(params[:id])
+		@user = @patient.user
+		if(params[:patient][:func] == "add")
+			@patient.update_attribute(:doctor_id, params[:patient][:doctor_id])
+			@patient.update_attribute(:accepted, false)
+			redirect_to admin_path(current_user.profile_id)
+		elsif(params[:patient][:func] == "remove")
+			@patient.update_attribute(:doctor_id, nil)
+			@patient.update_attribute(:accepted, false)
+			redirect_to admin_path(current_user.profile_id)
+		else
 		@patient.update(patient_params)
 		@user.update(user_params)
+		end
+		
 	end
 	private
 		def user_params

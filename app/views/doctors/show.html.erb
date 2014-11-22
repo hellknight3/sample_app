@@ -11,5 +11,44 @@
 		</section>
 	</aside>
 </div>
+<table>
+  <thead>
+    <tr>
+      <th>Users name</th>
+      <th>Accepted</th>
+      <th></th>
+    </tr>
+  </thead>
+   <tbody>
+<% @patients.each do |patient| %>
+      <tr>
+      
+	<td><%= User.find(:first, :conditions => ["profile_id = :doc",{:doc => patient.id}]).name %></td>
+	<td><%= patient.accepted %></td>
+	
+	
+		<%unless patient.accepted%>
+		<td>
+			<%=form_for(@doctor) do |f| %> 
+			<%= f.hidden_field :patient_id, :value => patient.id %>
+			<%= f.hidden_field :func, :value => "accept" %>
+			<%= f.submit "Accept patient", class: "btn" %>
+			<%end%>
+		</td>
+		<td>
+			<%=form_for(@doctor) do |f| %> 
+			<%= f.hidden_field :patient_id, :value => patient.id %>
+			<%= f.hidden_field :func, :value => "reject" %>
+			<%= f.submit "Reject patient", class: "btn" %>
+			<%end%>
+		</td>
+		<%end%>
+	
+
+      </tr>
+    <% end %>
+</tdbody>
+</table>
+
 <%= link_to 'Edit', edit_doctor_path(@doctor) %> |
 <%= link_to 'Back', doctors_path %>

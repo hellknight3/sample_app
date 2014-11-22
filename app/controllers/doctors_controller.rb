@@ -13,9 +13,10 @@ class DoctorsController < ApplicationController
 	end
 	def show
 		#looks up the user that has the id in the params hash
+		@doctor = Doctor.find(params[:id])
+		@user = @doctor.user
+		@patients=Patient.find(:all, :conditions => ["doctor_id = :doc",{:doc => @doctor.id}])
 		
-		@user = User.find(params[:id])
-		@doctor = Doctor.find(@user.profile_id)
 	end
 	def new
 		#creates variables for the views to initialize
@@ -34,16 +35,28 @@ class DoctorsController < ApplicationController
 		end
 	end
 	def edit
-		@user = User.find(params[:id])
-		@doctor = Doctor.find(@user.profile_id)
+		@doctor = Doctor.find(params[:id])
+		@user = @doctor.user
 	end
 	def update
-		@doctor.update(patient_params)
-		@user.update(user_params)
+		@doctor = Doctor.find(params[:id])
+		@user = @doctor.user
+		if(params[:doctor][:func] == "accept")
+			@patient=Patient.find(params[:doctor][:patient_id])
+			@patient.update_attribute(:accepted, true)
+		elsif(params[:doctor][:func] == "reject")
+			@patient=Patient.find(params[:doctor][:patient_id])
+			@patient.update_attribute(:doctor_id, nil)
+			@patient.update_attribute(:accepted, false)
+		else
+			@doctor.update(doctor_params)
+			@user.update(user_params)	
+		end
+		redirect_to doctor_path(@doctor)
 	end
 	private
 		def user_params
-			params.require(:user).permit(:name, :email, :password, :password_confirmation)
+			params.require(:doctor).permit(:name, :email, :password, :password_confirmation)
 		end
 		def doctor_params
 		end
