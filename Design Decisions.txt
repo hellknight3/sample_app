@@ -1,0 +1,2 @@
+this document is for design descisions that are meant to be temporary, these  should be fixed later
+1) change doctor to has many through asssociation with patient/pool

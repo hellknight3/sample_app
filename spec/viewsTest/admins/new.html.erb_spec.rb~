@@ -7,6 +7,6 @@ describe 'admins\new.html.erb', type: :view do
 		assigns(:user)
 		puts @user.user.name
 		puts @user.user.profile_type
-		render 'new' :formats => :html
+		render 'admins/new.html.erb'
 	end
 end 

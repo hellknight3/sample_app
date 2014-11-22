@@ -6,7 +6,7 @@ describe "admins/show" do
 #  end
 
   it "renders attributes in <p>" do
-	@user= create(:admin)
+	@user= create(:admin):
 	name = @user.user.name
 	puts name
  #   render
