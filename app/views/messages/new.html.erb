@@ -6,7 +6,6 @@
 <%= form_for(@message) do |f| %>
 	<%= render 'shared/error_messages' %>
 	<%= f.hidden_field :appointment_id, :value => params[:appointment_id] %>
-	<%=label :message, :message %>
 	<%=text_area :message, :message ,:size => "3\20x10"%>
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>

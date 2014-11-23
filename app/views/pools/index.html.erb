@@ -1,13 +1,23 @@
 <h1>Pools</h1>
-
-<% @pools.each do |pool| %>
-      <tr>
-	<td><%= pool.name %></td>
-	<td><%= pool.description %></td>
-	
-        <td><%= link_to 'Show', pool %></td>
-        <td><%= link_to 'Edit', edit_pool_path(pool) %></td>
-        <td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-
+<table>
+	<thead>
+		<th>Name</th>
+		<th>Description</th>
+		<th>Institution</th>
+		<th>Specialization</th>
+	</thead>
+	<tbody>
+	<% @pools.each do |pool| %>
+	      <tr>
+		<td><%= pool.name %></td>
+		<td><%= pool.description %></td>
+		<td><%= pool.institution %></td>
+		<td><%= pool.specialization %></td>
+		<td><%= link_to 'Show', pool %></td>
+		<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
+		<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	      </tr>
+	    <% end %>
+	</tbody>
+</table>
+<%= link_to 'New Pool', new_pool_path %> 

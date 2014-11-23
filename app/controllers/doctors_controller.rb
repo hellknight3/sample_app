@@ -15,7 +15,7 @@ class DoctorsController < ApplicationController
 		#looks up the user that has the id in the params hash
 		@doctor = Doctor.find(params[:id])
 		@user = @doctor.user
-		@patients=Patient.find(:all, :conditions => ["doctor_id = :doc",{:doc => @doctor.id}])
+		
 		
 	end
 	def new
