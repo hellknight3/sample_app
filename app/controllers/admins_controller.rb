@@ -1,6 +1,6 @@
 class AdminsController < ApplicationController
-	before_action :signed_in_admin, only: [:new,:create,:index,:edit, :update]
-	before_action :correct_user, only: [:edit, :update]
+	#before_action :signed_in_admin, only: [:new,:create,:index,:edit, :update]
+	#before_action :correct_user, only: [:edit, :update]
 	def show
 		@admin = Admin.find(params[:id])
 		@user = @admin.user

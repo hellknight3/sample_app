@@ -1,0 +1,12 @@
+<h1>Conversation history</h1>
+<% @messages.each do |message| %>
+<p><%=message.message%></p>
+<%end%>
+<h1>New Message</h1>
+<%= form_for(@message) do |f| %>
+	<%= render 'shared/error_messages' %>
+	<%= f.hidden_field :appointment_id, :value => params[:appointment_id] %>
+	<%=label :message, :message %>
+	<%=text_area :message, :message ,:size => "3\20x10"%>
+	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
+<% end %>

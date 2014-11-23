@@ -1,5 +1,4 @@
 SampleApp::Application.routes.draw do
-
 	resources :admins do
 		resources :users
 		
@@ -10,8 +9,11 @@ SampleApp::Application.routes.draw do
 	resources :doctors do
 		resources :users
 	end
-		resources :pools
-	resources :appointments
+	resources :pools
+	resources :appointments do
+		
+	end
+	resources :messages
 	resources :users
 	resources :sessions, only: [:new, :create, :destroy]
 	root 'static_pages#home'

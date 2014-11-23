@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141123004500) do
+ActiveRecord::Schema.define(version: 20141123020053) do
 
   create_table "admins", force: true do |t|
   end
@@ -24,9 +24,6 @@ ActiveRecord::Schema.define(version: 20141123004500) do
     t.integer  "patient_id"
     t.integer  "doctor_id"
   end
-
-  add_index "appointments", ["doctor_id"], name: "index_appointments_on_doctor_id"
-  add_index "appointments", ["patient_id"], name: "index_appointments_on_patient_id"
 
   create_table "doctors", force: true do |t|
   end
