@@ -1,6 +1,6 @@
 class PatientsController < ApplicationController
 	before_action :signed_in_patient, only: [:edit, :update]
-	before_action :signed_in_admin, only: [:new, :create,:edit,:update]
+	before_action :signed_in_admin, only: [:new, :create]
 	#before_action :correct_user, only: [:edit, :update]
 
 	def show

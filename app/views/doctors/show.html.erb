@@ -23,11 +23,23 @@
 <% @patients.each do |patient| %>
       <tr>
       
-	<td><%= User.find(:first, :conditions => ["profile_id = :doc",{:doc => patient.id}]).name %></td>
+	<td><%=patient.user.name%></td>
 	<td><%= patient.accepted %></td>
 	
 	
-		<%unless patient.accepted%>
+	
+		<%if patient.accepted%>
+			<td>
+				
+					<%= link_to 'View old Appointments', appointment_path(patient.id) %>
+				
+					
+				
+			</td>
+			<td>
+			<%= link_to 'New Appointment', new_appointment_path(patient.id) %>
+			</td>
+		<%else%>
 		<td>
 			<%=form_for(@doctor) do |f| %> 
 			<%= f.hidden_field :patient_id, :value => patient.id %>
