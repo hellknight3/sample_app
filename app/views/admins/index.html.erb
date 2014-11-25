@@ -29,7 +29,7 @@
 	<%elsif user.profile_type =="Doctor"%>
 			<td><%= link_to 'Edit', edit_doctor_path(user.profile_id) %></td>
 	<%end%>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Destroy', '#' %></td>
       </tr>
       <%else%>
       
