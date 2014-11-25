@@ -14,7 +14,7 @@ SampleApp::Application.routes.draw do
 		
 	end
 	resources :messages
-	resources :users
+	#resources :users
 	resources :sessions, only: [:new, :create, :destroy]
 	root 'sessions#new'
 	match '/signup', to: 'users#new', via: 'get'
