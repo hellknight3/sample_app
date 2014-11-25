@@ -1,4 +1,4 @@
-class PoolsController < ApplicationController
+  class PoolsController < ApplicationController
 	before_action :signed_in_as_admin, only: [:new, :create, :edit]
   def index
 	  @pools = Pool.paginate(page: params[:page])

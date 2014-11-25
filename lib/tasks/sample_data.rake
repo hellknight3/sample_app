@@ -14,7 +14,7 @@ namespace :db do
 				puts "error"
 			end
 		end
-		99.times do |n|
+		10.times do |n|
 			name=Faker::Name.name
 			email="examplePat-#{n+1}@example.org"
 			password = "foobar"
@@ -27,7 +27,7 @@ namespace :db do
 				puts "error"
 			end
 		end
-		10.times do |n|
+		2.times do |n|
 			name=Faker::Name.name
 			email="exampleDoc-#{n+1}@example.org"
 			password = "foobar"

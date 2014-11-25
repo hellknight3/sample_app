@@ -10,6 +10,14 @@ FactoryGirl.define do
 
 		
 	end
+	
+	factory :pool do 
+		name{Faker::Name.name}
+		institution{Faker::Name.name}
+		description{Faker::Name.name}
+		specialization{Faker::Name.name}
+	end
+	
 	factory :patient do 
 		user
 	end
