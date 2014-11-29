@@ -1,0 +1,44 @@
+<h1>Exercises</h1>
+
+<%if current_user.profile_type == "Doctor" || current_user.profile_type == "Admin" %>
+	<% @questions.each do |question| %>
+
+		<p>
+		Description:
+		<%= question.description%></br>
+		question id: <%= question.id%></br>
+		<td><%= link_to 'Remove Question', '#' %></td>
+		</p>
+	<% end %>
+
+
+	<br>
+
+	<%= link_to 'New Question', new_question_path({exercise_id: params[:id]}) %> |
+	<%= link_to 'Back', exercises_path %>
+<%elsif current_user.profile_type == "Patient" %>
+ 
+	<% @questions.each do |question| %>
+		<p>
+		Description:
+		<%= question.description%></br>
+
+		</p>
+		<% #if Answer.exists?(:first, :conditions =>["question_id = :doc AND user_id = :user",{:doc => question.id, :user =>current_user.id}])%>
+			<%# @answer=Answer.find(:first, :conditions =>["question_id = :doc AND user_id = :user",{:doc => question.id, :user =>current_user.id}])%>
+		<%#else%>
+			<% @answer=Answer.new%>
+		<%#end%>
+		
+		<%= form_for(@answer) do |f| %>
+			
+			<%= f.hidden_field :exercise_id, :value => question.exercise_id %>
+			<%= f.hidden_field :question_id, :value => question.id %>
+			<%= f.label :response %>
+			<%= f.text_field :response%>
+			<%= f.submit "Save response", class: "btn" %>
+		<% end %>
+	<%end%>
+	</br>
+	<%= link_to 'Back', exercises_path %>
+<%end%>

@@ -1,9 +1,15 @@
   class PoolsController < ApplicationController
 	before_action :signed_in_as_admin, only: [:new, :create, :edit]
   def index
-	  @pools = Pool.paginate(page: params[:page])
-  end
-
+	  
+	  #if current_user.profile_type=="Doctor"
+	  #@pools= Pool.find(:all, :conditions =>["doctor_id = :doc",{:doc => current_user.profile_id}])
+	  #elsif current_user.profile_type=="Patient"
+#		@pools= Pool.find(:all, :conditions =>["patient_id = :doc",{:doc => current_user.profile_id}])
+#	  elsif current_user.profile_type=="Admin"
+		@pools = Pool.paginate(page: params[:page])
+#	  end
+end
   def show
 	@pool = Pool.find(params[:id])
   end
@@ -25,7 +31,7 @@
   end
 
   def edit
-  	@users =User.paginate(page: params[:page])
+  	@pools =User.paginate(page: params[:page])
 	@pool=Pool.find(params[:id])
   end
   def update

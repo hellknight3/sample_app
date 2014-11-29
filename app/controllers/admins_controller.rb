@@ -1,13 +1,14 @@
 class AdminsController < ApplicationController
-	#before_action :signed_in_admin, only: [:new,:create,:index,:edit, :update]
-	#before_action :correct_user, only: [:edit, :update]
+	before_action :signed_in_admin, only: [:new,:create,:index,:edit, :update]
+	#before_action :correct_user, only: [:show, :edit, :update]
+	before_action :signed_in, only: [:show, :edit, :update]
 	def show
 		@admin = Admin.find(params[:id])
 		@user = @admin.user
 	end
 	def index
 	#puts all of the admins into a browsable list
-		@users =User.all
+		@admins =User.paginate(page: params[:page])
 	end
 	def new
 		#creates temp variables for the new form to use for the views
@@ -43,6 +44,13 @@ class AdminsController < ApplicationController
 			
 		end
 		#before filters
+		def signed_in
+			if signed_in?
+			else
+				store_location
+				redirect_to signin_url, notice: "Please sign in."
+			end
+		end
 		def signed_in_admin
 			if signed_in?
 				if current_user.profile_type=="Admin"

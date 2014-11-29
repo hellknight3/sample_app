@@ -1,0 +1,25 @@
+<h1>Exercises</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Exercise Name</th>
+      <th>exercise id</th>
+
+      </tr>
+  </thead>
+
+  <tbody>	
+    <% @exercises.each do |exercise| %>
+
+      <tr>
+	<td><%= link_to exercise.name, exercise_path(exercise) %></td>
+	<td><%= exercise.id%></td>
+        <td><%= link_to 'Destroy', exercise_path(exercise.id), method: :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Exercise', new_exercise_path %>

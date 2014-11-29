@@ -8,7 +8,7 @@
     </tr>
   </thead>
    <tbody>
-<% @users.each do |user| %>
+<% @pools.each do |user| %>
       <tr>
 	<td><%= user.name %></td>
 	
@@ -33,5 +33,5 @@
     <% end %>
     </tbody>
     </table>
-
+<%=will_paginate%>
 <%= link_to 'Back', pools_path%>

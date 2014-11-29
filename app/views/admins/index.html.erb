@@ -12,7 +12,7 @@
   </thead>
 
   <tbody>	
-    <% @users.each do |user| %>
+    <% @admins.each do |user| %>
     <%unless user.profile_type.nil?%>
       <tr>
 	<td><%= user.name%></td>
@@ -37,7 +37,7 @@
     <% end %>
   </tbody>
 </table>
-
+<%=will_paginate%>
 <br>
 
 <%= link_to 'New Admin', new_admin_path %> |

@@ -1,8 +1,8 @@
 class DoctorsController < ApplicationController
 
-	#before_action :signed_in_doctor, only: [:edit, :update]
+	before_action :signed_in, only: [:show,:edit, :update]
 	before_action :signed_in_admin, only: [:new, :create]
-	#before_action :correct_user, only: [:edit, :update]
+	#before_action :correct_user, only: [:show,:edit, :update]
 	def index
 		#will need to figure out how to restrict the information
 		#this will make it so a list of users is created and displayed similar to how facebook displays users
@@ -29,7 +29,7 @@ class DoctorsController < ApplicationController
 		@user = @doctor.build_user(user_params)
 		if @doctor.save			
 			flash[:success]
-			redirect_to @doctor
+			redirect_to pools_path
 		else
 			render 'new'
 		end
@@ -61,7 +61,7 @@ class DoctorsController < ApplicationController
 		def doctor_params
 		end
 		#before filters
-		def signed_in_doctor
+		def signed_in
 			unless signed_in?
 				store_location
 				redirect_to signin_url, notice: "Please sign in."

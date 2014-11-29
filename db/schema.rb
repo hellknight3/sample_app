@@ -11,10 +11,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141123020053) do
+ActiveRecord::Schema.define(version: 20141126195950) do
 
   create_table "admins", force: true do |t|
   end
+
+  create_table "answers", force: true do |t|
+    t.text     "response"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "question_id"
+    t.integer  "user_id"
+  end
+
+  add_index "answers", ["question_id"], name: "index_answers_on_question_id"
+  add_index "answers", ["user_id"], name: "index_answers_on_user_id"
 
   create_table "appointments", force: true do |t|
     t.datetime "start_time"
@@ -26,6 +37,13 @@ ActiveRecord::Schema.define(version: 20141123020053) do
   end
 
   create_table "doctors", force: true do |t|
+  end
+
+  create_table "exercises", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "messages", force: true do |t|
@@ -52,6 +70,16 @@ ActiveRecord::Schema.define(version: 20141123020053) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "questions", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "exercise_id"
+  end
+
+  add_index "questions", ["exercise_id"], name: "index_questions_on_exercise_id"
 
   create_table "users", force: true do |t|
     t.string   "name"

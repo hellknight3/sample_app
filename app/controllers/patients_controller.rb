@@ -1,7 +1,7 @@
 class PatientsController < ApplicationController
-	before_action :signed_in_patient, only: [:edit, :update]
+	before_action :signed_in, only: [:edit, :update]
 	before_action :signed_in_admin, only: [:new, :create]
-	#before_action :correct_user, only: [:edit, :update]
+	#before_action :correct_user, only: [:show,:edit, :update]
 
 	def show
 		#shows the current users properties
@@ -18,8 +18,8 @@ class PatientsController < ApplicationController
 		@patient =Patient.new(patient_params)
 		@user = @patient.build_user(user_params)
 		if @patient.save			
-			flash[:success]
-			redirect_to @patient
+			flash[:success] ="successfully added patient"
+			redirect_to pools_path
 		else
 			render 'new'
 		end
@@ -56,7 +56,7 @@ class PatientsController < ApplicationController
 		def patient_params
 		end
 		#before filters
-		def signed_in_patient
+		def signed_in
 			unless signed_in?
 				store_location
 				redirect_to signin_url, notice: "Please sign in."

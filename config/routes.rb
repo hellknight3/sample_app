@@ -1,4 +1,6 @@
 SampleApp::Application.routes.draw do
+
+
 	resources :admins do
 		resources :users
 		
@@ -13,6 +15,12 @@ SampleApp::Application.routes.draw do
 	resources :appointments do
 		
 	end
+	#should be nested are not, will need to fix when i understand more
+	resources :exercises 
+	resources :questions 
+	resources :answers
+		
+	
 	resources :messages
 	#resources :users
 	resources :sessions, only: [:new, :create, :destroy]
