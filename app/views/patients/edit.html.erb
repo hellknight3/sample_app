@@ -1,5 +1,6 @@
 <% provide(:title, "Edit patient") %>
 <h1>Update your profile</h1>
+<%#displays the edit page for the patient, different views will be created depending on the profile type%>
 <%if current_user.profile_type =="Patient"%>
 <div class="row">
 	<div class="span6 offset3">
@@ -21,8 +22,9 @@
 		<%end%>
 	</div>
 </div>
+<%#The Admin is checked since he will be the one adding the doctor to the user%>
 <%elsif current_user.profile_type =="Admin"%>
-<table>
+	<table>
 	<thead>
 		<tr>
 			<th>name</th>
@@ -34,13 +36,11 @@
 
 	<tbody>	
 		<% @doctors.each do |doctor| %>
-		
-			
 				<tr>
-				
 					<td><%=doctor.name%></td>
 					<%if @patient.doctor.nil?%>
 					<td>
+						<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'add' to the params hash%>
 						<%=form_for(@patient) do |f| %> 
 						<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
 						<%= f.hidden_field :func, :value => "add" %>
@@ -49,6 +49,7 @@
 					</td>
 					<%elsif @patient.doctor_id == doctor.profile_id%>
 					<td>
+						<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'remove' to the params hash%>
 						<%=form_for(@patient) do |f| %> 
 						<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
 						<%= f.hidden_field :func, :value => "remove" %>

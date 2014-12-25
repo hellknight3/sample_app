@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+#ignore this file, we will need to delete this later on since a user should not be actionable
+#check patient, doctor, or admin controller for the actual implementation. I'm leaving this in
+#so i dont have to make a bunch of changes to other code right now, will fix l8r
 	before_action :signed_in_user, only: [:index,:edit, :update]
 	before_action :correct_user, only: [:edit, :update]
 	def index

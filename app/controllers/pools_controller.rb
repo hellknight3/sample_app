@@ -7,19 +7,24 @@
 	  #elsif current_user.profile_type=="Patient"
 #		@pools= Pool.find(:all, :conditions =>["patient_id = :doc",{:doc => current_user.profile_id}])
 #	  elsif current_user.profile_type=="Admin"
+		#puts all the pools that exist into pages, I know this is not functionality desired but was having trouble getting working
 		@pools = Pool.paginate(page: params[:page])
 #	  end
 end
   def show
+	#finds the pool that is requested, this is stored in params hash it will look like http://....pool/{:id}
 	@pool = Pool.find(params[:id])
   end
 
   def new
+	#creates another variable for current_user, probably just to side step a bug, will look into later
 	@user =current_user
+	#brings a pool variable into scope for use with the new view
 	  @pool = Pool.new
   end
 
   def create
+	#creates a new pool variable that has the variables that the user tries to edit checked against the pool_params which specifies the allowed fields to be changed
 	  @pool=Pool.new(pool_params)
 	  if @pool.save
 		  flash[:success] = "Pool successfully created"
@@ -27,7 +32,6 @@ end
 	  else
 		render 'new'	 
 	  end
-	
   end
 
   def edit
