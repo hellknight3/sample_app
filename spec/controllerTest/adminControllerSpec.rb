@@ -8,6 +8,7 @@ describe AdminsController, type: :controller do
 		it "populates an array of users" do
 			person = create(:admin)#creates a person variable which is an admin
 			puts person.user.name#prints out persons name to the cmd prompt 
+			puts person.id
 			get :index #gets the index method from the controller
 			assigns(:admin).should eq([person])#checks that the results from the get method is equal to the person variable
 		end
@@ -17,7 +18,7 @@ describe AdminsController, type: :controller do
 			response.should render_template :index
 		end
 	end
-	
+=begin
 	#testing the show function
 	describe "show" do
 		it "assigns the request user to @user" do
@@ -51,13 +52,11 @@ describe AdminsController, type: :controller do
 		#testing valid attributes
 		context "valid attributes" do
 			it "create new contact" do
-				@user = create(:user)	#create new user
-				expect{post :create, admin: attributes_for(:admin), user: @user}.to change(Admin, :count).by(1)#call the create method in the controller and create a new admin, check that the admin count increases by 1
+				expect{post :create, admin: attributes_for(:admin), user: attributes_for(:user)}.to change(Admin, :count).by(1)#call the create method in the controller and create a new admin, check that the admin count increases by 1
 			end
 			#get the create method and checks that the appropriate template is rendered
 			it "redirects to the home page" do
-				@user = create(:user)	
-				post :create, admin: attributes_for(:admin), user: @user
+				post :create, admin: attributes_for(:admin), user: attributes_for(:user)
 				response.should redirect_to Admin.last
 			end
 		end
@@ -241,5 +240,5 @@ describe AdminsController, type: :controller do
 			response.should redirect_to user
 		end
 	end
-
+=end
 end

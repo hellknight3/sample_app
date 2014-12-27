@@ -33,7 +33,7 @@ describe DoctorsController, type: :controller do
 	describe "new" do
 		it "assigns a new user to @user" do
 			get :new
-			expect(assigns(:doctor)).to be_a_new(Admin)
+			expect(assigns(:doctor)).to be_a_new(Doctor)
 		end
 		it "renders the : new template" do
 			get :new
@@ -46,22 +46,20 @@ describe DoctorsController, type: :controller do
 		context "valid attributes" do
 		
 			it "create new contact" do
-				@user = create(:user)	
-				expect{post :create, admin: attributes_for(:doctor), user: @user}.to change(Admin, :count).by(1)
+				expect{post :create, doctor: attributes_for(:doctor), user: attributes_for(:user)}.to change(Doctor, :count).by(1)
 			end
 			it "redirects to the home page" do
-				@user = create(:user)	
-				post :create, admin: attributes_for(:doctor), user: @user
-				response.should redirect_to Admin.last
+				post :create, doctor: attributes_for(:doctor), user: attributes_for(:user)
+				response.should redirect_to Doctor.last
 			end
 		end
 		context "invalid attributes" do
 		
 			it "create new contact" do
-				expect{post :create, admin: attributes_for(:doctor), user: attributes_for(:userInvalid)}.to_not change(Admin, :count).by(1)
+				expect{post :create, doctor: attributes_for(:doctor), user: attributes_for(:userInvalid)}.to_not change(Doctor, :count).by(1)
 			end
 			it "redirects to the home page" do
-				post :create, admin: attributes_for(:doctor), user: attributes_for(:userInvalid)
+				post :create, doctor: attributes_for(:doctor), user: attributes_for(:userInvalid)
 				response.should render_template :new
 			end
 		end
