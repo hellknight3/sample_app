@@ -21,7 +21,7 @@ describe PoolsController, type: :controller do
 	describe "show" do
 		it "assigns the request user to @user" do
 			pool = create(:pool) #create pool
-			puts pool.name
+			#puts pool.name
 			get :show, id: pool.id #call show function
 			assigns(:pool).should eq(pool) #check pool found is the correct pool
 		end
@@ -35,78 +35,91 @@ describe PoolsController, type: :controller do
 
 	describe "new" do
 		it "assigns a new user to @user" do
-			get :new
+			poolNew = get :new
+			#puts poolNew.name
 			expect(assigns(:pool)).to be_a_new(Pool)
 		end
+		#test rending 
 		it "renders the : new template" do
 			get :new
 			response.should render_template :new
 		end 
 	end 
-=begin
+
+	#test create function
 	describe "create" do
-		context "valid attributes" do
-		
-			it "create new contact" do
-				@user = create(:user)	
-				expect{post :create, patient: attributes_for(:patient), user: @user}.to change(Patient, :count).by(1)
+		#test using valid attributes
+		context "valid attributes" do		
+		it "create new contact" do
+				#create new Pool expect the pool count to increase by one
+				expect{post :create, pool: attributes_for(:pool)}.to change(Pool, :count).by(1)
 			end
+			#test redirection
 			it "redirects to the home page" do
-				@user = create(:user)	
-				post :create, patient: attributes_for(:patient), user: @user
-				response.should redirect_to Patient.last
+				post :create, pool: attributes_for(:pool)
+				response.should redirect_to Pool.last
 			end
 		end
-		context "invalid attributes" do
-		
+		#test invalid attributes
+		#test this case when model is sorted out
+=begin
+		context "invalid attributes" do		
 			it "create new contact" do
-				expect{post :create, admin: attributes_for(:patient), user: attributes_for(:userInvalid)}.to_not change(Admin, :count).by(1)
+				#create pool with invalid attribute, check pool count does not increment
+				expect{post :create, pool: attributes_for(:InvalidPool)}.to_not change(Pool, :count).by(1)
 			end
 			it "redirects to the home page" do
-				post :create, admin: attributes_for(:patient), user: attributes_for(:userInvalid)
+				post :create, pool: attributes_for(:pool), user: attributes_for(:InvalidPool)
 				response.should render_template :new
 			end
 		end
+=end
 	end
 
-
+	#test edit function
 	describe "edit" do
 		it "request user to @user" do
-			user = create(:patient)
-			get :edit, {'id' => "1"}
-			assigns(:patient).should eq(user)
+			user = create(:pool)#create new 
+			puts user.nameUser
+			get :edit, {'id' => "1"} #call edit function
+			assigns(:pool).should eq(user)#check pool found = user
 		end
+		#check rendering
 		it "rends show view" do
-			user = create(:patient)
+			user = create(:pool)
 			get :edit, {'id' => "1"}
 			response.should render_template :edit
 		end
 		
 	end
-
-
-	describe "update" do
 	
+	#test update function
+	describe "update" do
+		#test with valid attributes
 		context "valid attribute" do 
 			it "locate requested @user" do
-				@user = create(:patient)
-				put :update, id: @user, user: FactoryGirl.attributes_for(:patient)
-		
+				@user = create(:pool)#create new pool
+				put :update, id: @user, pool: FactoryGirl.attributes_for(:pool)#check user can be updated
 			end
 			it "changes user attributes" do
-				@user = create(:patient)
-				nameUser = @user.user.name
-				emailUser = @user.user.email
-				passwordUser = @user.user.password
-				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:"Bob", email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
-				@user.reload
-				@user.user.name.should eq(nameUser)
-				@user.user.email.should eq(emailUser)
-				@user.user.password.should eq(passwordUser)
-				@user.user.password_confirmation.should eq(passwordUser)
+				@user = create(:pool)#create new pool
+				#save attributes
+				nameUser = @user.name
+				descriptionUser = @user.description
+				specializationUser = @user.specialization
+				institutionUser = @user.institution
+				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:"Bob", institution:"something@gmail.com", description:"barfoo",specialization:"barfoo")
+				@user.reload #reload pool
+				#check attributes
+				@user.name.should eq(nameUser)
+				@user.description.should eq(descriptionUser)
+				@user.institution.should eq(institutionUser)
+				@user.specialization.should eq(specializationUser)
 				response.should redirect_to @user
 			end
 		end
+		#test invalid attributes after model testing is done
+=begin
 		context "invalid attributes" do
 			it "doesnt changes attribute" do
 				@user = create(:patient)	
@@ -218,6 +231,6 @@ describe PoolsController, type: :controller do
 			delete :destroy, id: @user
 			response.should redirect_to user
 		end
-	end
 =end
+		end
 end

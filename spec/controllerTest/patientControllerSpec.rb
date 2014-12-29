@@ -111,10 +111,10 @@ describe PatientsController, type: :controller do
 				put :update, id: @user, user: FactoryGirl.attributes_for(:user, name:"Bob", email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
 				@user.reload #reload attributes
 				#check attributes have been modified
-				@user.user.name.should eq(nameUser)
-				@user.user.email.should eq(emailUser)
-				@user.user.password.should eq(passwordUser)
-				@user.user.password_confirmation.should eq(passwordUser)
+				@user.user.name.should eq("Bob")
+				@user.user.email.should eq("something@gmail")
+				@user.user.password.should eq("barfoo")
+				@user.user.password_confirmation.should eq("barfoo")
 				response.should redirect_to @user # check redirection
 			end
 		end
