@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+#being reworked to test that user cannot be created by itself
 
 #RSpec.describe User do
 describe UsersController, type: :controller do

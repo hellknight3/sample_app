@@ -3,43 +3,47 @@ require 'spec_helper'
 
 #RSpec.describe User do
 describe PoolsController, type: :controller do
- 	
+ 	#test index function
 	describe "index" do
 		it "populates an array of users" do
-			pool = create(:pool)
-			get :index
-			assigns(:pool).should eq([pool])
+			pool = create(:pool) #create new pool
+			get :index #call index function
+			assigns(:pool).should eq([pool]) #check pool found = pool
 		end
+		#check rendering
 		it "renders the: index view" do 
 			get :index
 			response.should render_template :index
 		end
 	end
-
+	
+	#test show function
 	describe "show" do
 		it "assigns the request user to @user" do
-			pool = create(:pool)
-			get :show, id: pool.id
-			assigns(:pool).should eq(pool)
+			pool = create(:pool) #create pool
+			puts pool.name
+			get :show, id: pool.id #call show function
+			assigns(:pool).should eq(pool) #check pool found is the correct pool
 		end
+		#check rendering
 		it "rends show view" do
 			pool = create(:pool)
 			get :show, id: pool.id
 			response.should render_template :show
 		end
 	end
-=begin  
+
 	describe "new" do
 		it "assigns a new user to @user" do
 			get :new
-			expect(assigns(:patient)).to be_a_new(Admin)
+			expect(assigns(:pool)).to be_a_new(Pool)
 		end
 		it "renders the : new template" do
 			get :new
 			response.should render_template :new
 		end 
 	end 
-
+=begin
 	describe "create" do
 		context "valid attributes" do
 		

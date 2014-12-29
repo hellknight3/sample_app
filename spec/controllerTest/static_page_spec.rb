@@ -11,6 +11,7 @@ describe StaticPagesController, type: :controller do
 		it{should have_selector('h1', text 'Welcome to the Sample App')}
 	end
 =end
+#the following all click on a like (home, help etc) and check that the link has been clink
 it "should get home" do 
 	get :home
     assert_response :success
