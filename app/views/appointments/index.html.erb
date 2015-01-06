@@ -2,12 +2,10 @@
 <table>
   <thead>
     <tr>
-	<th>patient name</th>
-	<th>patient id</th>
-	<th>patient type</th>
-	<th>doctor name</th>
-	<th>doctor id</th>
-	<th>doctor type</th>
+	<th>name</th>
+	<th>description</th>
+
+
 	<th></th>
 
       </tr>
@@ -16,41 +14,10 @@
   <tbody>
     <% @appointments.each do |appointment| %>
 	<tr>
-		<%unless appointment.patient_id.nil?%>
-			<%if Patient.exists?(appointment.patient_id)%>
-				<% @patient = Patient.find(appointment.patient_id)%>
-				<% @patUser = @patient.user%>
-				<td><%=@patUser.name%></td>
-				<td><%=appointment.patient_id%></td>
-				<td><%=@patUser.profile_type%></td>
-			<%else%>
-				<td></td>
-				<td></td>
-				<td></td>
-			<%end%>
-		<%else%>
-			<td></td>
-			<td></td>
-			<td></td>
-		<%end%>
-		<%unless appointment.doctor_id.nil?%>
-			<%if Doctor.exists?(appointment.doctor_id)%>
-				<% @doctor = Doctor.find(appointment.doctor_id)%>
-				<% @docUser = @doctor.user%>
-				<td><%=@docUser.name%></td>
-				<td><%=appointment.doctor_id%></td>
-				<td><%=@docUser.profile_type%></td>
-			<%else%>
-				<td></td>
-				<td></td>
-				<td></td>
-			<%end%>
-		<%else%>
-			<td></td>
-			<td></td>
-			<td></td>
-			
-		<%end%>
+		<td><%=appointment.name%></td>
+		<td><%=appointment.description%></td>
+		
+
 		<td>
 		<%=form_for(appointment) do |f| %> 
 			<%= f.hidden_field :appointment_id, :value => appointment.id %>
@@ -70,3 +37,4 @@
     <%end%>
     </tbody>
     </table>
+<%= link_to 'New Appointment', new_appointment_path%> 

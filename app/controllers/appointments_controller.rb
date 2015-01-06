@@ -1,30 +1,22 @@
 class AppointmentsController < ApplicationController
   def new
-  @user = current_user
-  @appointment = Appointment.new
+	  @user = current_user
+	  @appointment = Appointment.new
+	  
   end
 
   def create
-	@appointment =Appointment.new(appointment_params)
-	if current_user.profile_type=="Patient"
-		@appointment.patient_id=current_user.profile_id
-		@appointment.doctor_id=params[:appointment][:profile_id]
-	else #if current_user.profile_type=="Doctor"
-		@appointment.doctor_id=current_user.profile_id
-		@appointment.patient_id=params[:appointment][:profile_id]
-		
-	end	
-
+	@appointment =Appointment.new(appointment_params)	
 	if @appointment.save
-		@message = Message.new
 		
-		@message.appointment_id=@appointment.id
+		@message = Message.new(:appointment_id => @appointment.id, :user_id => current_user.id, :message => "Started appointment")
 		if @message.save
-		@message.update_attribute(:message, params[:message][:message])
-			flash[:success]="Successfully sent message"
-		else
-			flash[:error]="message not saved"
+			flash[:success]="Successfully created appointment"
+		else 
+			flash[:failure]="Failed to create appointment"
+		
 		end
+			
 		redirect_to appointments_path
 	else
 		render 'new'
@@ -33,13 +25,8 @@ class AppointmentsController < ApplicationController
   end
 
   def index
-	if current_user.profile_type =="Doctor"
-		@doctor=Doctor.find(current_user.profile_id)
-		@appointments=Appointment.find(:all, :conditions =>["doctor_id = :doc",{:doc => @doctor.id}])
-	elsif current_user.profile_type=="Patient"
-		@patient=Patient.find(current_user.profile_id)
-		@appointments=Appointment.find(:all, :conditions =>["patient_id = :doc",{:doc => @patient.id}])
-	end
+	@appointments = current_user.appointments
+
   end
 def update
 		if(params[:appointment][:func] == "destroy")
@@ -60,7 +47,10 @@ end
   def appointment_params
 	
 	
-	#params.require(:message).permit(:content)
+	params.require(:appointment).permit(:name, :description)
 	
   end
+	def message_params
+		params.require(:message).permit!
+	end
 end

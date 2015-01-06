@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126195950) do
+ActiveRecord::Schema.define(version: 20150106194117) do
 
   create_table "admins", force: true do |t|
   end
@@ -32,8 +32,8 @@ ActiveRecord::Schema.define(version: 20141126195950) do
     t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "patient_id"
-    t.integer  "doctor_id"
+    t.string   "name"
+    t.string   "description"
   end
 
   create_table "doctors", force: true do |t|
@@ -51,9 +51,8 @@ ActiveRecord::Schema.define(version: 20141126195950) do
     t.integer  "appointment_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_id"
   end
-
-  add_index "messages", ["appointment_id"], name: "index_messages_on_appointment_id"
 
   create_table "patients", force: true do |t|
     t.integer "doctor_id"

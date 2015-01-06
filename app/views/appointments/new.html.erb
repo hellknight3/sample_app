@@ -1,14 +1,12 @@
 <h1>Compose New Message</h1>
-<%if current_user.profile_type=="Doctor"%>
-	<%@user=Patient.find(params[:patient_id]).user%>
-<%else%>
-	<%@user=Doctor.find(params[:doctor_id]).user%>
-<%end%>
-<h2><%=@user.name%></h2>
+
+
 <%= form_for(@appointment) do |f| %>
 	<%= render 'shared/error_messages' %>
+	<%= f.label :name %><br />
+	<%= f.text_field :name %>
 	<%= f.hidden_field :profile_id, :value => @user.profile_id %>
-	<%=label :message, :message %>
-	<%=text_area :message, :message ,:size => "30x10"%>
-	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
+	<%=f.label  :description %>
+	<%=f.text_area  :description ,:size => "30x10"%>
+	<%= f.submit "Create Appointment", class: "btn btn-large btn-primary" %>
 <% end %>

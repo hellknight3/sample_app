@@ -22,17 +22,26 @@ end
 	
   end
   def show
-	@questions=Question.find(:all, :conditions =>["exercise_id = :doc",{:doc => params[:id]}])
+  @exercise=Exercise.find(params[:id])
+  @questions=@exercise.questions
+	#@questions=Question.find(:all, :conditions =>["exercise_id = :doc",{:doc => params[:id]}])
   end
   def destroy
 	Exercise.find(params[:id]).destroy
 			flash[:success]="Destroyed exercise"
 			redirect_to exercises_path
   end
-  
+	def update
+		@exercise = Exercise.find(params[:id])
+		if @exercise.update_attributes(exercise_params)
+			redirect_to @exercise, notice: "Successfully updated exercise."
+		else
+			render :edit
+		end
+	end
   private
   def exercise_params
-	params.require(:exercise).permit(:name, :description)
+	params.require(:exercise).permit(:name, :description, questions_attributes: [:id, :description, :_destroy])
   end
   
 end

@@ -1,0 +1,22 @@
+<%= simple_form_for @exercise do |f| %>
+	<%if @exercise.errors.any? %>
+		<div class="error_messages">
+			<h2><%= pluralize(@exercise.errors.count,"error") %> problem saving this exercise</h2>
+			<ul>
+			<% @exercise.errors.full_messages.each do |msg| %>
+				<li><%= msg %>
+				</li>
+				<%end%>
+			</ul>
+		</div>
+	<%end%>
+	<%= f.input :name%>
+	<%= f.input :description %>
+	<%= f.fields_for :questions do |builder| %>
+		<%= render 'question_fields', f: builder %>
+	<% end %>
+	<%= link_to_add_fields "Add Question", f, :questions %>
+
+
+	<%= f.button :submit %>
+<% end %>

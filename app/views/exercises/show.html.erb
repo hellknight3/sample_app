@@ -1,4 +1,5 @@
-<h1>Exercises</h1>
+<h1><%=@exercise.name%></h1>
+<h2><%=@exercise.description%></h1>
 
 <%if current_user.profile_type == "Doctor" || current_user.profile_type == "Admin" %>
 	<% @questions.each do |question| %>
@@ -7,14 +8,14 @@
 		Description:
 		<%= question.description%></br>
 		question id: <%= question.id%></br>
-		<td><%= link_to 'Remove Question', '#' %></td>
+		<!--<td><%= link_to 'Remove Question', '#' %></td>-->
 		</p>
 	<% end %>
 
 
 	<br>
 
-	<%= link_to 'New Question', new_question_path({exercise_id: params[:id]}) %> |
+	<%= link_to 'Edit Exercise', edit_exercise_path(params[:id]) %> |
 	<%= link_to 'Back', exercises_path %>
 <%elsif current_user.profile_type == "Patient" %>
  
