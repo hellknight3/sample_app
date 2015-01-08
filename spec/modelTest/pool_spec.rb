@@ -1,13 +1,14 @@
 require 'spec_helper'
 
 describe Pool do
+
 	#create pool object name pool
 	before { @pool = create(:pool)}
 	#check variable are responding 
-	subject {@user}
-	it { should respond_to(:name)}
-	it { should respond_to(:specialization)}
-	it { should respond_to(:discription)}
+	subject {@pool}
+	it {should respond_to(:name)}
+	it {should respond_to(:specialization)}
+	it {should respond_to(:description)}
 	it {should respond_to(:institution)}
 
 	#check is pool object can be created
@@ -16,41 +17,55 @@ describe Pool do
 		create(:pool).should be_valid
 	end
 	
-	it "attributes are not blank" do
+	#check name is not void
+	it "name is not blank" do
 		pool = create(:pool)#create pool
 		#check attributes are not blank
 		pool.name.should_not be_blank	
 	end
-	it "attributes are not blank" do
+	
+	#check specialization is not blank
+	it "specialization is not blank" do
 		pool = create(:pool)#create pool
 		#check attributes are not blank
 		pool.specialization.should_not be_blank
 	end
-	it "attributes are not blank" do
+	#check description is not void
+	it "describe is not blank" do
 		pool = create(:pool)#create pool
-		pool.name.should_not be_blank
-		pool.describe.should_not be_blank
+		pool.description.should_not be_blank
 	end
-	it "attributes are not blank" do
+	#check institution is not blank
+	it "institution is not blank" do
 		pool = create(:pool)#create pool
 		#check attributes are not blank
 		pool.institution.should_not be_blank
 	end
 		
+	#check name cannot be void
 	it"should not accept nil name" do
 		#check name cannot be nil
-		build(:user, name: nil).should_not be_valid
+		build(:pool, name: nil).should_not be_valid
 	end
+	#check specialization cannot be nil
 	it"should not accept nil specialization" do
 		#check specialization cannot be nil
-		build(:user, specialization: nil).should_not be_valid
+		build(:pool, specialization: nil).should_not be_valid
 	end
+	#check institution cannot be nil
 	it"should not accept nil institution" do
 		#check institution cannot be nil
-		build(:user, institution: nil).should_not be_valid
+		build(:pool, institution: nil).should_not be_valid
 	end
+	#check description cannot be nil
 	it"should not accept nil description" do
 		#check description cannot be nil
-		build(:user, description: nil).should_not be_valid
+		build(:pool, description: nil).should_not be_valid
+	end
+	
+	#check has_many relationship
+	it "should have many users" do
+		pool = create(:pool)
+		pool.should have_many(:users)
 	end
 end
