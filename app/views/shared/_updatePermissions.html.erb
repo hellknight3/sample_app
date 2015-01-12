@@ -1,0 +1,36 @@
+<table>
+  <thead>
+    <tr>
+      <th>Pool name</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+   <tbody>
+<% pools.each do |pool| %>
+<%@perm = pool.permissions%>
+      <tr>
+	<td><%=pool.name%></td>
+	<td><%@temp = @perm.detect{|w| w.user_id == @user.id} %></td>
+
+
+	<td>
+		<%if @temp == nil%>
+			<%=form_for(user) do |f| %> 
+			<%= f.hidden_field :pool_id, :value => pool.id %>
+			<%= f.hidden_field :func, :value => "addPool" %>
+			<%= f.submit "add to pool", class: "btn" %>
+			<%end%>
+		<%else%>
+			<%=form_for(user) do |f| %> 
+			<%= f.hidden_field :pool_id, :value => pool.id %>
+			<%= f.hidden_field :func, :value => "removePool" %>
+			<%= f.submit "remove from pool", class: "btn" %>
+			<%end%>
+		<%end%>
+	</td>
+	
+      </tr>
+    <% end %>
+    </tbody>
+    </table>

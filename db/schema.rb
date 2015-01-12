@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150106194117) do
+ActiveRecord::Schema.define(version: 20150112130337) do
 
   create_table "admins", force: true do |t|
   end
@@ -46,6 +46,12 @@ ActiveRecord::Schema.define(version: 20150106194117) do
     t.datetime "updated_at"
   end
 
+  create_table "institutions", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "messages", force: true do |t|
     t.string   "message"
     t.integer  "appointment_id"
@@ -60,6 +66,11 @@ ActiveRecord::Schema.define(version: 20150106194117) do
   end
 
   add_index "patients", ["doctor_id"], name: "index_patients_on_doctor_id"
+
+  create_table "permissions", id: false, force: true do |t|
+    t.integer "user_id"
+    t.integer "pool_id"
+  end
 
   create_table "pools", force: true do |t|
     t.string   "name"

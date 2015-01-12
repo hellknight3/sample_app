@@ -12,8 +12,8 @@
 	<%end%>
 	<%= f.input :name%>
 	<%= f.input :description %>
-	<%= f.fields_for :questions do |builder| %>
-		<%= render 'question_fields', f: builder %>
+	<%= f.fields_for :questions do |question| %>
+		<%= render 'question_fields', f: question %>
 	<% end %>
 	<%= link_to_add_fields "Add Question", f, :questions %>
 

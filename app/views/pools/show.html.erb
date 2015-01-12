@@ -3,4 +3,25 @@
 <p>description: <%=@pool.description%></p>
 <p>institution: <%=@pool.institution%></p>
 <p>specialization: <%=@pool.specialization%></p>
+
+<%if current_user.profile_type == "Admin"%>
+<table>
+<tbody>
+<% @pool.users.each do |user|%>
+<tr>
+<td> <%=user.name%></td>
+	<td>
+	<%=form_for(user) do |f| %> 
+			<%= f.hidden_field :user_id, :value => user.id %>
+			<%= f.hidden_field :func, :value => "create" %>
+			<%= f.submit "Allow Permission", class: "btn" %>
+			<%end%>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+<% end %>
+<% end %>
 <%= link_to 'Back', pools_path%>

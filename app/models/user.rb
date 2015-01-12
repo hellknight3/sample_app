@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	belongs_to :profile, polymorphic: true
-	belongs_to :pools
+	#has_many :permissions
+	has_many :pools, :through => :permissions
 	has_many :messages
 	has_many :appointments, :through => :messages
 	before_save { self.email = email.downcase}

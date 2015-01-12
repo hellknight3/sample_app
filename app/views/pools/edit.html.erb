@@ -1,37 +1,16 @@
 <h1>Edit Pool</h1>
-<table>
-  <thead>
-    <tr>
-      <th>Users name</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-   <tbody>
-<% @pools.each do |user| %>
-      <tr>
-	<td><%= user.name %></td>
-	
-	<td>
-		<%if user.pool_id == nil%>
-			<%=form_for(@pool) do |f| %> 
-			<%= f.hidden_field :user_id, :value => user.id %>
-			<%= f.hidden_field :func, :value => "add" %>
-			<%= f.submit "add to pool", class: "btn" %>
-			<%end%>
-		<%else%>
-			<%=form_for(@pool) do |f| %> 
-			<%= f.hidden_field :user_id, :value => user.id %>
-			<%= f.hidden_field :func, :value => "remove" %>
-			<%= f.submit "remove from pool", class: "btn" %>
-			<%end%>
+<%if current_user.profile_type == "Admin" %>
+<div class="row">
+	<div class="span6 offset3">
+		<%= simple_form_for @pool do |f| %>
+			
+			<%=f.input :name %>
+			<%=f.input :description%>
+			<%=f.input :specialization%>
+			<%=f.button :submit %>
 		<%end%>
-	</td>
-	<td>
-	</td>
-      </tr>
-    <% end %>
-    </tbody>
-    </table>
-<%=will_paginate%>
+	</div>
+</div>
+
+    <%end%>
 <%= link_to 'Back', pools_path%>

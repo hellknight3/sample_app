@@ -20,6 +20,8 @@
 		<%end%>
 	</div>
 </div>
-
+<%if current_user.profile_type=="Admin"%>
+ <%= render partial: "shared/updatePermissions", locals: {user: @doctor, pools: @pools}%>
+<%end%>
 <%= link_to 'Show', @doctor %> |
 <%= link_to 'Back', doctors_path %>

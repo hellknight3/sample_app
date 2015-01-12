@@ -14,6 +14,7 @@ end
   def show
 	#finds the pool that is requested, this is stored in params hash it will look like http://....pool/{:id}
 	@pool = Pool.find(params[:id])
+	
   end
 
   def new
@@ -35,18 +36,12 @@ end
   end
 
   def edit
-  	@pools =User.paginate(page: params[:page])
 	@pool=Pool.find(params[:id])
   end
   def update
-	@user = User.find(params[:pool][:user_id])
-	@users =User.paginate(page: params[:page])
+
 	@pool=Pool.find(params[:id])
-	if(params[:pool][:func] == "add")
-		@user.update_attribute(:pool_id, params[:id])
-	elsif(params[:pool][:func] == "remove")
-		@user.update_attribute(:pool_id, nil)
-	end
+	@pool.update_attributes(pool_params)
 	render 'edit'
   end
   
@@ -54,7 +49,7 @@ end
 
   private
   def pool_params
-	params.require(:pool).permit(:name, :institution, :description, :specialization)
+	params.require(:pool).permit(:name, :description, :specialization)
   end
   def signed_in_as_admin
   
