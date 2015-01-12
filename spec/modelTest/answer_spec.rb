@@ -12,7 +12,7 @@ describe Answer do
 
 	#check answer object can be created
 	it "has a valid factory" do
-		create(:answer).should be_valid
+		create(:answer, name: nil).should be_valid
 	end 
 	
 	#check responce cannot be nil
