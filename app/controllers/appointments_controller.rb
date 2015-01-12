@@ -9,7 +9,7 @@ class AppointmentsController < ApplicationController
 	@appointment =Appointment.new(appointment_params)	
 	if @appointment.save
 		
-		@message = Message.new(:appointment_id => @appointment.id, :user_id => current_user.id, :message => "Started appointment")
+		@message = Message.new(:appointment_id => @appointment.id, :user_id => current_user.id, :message => current_user.name+" Started appointment")
 		if @message.save
 			flash[:success]="Successfully created appointment"
 		else 

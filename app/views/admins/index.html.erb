@@ -25,21 +25,24 @@
 		<td><%= link_to 'Edit', edit_admin_path(user.profile_id) %></td>
 	<%elsif user.profile_type =="Patient"%>
 		<td><%= link_to 'Edit', edit_patient_path(user.profile_id) %></td>
-		
 	<%elsif user.profile_type =="Doctor"%>
 			<td><%= link_to 'Edit', edit_doctor_path(user.profile_id) %></td>
 	<%end%>
+	<% if is_director?(current_user) || user.profile_type != "Admin"%>
         <td><%= link_to 'Destroy', '#' %></td>
-      </tr>
+	<%end%>
+	</tr>
       <%else%>
       
       <%end%>
+      
     <% end %>
   </tbody>
 </table>
 <%=will_paginate%>
 <br>
-
+<%if is_director?(current_user) %>  
 <%= link_to 'New Admin', new_admin_path %> |
+<% end %>
 <%= link_to 'New Doctor', new_doctor_path %> |
 <%= link_to 'New Patient', new_patient_path %>

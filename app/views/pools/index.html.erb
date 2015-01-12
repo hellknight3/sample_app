@@ -15,10 +15,14 @@
 		<td><%= pool.specialization %></td>
 		<td><%= link_to 'Show', pool %></td>
 		<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
-		<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-	      </tr>
+		<% if is_director?(current_user)%>
+			<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+		<%end%>
+		</tr>
 	    <% end %>
 	</tbody>
 </table>
 <%=will_paginate%>
+<%if is_director?(current_user)%>
 <%= link_to 'New Pool', new_pool_path %> 
+<%end%>

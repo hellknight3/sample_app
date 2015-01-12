@@ -9,3 +9,21 @@
 	<%=text_area :message, :message ,:size => "3\20x10"%>
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>
+<div id='popup'>
+<table>
+		<thead>
+		<th>name</th>
+		<th></th>
+		</thead>
+	<%@users.each do |user|%>
+		<%=simple_form_for(@message) do |f|%>
+			<%= hidden_field :invite, :appointment_id, :value => params[:appointment_id] %>
+			<%= hidden_field :invite, :user_id, :value => user.id %>
+			<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
+			<%=f.button :submit %>
+		<%end%>
+		
+		
+	<%end%>
+	</table>
+</div>

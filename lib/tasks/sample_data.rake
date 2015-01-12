@@ -43,11 +43,9 @@ namespace :db do
 		10.times do |n|
 			name=Faker::Name.name
 			description="sample description"
-			institution="sample institution"
 			specialization="sample specialization"
 			Pool.create!(name: name,
 			description: description,
-			institution: institution,
 			specialization: specialization)
 			
 			

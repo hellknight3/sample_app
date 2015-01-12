@@ -41,7 +41,7 @@ end
 	end
   private
   def exercise_params
-	params.require(:exercise).permit(:name, :description, questions_attributes: [:id, :description, :_destroy])
+	params.require(:exercise).permit(:name, :description,:template, questions_attributes: [:id, :description, :_destroy])
   end
   
 end

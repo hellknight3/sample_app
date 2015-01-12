@@ -1,16 +1,5 @@
 <h1>Edit Pool</h1>
-<%if current_user.profile_type == "Admin" %>
-<div class="row">
-	<div class="span6 offset3">
-		<%= simple_form_for @pool do |f| %>
-			
-			<%=f.input :name %>
-			<%=f.input :description%>
-			<%=f.input :specialization%>
-			<%=f.button :submit %>
-		<%end%>
-	</div>
-</div>
-
-    <%end%>
+<%if is_admin?(current_user) %>
+	<%=render "inputForm"%>
+<%end%>
 <%= link_to 'Back', pools_path%>

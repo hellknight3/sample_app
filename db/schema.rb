@@ -11,9 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150112130337) do
+ActiveRecord::Schema.define(version: 20150112164947) do
 
   create_table "admins", force: true do |t|
+    t.boolean "director"
   end
 
   create_table "answers", force: true do |t|
@@ -44,6 +45,7 @@ ActiveRecord::Schema.define(version: 20150112130337) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "template"
   end
 
   create_table "institutions", force: true do |t|
@@ -74,12 +76,14 @@ ActiveRecord::Schema.define(version: 20150112130337) do
 
   create_table "pools", force: true do |t|
     t.string   "name"
-    t.string   "institution"
     t.string   "description"
     t.string   "specialization"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "institutions_id"
   end
+
+  add_index "pools", ["institutions_id"], name: "index_pools_on_institutions_id"
 
   create_table "questions", force: true do |t|
     t.string   "name"

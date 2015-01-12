@@ -24,6 +24,7 @@ class AdminsController < ApplicationController
 		@admin =Admin.new(admin_params)
 		#creates a user and attaches it to the admin with the user parameter restrictions required
 		@user = @admin.build_user(user_params)
+		@admin.director =false
 		#tries to save the admin to the database
 		if  @admin.save
 			#flashes a success message for the admin

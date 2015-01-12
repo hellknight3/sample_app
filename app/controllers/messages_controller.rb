@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
 	@user=current_user
 	@message=Message.new
 	@messages=Message.find(:all, :conditions =>["appointment_id = :appointment",{:appointment => params[:appointment_id]}])
-	
+	@users = User.all
   
   end
 
