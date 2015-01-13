@@ -2,8 +2,8 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 #popup {
-    height: 50px;
-    width: 200px;
+    height: 60%;
+    width: 50%;
     text-align: center;
     vertical-align:middle;
     background-color: cornflowerblue;
@@ -11,4 +11,7 @@
     display: none;
     padding-top: 8px;
     position: absolute;
+    overflow: auto;
+    border: 2px solid;
+    border-radius: 1em;
 }

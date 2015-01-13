@@ -8,22 +8,23 @@ class MessagesController < ApplicationController
 	@message=Message.new
 	@messages=Message.find(:all, :conditions =>["appointment_id = :appointment",{:appointment => params[:appointment_id]}])
 	@users = User.all
+	
   
   end
 
   def create
 	@message = Message.new(message_params)
 	  if @message.save
-		@message.update_attribute(:appointment_id, params[:internal][:appointment_id])
-		@message.update_attribute(:user_id,current_user.id)
+		#@message.update_attribute(:appointment_id, params[:internal][:appointment_id])
+		#@message.update_attribute(:user_id,current_user.id)
 		flash[:success] = "message sent successfully"
-		redirect_to new_message_path({appointment_id:params[:internal][:appointment_id]})
+		redirect_to new_message_path({appointment_id:params[:message][:appointment_id]})
 	  end
   end
   
   private
   
   def message_params
-	params.require(:message).permit(:message)
+	params.require(:message).permit(:message,:user_id,:appointment_id)
   end
 end

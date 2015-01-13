@@ -2,13 +2,6 @@
 <% @messages.each do |message| %>
 <p><%=message.message%></p>
 <%end%>
-<h1>New Message</h1>
-<%= form_for(@message) do |f| %>
-	<%= render 'shared/error_messages' %>
-	<%= hidden_field :internal, :appointment_id, :value => params[:appointment_id] %>
-	<%=text_area :message, :message ,:size => "3\20x10"%>
-	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
-<% end %>
 <div id='popup'>
 <table>
 		<thead>
@@ -16,14 +9,27 @@
 		<th></th>
 		</thead>
 	<%@users.each do |user|%>
+	<tr>
+	<td><%=user.name%></td>
+		<td>
 		<%=simple_form_for(@message) do |f|%>
-			<%= hidden_field :invite, :appointment_id, :value => params[:appointment_id] %>
-			<%= hidden_field :invite, :user_id, :value => user.id %>
+			<%= hidden_field :message, :appointment_id, :value => params[:appointment_id] %>
+			<%= hidden_field :message, :user_id, :value => user.id %>
 			<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
-			<%=f.button :submit %>
+			<%=f.button :submit, :caption => "hello" %>
 		<%end%>
-		
+		</td>
 		
 	<%end%>
+	</tr>
 	</table>
 </div>
+<h1>New Message</h1>
+<%= form_for(@message) do |f| %>
+	<%= render 'shared/error_messages' %>
+	<%= hidden_field :message, :appointment_id, :value => current_user.id %>
+	<%= hidden_field :message, :appointment_id, :value => params[:appointment_id] %>
+	<%=text_area :message, :message ,:size => "3\20x10"%>
+	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
+<% end %>
+<button onclick="$('#popup').show();">add recipient</button>
