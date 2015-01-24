@@ -77,8 +77,15 @@ class DoctorsController < ApplicationController
 			flash[:success]="removed doctors' permission from pool"
 			redirect_to edit_doctor_path(params[:id])
 		else
-			@doctor.update(doctor_params)
-			@user.update(user_params)	
+			if @user.authenticate(params[:user][:old_password])
+				@doctor.update(doctor_params)
+				@user.update(user_params)
+				flash[:success]="successfully updated your profile."
+				redirect_to @doctor
+			else
+				flash[:failure]="error updating your profile."
+				render 'edit'
+			end			
 			redirect_to doctor_path(@doctor)
 		end
 		#redirects to the current doctors home page

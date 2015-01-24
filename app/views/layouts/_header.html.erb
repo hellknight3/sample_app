@@ -10,7 +10,7 @@
 						<%if current_user.profile_type == 'Admin' %>
 							<li><%= link_to "Users", admins_path %></li>
 							<li><%= link_to "Pools", pools_path %></li>
-							<li><%= link_to "Exercises", exercises_path %></li>
+							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
 							
 							<li id="fat-menu" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -25,11 +25,11 @@
 								</li>
 							</ul>
 							</li>
-						<%elsif current_user.profile_type == "Doctor" %>
+						<%elsif is_doctor?(current_user) %>
 							<li><%= link_to "Patients", doctors_path({id:current_user.profile_id}) %></li>
 							<li><%= link_to "Pools", pools_path %></li>
 							<li><%= link_to "Appointments", appointments_path %></li>
-							<li><%= link_to "Exercises", exercises_path %></li>
+							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
 							
 							<li id="fat-menu" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -44,9 +44,9 @@
 								</li>
 							</ul>
 							</li>
-						<%elsif current_user.profile_type == 'Patient' %>
+						<%elsif is_patient?(current_user)%>
 							<li><%= link_to "Appointments", appointments_path %></li>
-							<li><%= link_to "Exercises", exercises_path %></li>
+							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
 							<li id="fat-menu" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								Account <b class="caret"></b>

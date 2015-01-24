@@ -37,7 +37,7 @@ class PatientsController < ApplicationController
 		@patient = Patient.find(params[:id])
 		#finds the user profile of the patient that is found
 		@user = @patient.user
-		if(current_user.profile_type=="Admin")
+		if(is_admin)
 			#if the current user is an admin it will create a doctor variable finding all the user profiles with a profile_type of doctor in the database
 			@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
 			@pools = Pool.all
@@ -72,8 +72,15 @@ class PatientsController < ApplicationController
 			flash[:success]="removed patients' permission from pool"
 			redirect_to edit_patient_path(params[:id])
 		else
-			@patient.update(patient_params)
-			@user.update(user_params)
+			if @user.authenticate(params[:user][:old_password])
+				@patient.update(patient_params)
+				@user.update(user_params)
+				flash[:success]="successfully updated your profile."
+				redirect_to @patient
+			else
+				flash[:failure]="error updating your profile."
+				render 'edit'
+			end	
 		end
 		
 	end
@@ -92,7 +99,7 @@ class PatientsController < ApplicationController
 		end
 		def signed_in_admin
 			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analy sis
-				if current_user.profile_type=="Admin" #checks if the currently logged in user is an Admin
+				if is_admin #checks if the currently logged in user is an Admin
 				else
 				redirect_to signin_url, notice: "You do not have permission to do that."
 				end

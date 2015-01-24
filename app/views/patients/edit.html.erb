@@ -1,29 +1,14 @@
 <% provide(:title, "Edit patient") %>
-<h1>Update your profile</h1>
+<%if is_admin%>
+	<h1>Update <%=@patient.user.name%></h1>
+<%else%>
+	<h1>Update your profile</h1>
+<%end%>
 <%#displays the edit page for the patient, different views will be created depending on the profile type%>
-<%if current_user.profile_type =="Patient"%>
-<div class="row">
-	<div class="span6 offset3">
-		<%=form_for(@patient) do |f| %>
-			<%= render 'shared/error_messages' %>
-			<%=label :user, :name %>
-			<%=text_field :user, :name %>
-
-			<%= label :user, :email %>
-			<%= text_field :user, :email%>
-
-			<%=label :user, :password %>
-			<%=password_field :user, :password%>
-
-			<%= label :user, :password_confirmation, "Confirmation"%>
-			<%= password_field :user, :password_confirmation%>
-
-			<%=f.submit "Save changes", class: "btn btn-large btn-primary" %>
-		<%end%>
-	</div>
-</div>
-<%#The Admin is checked since he will be the one adding the doctor to the user%>
-<%elsif current_user.profile_type =="Admin"%>
+<%if is_patient%>
+	<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient, new: false}%>
+	<%#The Admin is checked since he will be the one adding the doctor to the user%>
+<%elsif is_admin%>
 	<table>
 	<thead>
 		<tr>
@@ -63,7 +48,7 @@
 	</tbody>
 </table>		
 <%end%>
-<%if current_user.profile_type=="Admin"%>
+<%if is_admin%>
  <%= render partial: "shared/updatePermissions", locals: {user: @patient, pools: @pools}%>
 <%end%>
 <%= link_to 'Show', @patient %> |

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150112164947) do
+ActiveRecord::Schema.define(version: 20150120160250) do
 
   create_table "admins", force: true do |t|
     t.boolean "director"
@@ -35,9 +35,20 @@ ActiveRecord::Schema.define(version: 20150112164947) do
     t.datetime "updated_at"
     t.string   "name"
     t.string   "description"
+    t.integer  "pool_id"
   end
 
+  add_index "appointments", ["pool_id"], name: "index_appointments_on_pool_id"
+
   create_table "doctors", force: true do |t|
+  end
+
+  create_table "exercise_settings", force: true do |t|
+    t.integer  "exercise_id"
+    t.integer  "pool_id"
+    t.boolean  "template"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "exercises", force: true do |t|

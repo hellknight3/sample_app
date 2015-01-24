@@ -1,0 +1,6 @@
+<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'addDoc' to the params hash%>
+<%=form_for(user_type) do |f| %> 
+<%= f.hidden_field :value, :value => valueToPass %>
+<%= f.hidden_field :func, :value => funcName %>
+<%= f.submit buttonName , class: "btn" %>
+<%end%>

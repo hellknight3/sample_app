@@ -1,7 +1,11 @@
 <% provide(:title, "Edit admin") %>
-<h1>Update your profile</h1>
-<%=render "inputForm"%>
-<%if is_admin?(current_user)%>
+<%if is_director%>
+	<h1>Update <%=@admin.user.name%></h1>
+<%else%>
+	<h1>Update your profile</h1>
+<%end%>
+<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @admin, new: false}%>
+<%if is_director%>
 	<%= render partial: "shared/updatePermissions", locals: {user: @admin, pools: @pools}%>
 <%end%>
 <%= link_to 'Show', @admin %> |
