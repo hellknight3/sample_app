@@ -14,7 +14,7 @@ end
   def show
 	#finds the pool that is requested, this is stored in params hash it will look like http://....pool/{:id}
 	@pool = Pool.find(params[:id])
-	
+	@users = @pool.users
   end
 
   def new

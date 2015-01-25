@@ -7,7 +7,7 @@
 		<th>Specialization</th>
 	</thead>
 	<tbody>
-	<% @pools.each do |pool| %>
+	<% current_user.pools.each do |pool| %>
 	      <tr>
 		<td><%= pool.name %></td>
 		<td><%= pool.description %></td>

@@ -15,6 +15,7 @@ class DoctorsController < ApplicationController
 		#looks up the user that has the id in the params hash
 		@doctor = Doctor.find(params[:id])
 		@user = @doctor.user
+		@patients=@doctor.patients
 	end
 	def new
 		#creates variables for the views to initialize

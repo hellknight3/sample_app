@@ -2,7 +2,7 @@ SampleApp::Application.routes.draw do
 
 
 	resources :admins do
-		resources :users
+		
 		
 	end
 	resources :patients do

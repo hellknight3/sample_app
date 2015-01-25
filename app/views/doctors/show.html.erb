@@ -11,7 +11,14 @@
 		</section>
 	</aside>
 </div>
+<%if is_doctor %>
+<p>Current Patients</p>
+<% @patients.find_each do |patient|%>
+	<p><%=patient.user.name%></p>
+	
+<%end%>
 
+<%end%>
 
 <%= link_to 'Edit', edit_doctor_path(@doctor) %> |
 <%= link_to 'Back', doctors_path %>
