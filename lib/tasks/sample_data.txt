@@ -5,19 +5,6 @@ namespace :db do
 			name=Faker::Name.name
 			email="admin@example.org"
 			password = "foobar"
-			admin=Admin.create!()
-			admin.build_user(name: name,
-				     email: email,
-				     password: password,
-				     password_confirmation: password)
-			unless admin.save
-				puts "error"
-			end
-		end
-		1.times do |n|
-			name=Faker::Name.name
-			email="director@example.org"
-			password = "foobar"
 			admin=Admin.create!(director: true)
 			admin.build_user(name: name,
 				     email: email,
