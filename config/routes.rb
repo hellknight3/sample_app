@@ -2,14 +2,14 @@ SampleApp::Application.routes.draw do
 
 
 	resources :admins do
-		
+		resources :users
 		
 	end
 	resources :patients do
-		
+		resources :users
 	end
 	resources :doctors do
-	
+	resources :users
 	end
 	resources :pools do
 	

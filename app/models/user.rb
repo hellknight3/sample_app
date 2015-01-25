@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 	has_many :permissions
 	accepts_nested_attributes_for :permissions
 	has_many :pools, :through => :permissions
-	accepts_nested_attributes_for :pools
+	#accepts_nested_attributes_for :pools
 	has_many :messages
 	has_many :appointments, :through => :messages
 	before_save { self.email = email.downcase}
