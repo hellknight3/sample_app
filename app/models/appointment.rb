@@ -1,7 +1,9 @@
 class Appointment < ActiveRecord::Base
 
-	has_many :messages, dependent: :destroy
+	has_many :messages, as: :messageable, dependent: :destroy	
+	has_many :users, :through => :messages, :source => :messageable,
+    :source_type => "User"	
 	accepts_nested_attributes_for :messages
-	#has_many :users, :through => :messages
+	
 	belongs_to :pool
 end

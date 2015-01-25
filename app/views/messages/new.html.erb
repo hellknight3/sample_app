@@ -12,11 +12,23 @@
 	<tr>
 	<td><%=user.name%></td>
 		<td>
+		<% if params[:messageable_type]==Appointment.name%>
 		<%=simple_form_for(@message) do |f|%>
-			<%= hidden_field :message, :appointment_id, :value => params[:appointment_id] %>
+			<%= hidden_field :message, :messageable_id, :value => params[:appointment_id] %>
+			<%= hidden_field :message, :messageable_type, :value => Appointment.name %>
 			<%= hidden_field :message, :user_id, :value => user.id %>
 			<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
-			<%=f.button :submit, :caption => "hello" %>
+			<%=f.button :submit %>
+		<%end%>
+		
+		<% elsif params[:messageable_type]==User.name%>
+			<%=simple_form_for(@message) do |f|%>
+				<%= hidden_field :message, :messageable_id, :value => user.id %>
+				<%= hidden_field :message, :messageable_type, :value => User.name %>
+				<%= hidden_field :message, :user_id, :value => current_user.id %>
+				<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
+				<%=f.button :submit %>
+			<%end%>
 		<%end%>
 		</td>
 		
@@ -24,12 +36,16 @@
 	</tr>
 	</table>
 </div>
+
 <h1>New Message</h1>
+<%unless params[:messageable_id].nil?%>
 <%= form_for(@message) do |f| %>
 	<%= render 'shared/error_messages' %>
-	<%= hidden_field :message, :appointment_id, :value => current_user.id %>
-	<%= hidden_field :message, :appointment_id, :value => params[:appointment_id] %>
+	<%= hidden_field :message, :messageable_id, :value =>	params[:messageable_id] %>
+	<%= hidden_field :message, :messageable_type, :value => params[:messageable_type] %>
+	<%= hidden_field :message, :user_id, :value => current_user.id %>
 	<%=text_area :message, :message ,:size => "3\20x10"%>
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>
+<%end%>
 <button onclick="$('#popup').show();">add recipient</button>

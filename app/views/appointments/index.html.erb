@@ -12,22 +12,25 @@
   </thead>
 
   <tbody>
-    <% @appointments.each do |appointment| %>
+    <% @messages.each do |message| %>
+    <% @appointment=Appointment.find(message.messageable_id)%>
 	<tr>
-		<td><%=appointment.name%></td>
-		<td><%=appointment.description%></td>
+		<td><%=@appointment.name%></td>
+		<td><%=@appointment.description%></td>
 		
 
 		<td>
-		<%=form_for(appointment) do |f| %> 
-			<%= f.hidden_field :appointment_id, :value => appointment.id %>
+		<%=@appointment.id%>
+		<%=form_for(@appointment) do |f| %> 
+			<%= f.hidden_field :messageable_id, :value => @appointment.id %>
+			<%= f.hidden_field :messageable_type, :value => Appointment.name %>
 			<%= f.hidden_field :func, :value => "create" %>
 			<%= f.submit "Send new message", class: "btn" %>
 			<%end%>
 		</td>
 		<td>
-		<%=form_for(appointment) do |f| %> 
-			<%= f.hidden_field :appointment_id, :value => appointment.id %>
+		<%=form_for(@appointment) do |f| %> 
+			<%= f.hidden_field :appointment_id, :value => @appointment.id %>
 			<%= f.hidden_field :func, :value => "destroy" %>
 			<%= f.submit "Destroy appointment", class: "btn" %>
 			<%end%>
