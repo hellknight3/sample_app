@@ -9,7 +9,7 @@ class AppointmentsController < ApplicationController
 	@appointment =Appointment.new(appointment_params)	
 	if @appointment.save
 		
-		@message = Message.new(:appointment_id => @appointment.id, :user_id => current_user.id, :message => current_user.name+" Started appointment")
+		@message = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
 		if @message.save
 			flash[:success]="Successfully created appointment"
 		else 
@@ -25,7 +25,7 @@ class AppointmentsController < ApplicationController
   end
 
   def index
-	@appointments = current_user.appointments
+	@messages = Message.where("messageable_type = ? and user_id = ? ",'Appointment', current_user.id).select(:messageable_id).distinct.all
 
   end
 def update
@@ -34,7 +34,7 @@ def update
 			flash[:success]="Destroyed appointment"
 			redirect_to appointments_path
 		elsif(params[:appointment][:func] == "create")
-			redirect_to new_message_path({appointment_id:params[:appointment][:appointment_id]})
+			redirect_to new_message_path({messageable_id: params[:appointment][:messageable_id], messageable_type: "Appointment"})
 		end
 end
   
