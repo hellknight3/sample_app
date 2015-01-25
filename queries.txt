@@ -1,0 +1,27 @@
+
+For Admins only
+view ppl in their pools
+
+current_user.pools.find_each do |userPool|
+	userPool.user.find_each do |user|
+		user.show
+	end
+end
+
+For doctors
+view internals of the pools
+
+current_user.pool.find_each do |userPool|	
+	#this will loop for each pool
+	#from here put button to link to the internals of the pool
+	#aka show user in the pool
+	#userPool.user.find_each do |u|u.show end 
+end
+
+For doctors
+view patient profiles
+
+current_doctor.patient.find_each do |docPatient|
+	docPatient show 
+	#or something like button to each profile
+end
