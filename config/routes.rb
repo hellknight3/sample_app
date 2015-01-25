@@ -6,13 +6,13 @@ SampleApp::Application.routes.draw do
 		
 	end
 	resources :patients do
-		resources :users
+		
 	end
 	resources :doctors do
-		resources :users
+	
 	end
 	resources :pools do
-		resources :users
+	
 	end
 	resources :appointments do
 		
