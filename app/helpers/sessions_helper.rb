@@ -41,7 +41,7 @@ module SessionsHelper
 	end
 	def is_director?(user)
 		 if is_admin?(user)
-			Admin.find(user.id).director==true
+			Admin.find(user.profile_id).director==true
 		else
 			false
 		end
