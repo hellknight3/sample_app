@@ -45,8 +45,9 @@
 								</li>
 							</ul>
 							</li>
-						<%elsif is_patient?(current_user)%>
+						<%elsif is_patient%>
 							<li><%= link_to "Appointments", appointments_path %></li>
+							<li><%= link_to "Doctor", doctor_path(get_patient(current_user).doctor_id) %></li>
 							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
 							<li id="fat-menu" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">

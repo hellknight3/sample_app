@@ -47,5 +47,7 @@
 	<%=text_area :message, :message ,:size => "3\20x10"%>
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>
-<%end%>
+<%= link_to 'Back', messages_path %>
+<%else%>
 <button onclick="$('#popup').show();">add recipient</button>
+<%end%>
