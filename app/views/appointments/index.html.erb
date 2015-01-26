@@ -12,7 +12,9 @@
   </thead>
 
   <tbody>
+	
     <% @messages.each do |message| %>
+    <%if message.nil?%>
     <% @appointment=Appointment.find(message.messageable_id)%>
 	<tr>
 		<td><%=@appointment.name%></td>
@@ -37,6 +39,7 @@
 		</td>
 		
 	</tr>
+    <%end%>
     <%end%>
     </tbody>
     </table>

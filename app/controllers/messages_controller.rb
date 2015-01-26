@@ -14,11 +14,13 @@ class MessagesController < ApplicationController
 	@message=Message.new
 	if (params[:messageable_type] == Appointment.name)
 		@messages=Message.where("messageable_type = ? and messageable_id = ?",'Appointment', params[:messageable_id]).select(:messageable_id, :user_id,:message).all
+		
 	else
 		@messages=Message.find(:all, :conditions =>["(messageable_id = :user or user_id = :user) and messageable_type = :messageable_type",{:user => params[:messageable_id], :messageable_type => User.name}])
+		
 	end
-	@users = User.all
 	
+	@users=@user.pools.select(:user_id).uniq.all
   
   end
 

@@ -1,5 +1,5 @@
 <h1>Edit Pool</h1>
-<%if is_admin?(current_user) %>
+<%if is_admin %>
 	<%=render "inputForm"%>
 <%end%>
 <%= link_to 'Back', pools_path%>

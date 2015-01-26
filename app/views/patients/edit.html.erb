@@ -36,38 +36,38 @@
 	</thead>
 
 	<tbody>	
-		<% @doctors.each do |doctor| %>
-			<%doctor.pools.each do |dPool|%>
-				<%@patient.user.pools.each do |pPool|%>
-					<%if dPool == pPool%>
-				<tr>
-					<td><%=doctor.name%></td>
-					<%if @patient.doctor.nil?%>
-					<td>
-						<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'addDoc' to the params hash%>
-						<%=form_for(@patient) do |f| %> 
-						<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
-						<%= f.hidden_field :func, :value => "addDoc" %>
-						<%= f.submit "add doctor", class: "btn" %>
+		<%if @doctors.include?(@user)%>
+			<% @doctors.each do |doctor| %>
+				<%unless doctor ==@user%>	
+					<tr>
+						<td><%=doctor.name%></td>
+						<%if @patient.doctor.nil?%>
+							<td>
+							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'addDoc' to the params hash%>
+							<%=form_for(@patient) do |f| %> 
+							<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
+							<%= f.hidden_field :func, :value => "addDoc" %>
+							<%= f.submit "add doctor", class: "btn" %>
+							<%end%>
+							</td>
+							<%elsif @patient.doctor_id == doctor.profile_id%>
+							<td>
+							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
+							<%=form_for(@patient) do |f| %> 
+							<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
+							<%= f.hidden_field :func, :value => "removeDoc" %>
+							<%= f.submit "remove doctor", class: "btn" %>
+							<%end%>
+							</td>
 						<%end%>
-					</td>
-					<%elsif @patient.doctor_id == doctor.profile_id%>
-					<td>
-						<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
-						<%=form_for(@patient) do |f| %> 
-						<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
-						<%= f.hidden_field :func, :value => "removeDoc" %>
-						<%= f.submit "remove doctor", class: "btn" %>
-						<%end%>
-					</td>
-					<%end%>
-				</tr>
+					</tr>
 				<%end%>
-				<%end%>
-				<%end%>
+			<%end%>
 		<%end%>
 	</tbody>
-</table>		
+</table>	
+
+
 <%end%>
 <%if is_admin%>
  <%= render partial: "shared/updatePermissions", locals: {user: @patient, pools: @pools}%>

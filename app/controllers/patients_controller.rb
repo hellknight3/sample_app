@@ -39,8 +39,12 @@ class PatientsController < ApplicationController
 		@user = @patient.user
 		if(is_admin)
 			#if the current user is an admin it will create a doctor variable finding all the user profiles with a profile_type of doctor in the database
-			@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
-			@pools = Pool.all
+			#@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
+			#@availableDocs= @doctors.pools.users.where("profile_type: = ?","Doctor").uniq.all
+			@doctors= User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("profile_type = 'Doctor' or profile_id = ?", params[:id]).uniq.all
+			#.joins(:user, :pool).where("profile_type = 'Doctor'").select(:name).uniq.all
+			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
+			
 		end		
 	end
 	def update

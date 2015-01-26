@@ -54,7 +54,7 @@ class DoctorsController < ApplicationController
 			@patient=Patient.find(params[:doctor][:patient_id])
 			#updates the doctors patient that had the accepted sent with a true value
 			@patient.update_attribute(:accepted, true)
-			redirect_to doctor_path(@doctor)
+			redirect_to doctors_path(id: @doctor)
 		elsif(params[:doctor][:func] == "reject")
 			#
 			@patient=Patient.find(params[:doctor][:patient_id])
