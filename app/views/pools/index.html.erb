@@ -7,31 +7,23 @@
 		<th>Specialization</th>
 	</thead>
 	<tbody>
-	<%unless is_director%>
-		<% current_user.pools.each do |pool| %>
-			  <tr>
-			<td><%= pool.name %></td>
-			<td><%= pool.description %></td>
-			<td><%= pool.institution %></td>
-			<td><%= pool.specialization %></td>
-			<td><%= link_to 'Show', pool %></td>
-			<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
-			
-			</tr>
-		<%end%>
-	<%else%>
-		<% @pools.each do |pool| %>
+	<% @pools.each do |pool| %>
 		  <tr>
 			<td><%= pool.name %></td>
 			<td><%= pool.description %></td>
 			<td><%= pool.institution %></td>
 			<td><%= pool.specialization %></td>
-			<td><%= link_to 'Show', pool %></td>
-			<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
-			<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+			<% current_user.pools.each do |p| %>
+				<%if pool.id == p.id %>
+					<td><%= link_to 'Show', pool %></td>
+					<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
+				<%end%>
+			<%end%>
+			<%if is_director%>
+				<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+			<%end%>
 			</tr>
 		<%end%>
-	<%end%>
 	</tbody>
 </table>
 <%=will_paginate%>

@@ -9,6 +9,9 @@
    <tbody>
 <% pools.each do |pool| %>
 <%@perm = pool.permissions%>
+<%unless current_user == nil%>
+	<%pool.permissions.uniq.each do |id|%>
+
       <tr>
 	<td><%=pool.name%></td>
 	<td><%@temp = @perm.detect{|w| w.user_id == @user.id} %></td>
@@ -31,6 +34,9 @@
 	</td>
 	
       </tr>
-    <% end %>
+	
+		<% end %>
+	 <% end %>
+   <% end %>
     </tbody>
     </table>

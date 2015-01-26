@@ -28,8 +28,8 @@
 	<table>
 	<thead>
 		<tr>
-			<th>name</th>
-			<th>user id</th>
+			<th>Available Doctors</th>
+			
 			
 
 		</tr>
@@ -37,6 +37,9 @@
 
 	<tbody>	
 		<% @doctors.each do |doctor| %>
+			<%doctor.pools.each do |dPool|%>
+				<%@patient.user.pools.each do |pPool|%>
+					<%if dPool == pPool%>
 				<tr>
 					<td><%=doctor.name%></td>
 					<%if @patient.doctor.nil?%>
@@ -59,7 +62,9 @@
 					</td>
 					<%end%>
 				</tr>
-			
+				<%end%>
+				<%end%>
+				<%end%>
 		<%end%>
 	</tbody>
 </table>		
@@ -67,5 +72,4 @@
 <%if is_admin%>
  <%= render partial: "shared/updatePermissions", locals: {user: @patient, pools: @pools}%>
 <%end%>
-<%= link_to 'Show', @patient %> |
-<%= link_to 'Back', patients_path %>
+<%= link_to 'Show', @patient %> 

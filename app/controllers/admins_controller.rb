@@ -47,7 +47,7 @@ class AdminsController < ApplicationController
 	def update
 		@admin = Admin.find(params[:id])
 		@user = @admin.user
-		if(params[:user][:func] == "addPool")
+		if(params[:admin][:func] == "addPool")
 			@perm = Permission.new
 			@perm.user_id = @user.id
 			@perm.pool_id = params[:admin][:pool_id]
@@ -57,7 +57,7 @@ class AdminsController < ApplicationController
 				flash[:error]="a problem occurred updating the users permissions"
 			end
 			redirect_to edit_admin_path(@admin)
-		elsif(params[:user][:func] == "removePool")
+		elsif(params[:admin][:func] == "removePool")
 			
 			Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:admin][:pool_id]).delete_all
 			flash[:success]="removed admins permission from pool"
