@@ -19,6 +19,22 @@
 				<%= label :user, :password_confirmation, "Confirmation"%>
 				<%= password_field :user, :password_confirmation%>
 				
+				<%if is_patient%>
+					<%=label :patient, :EmergencyContact %>
+					<%=text_field :patient, :emergencyContact%>
+					<%=label :patient, :emergencyPhoneNumber %>
+					<%=text_field :patient, :emergencyPhoneNumber%>
+					<%=label :patient, :familyDoctor %>
+					<%=text_field :patient, :familyDoctor%>
+					<%=label :patient, :phoneNumber %>
+					<%=text_field :patient, :phoneNumber%>
+					<%=label :patient, :weight %>
+					<%=text_field :patient, :weight%>
+					<%=label :patient, :height %>
+					<%=text_field :patient, :height%>
+				<%end%>
+				
+				
 				<%= f.button :submit %>
 			<% end %>
 		</div>

@@ -5,10 +5,57 @@
 			<h1>
 				<%= gravatar_for @user %>
 				<%= @user.name %>
+				
 			</h1>
+			
 		</section>
 	</aside>
 </div>
+<p>
+	Date of Birth:
+	<%= @patient.dateOfBirth %>
+</p>
+<p>
+	Health Card Number:
+	<%= @patient.healthCardNumber %>
+</p>
+<p>
+	Phone Number:
+	<%= @patient.phoneNumber %>
+</p>
+<p>
+	Weight:
+	<%= @patient.weight %>
+</p>
+<p>
+	Height:
+	<%= @patient.height %>
+</p>
+<p>
+	Current Medication:
+	<%= @patient.currentMedication %>
+</p>
 
-<%= link_to 'Edit', edit_patient_path(@patient) %> |
-<%= link_to 'Back', patients_path %>
+
+<%unless is_patient%>
+	<p>Patients Medical Condition:
+	<%= @patient.currentIssue %>
+	</p>
+<%end%>
+
+
+<p>
+	Emergency Contact:	
+	<%= @patient.emergencyContact %>
+</p>
+<p>
+	Emergency Contact Phone Number
+	<%= @patient.emergencyPhoneNumber %>
+</p>
+<%unless is_patient%>
+	<p>Doctors Notes:
+	<%= @patient.doctorNotes %>
+	</p>
+<%end%>
+<%= link_to 'Edit', edit_patient_path(@patient) %> 
+

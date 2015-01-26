@@ -18,8 +18,11 @@
 	<td><%= user.name%></td>
 	<td><%= user.id%></td>
 	<td><%= user.profile_id%></td>
-	<td><%= user.profile_type%></td>
-	
+	<%unless is_director?(user)%>
+		<td><%= user.profile_type%></td>
+	<%else%>
+			<td>Director</td>
+	<%end%>
         <td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id) %></td>
 	<%if user.profile_type =="Admin"%>
 		<td><%= link_to 'Edit', edit_admin_path(user.profile_id) %></td>
@@ -32,7 +35,7 @@
         <td><%= link_to 'Destroy', '#' %></td>
 	<%end%>
 	</tr>
-      <%else%>
+     
       
       <%end%>
       

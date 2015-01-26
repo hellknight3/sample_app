@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150120160250) do
+ActiveRecord::Schema.define(version: 20150126003046) do
 
   create_table "admins", force: true do |t|
     t.boolean "director"
@@ -76,6 +76,17 @@ ActiveRecord::Schema.define(version: 20150120160250) do
   create_table "patients", force: true do |t|
     t.integer "doctor_id"
     t.boolean "accepted"
+    t.string  "emergencyContact"
+    t.string  "emergencyPhoneNumber"
+    t.date    "dateOfBirth"
+    t.string  "familyDoctor"
+    t.integer "healthCardNumber"
+    t.string  "phoneNumber"
+    t.integer "weight"
+    t.integer "height"
+    t.string  "currentMedication"
+    t.string  "currentIssue"
+    t.string  "doctorNotes"
   end
 
   add_index "patients", ["doctor_id"], name: "index_patients_on_doctor_id"

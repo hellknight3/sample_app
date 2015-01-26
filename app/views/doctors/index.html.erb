@@ -1,4 +1,4 @@
-<h1>Listing doctors</h1>
+<h1>Listing Patients</h1>
 
 
 <table>
@@ -20,10 +20,13 @@
 	
 		<%if patient.accepted%>
 			<td>
-				<%= link_to 'View old Appointments', appointment_path(patient.id) %>
+				<%= link_to 'View old Appointments	', appointment_path(patient.id) %>
 			</td>
 			<td>
-			<%= link_to 'New Appointment', new_appointment_path({patient_id: patient.id,doctor_id: @doctor.id}) %>
+				<%= link_to 'New Appointment	', new_appointment_path({patient_id: patient.id,doctor_id: @doctor.id}) %>
+			</td>
+			<td>
+				<%= link_to 'Edit', patient %>
 			</td>
 			
 		<%else%>

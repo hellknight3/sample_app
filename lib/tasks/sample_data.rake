@@ -29,9 +29,22 @@ namespace :db do
 		end
 		10.times do |n|
 			name=Faker::Name.name
+			h=1 + n
+			w=1 + n
+			hNumber=n + 4561237
 			email="examplePat-#{n+1}@example.org"
-			password = "foobar"
-			patient=Patient.create!()
+			password="foobar"
+			patient=Patient.create!(
+					emergencyContact: Faker::Name.name,
+					emergencyPhoneNumber: Faker::Name.name,
+					dateOfBirth: rand(11.year).ago,
+					familyDoctor: Faker::Name.name,
+					healthCardNumber: hNumber,
+					phoneNumber: Faker::Name.name,
+					weight: w,
+					height: h,
+					currentMedication: Faker::Name.name,
+					currentIssue: Faker::Name.name)
 			 patient.build_user(name: name,
 				     email: email,
 				     password: password,

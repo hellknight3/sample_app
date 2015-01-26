@@ -8,6 +8,22 @@
 <%if is_patient%>
 	<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient, new: false}%>
 	<%#The Admin is checked since he will be the one adding the doctor to the user%>
+<%elsif is_doctor%>
+	<tbody>
+		<div class="row">
+			<div class="span6 offset3">
+				<%= simple_form_for(@patient) do |f| %>
+					<label> Doctors Notes</label>
+					<%= f.hidden_field :func, :value => "addNotes" %>
+						<textarea rows="20" cols="20>
+							<%= text_field :patient, :doctorNotes%>
+						</textarea>
+					<%= f.button :submit %>
+					
+				<% end %>
+		</div>
+	</div>
+	</tbody>
 <%elsif is_admin%>
 	<table>
 	<thead>

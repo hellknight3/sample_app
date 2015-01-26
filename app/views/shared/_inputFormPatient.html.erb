@@ -1,0 +1,34 @@
+
+<%if user==current_user || new%>
+	<div class="row">
+		<div class="span6 offset3">
+			<%= simple_form_for(user_type) do |f| %>
+				
+					<%=label :patient, :EmergencyContact %>
+					<%=text_field :patient, :emergencyContact%>
+					<%=label :patient, :emergencyPhoneNumber %>
+					<%=text_field :patient, :emergencyPhoneNumber%>
+					<%=label :patient, :familyDoctor %>
+					<%=text_field :patient, :familyDoctor%>
+					<%=label :patient, :phoneNumber %>
+					<%=text_field :patient, :phoneNumber%>
+					<%=label :patient, :weight %>
+					<%=text_field :patient, :weight%>
+					<%=label :patient, :height %>
+					<%=text_field :patient, :height%>
+				<%if is_admin%>
+					<%=label :patient, :dateOfBirth %>
+					<%=text_field :patient, :dateOfBirth%>
+					<%=label :patient, :currentMedication %>
+					<%=text_field :patient, :currentMedication%>
+					<%=label :patient, :currentIssue %>
+					<%=text_field :patient, :currentIssue%>
+					
+				<%end%>
+				
+				
+				<%= f.button :submit %>
+			<% end %>
+		</div>
+	</div>
+<%end%>

@@ -71,6 +71,9 @@ class PatientsController < ApplicationController
 			Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:patient][:pool_id]).delete_all
 			flash[:success]="removed patients' permission from pool"
 			redirect_to edit_patient_path(params[:id])
+		elsif(params[:patient][:func] == "addNotes")
+			@patient.update_attributes(patient_params)
+			redirect_to @patient
 		else
 			if @user.authenticate(params[:user][:old_password])
 				@patient.update(patient_params)
@@ -89,6 +92,9 @@ class PatientsController < ApplicationController
 			params.require(:user).permit(:name, :email, :password, :password_confirmation)
 		end
 		def patient_params
+			params.require(:patient).permit(:emergencyContact, :emergencyPhoneNumber, 
+			:dataOfBirth, :healthCardNumber, :phoneNumber, :weight, :height, :currentMedication,
+			:currentIssue)
 		end
 		#before filters
 		def signed_in

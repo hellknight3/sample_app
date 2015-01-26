@@ -7,22 +7,34 @@
 		<th>Specialization</th>
 	</thead>
 	<tbody>
-	<% current_user.pools.each do |pool| %>
-	      <tr>
-		<td><%= pool.name %></td>
-		<td><%= pool.description %></td>
-		<td><%= pool.institution %></td>
-		<td><%= pool.specialization %></td>
-		<td><%= link_to 'Show', pool %></td>
-		<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
-		<% if is_director?(current_user)%>
-			<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	<%unless is_director%>
+		<% current_user.pools.each do |pool| %>
+			  <tr>
+			<td><%= pool.name %></td>
+			<td><%= pool.description %></td>
+			<td><%= pool.institution %></td>
+			<td><%= pool.specialization %></td>
+			<td><%= link_to 'Show', pool %></td>
+			<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
+			
+			</tr>
 		<%end%>
-		</tr>
-	    <% end %>
+	<%else%>
+		<% @pools.each do |pool| %>
+		  <tr>
+			<td><%= pool.name %></td>
+			<td><%= pool.description %></td>
+			<td><%= pool.institution %></td>
+			<td><%= pool.specialization %></td>
+			<td><%= link_to 'Show', pool %></td>
+			<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
+			<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+			</tr>
+		<%end%>
+	<%end%>
 	</tbody>
 </table>
 <%=will_paginate%>
 <%if is_director?(current_user)%>
-<%= link_to 'New Pool', new_pool_path %> 
+	<%= link_to 'New Pool', new_pool_path %> 
 <%end%>
