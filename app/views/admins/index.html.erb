@@ -31,9 +31,7 @@
 	<%elsif user.profile_type =="Doctor"%>
 			<td><%= link_to 'Edit', edit_doctor_path(user.profile_id) %></td>
 	<%end%>
-	<% if is_director?(current_user) || user.profile_type != "Admin"%>
-        <td><%= link_to 'Destroy', '#' %></td>
-	<%end%>
+	
 	</tr>
 	</tr>
      
