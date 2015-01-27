@@ -76,7 +76,7 @@ class PatientsController < ApplicationController
 			flash[:success]="removed patients' permission from pool"
 			redirect_to edit_patient_path(params[:id])
 		elsif(params[:patient][:func] == "addNotes")
-			@patient.update(patient_params)
+			@patient.update_attribute(:doctorNotes, params[:patient][:doctorNotes])
 			redirect_to @patient
 		else
 			if @user.authenticate(params[:user][:old_password])
