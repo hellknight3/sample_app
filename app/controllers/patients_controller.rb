@@ -26,7 +26,7 @@ class PatientsController < ApplicationController
 			#flashes a success message for the admin		
 			flash[:success] ="successfully added patient"
 			#redirects to the pool index page
-			redirect_to pools_path
+			redirect_to @patient
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
