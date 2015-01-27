@@ -98,15 +98,8 @@ class PatientsController < ApplicationController
 		def patient_params
 			params.require(:patient).permit(:emergencyContact, :emergencyPhoneNumber, 
 			:dataOfBirth, :healthCardNumber, :phoneNumber, :weight, :height, :currentMedication,
-<<<<<<< HEAD
 			:currentIssue, :familyDoctor,:doctorNotes)
-=======
-<<<<<<< HEAD
-			:currentIssue,:familyDoctor)
-=======
-			:currentIssue, :doctorNotes)
->>>>>>> 290c4b7a6579ccc577ad8342e7461ab4badd549b
->>>>>>> aff42573c4ea10c48954d8e34c29e70d42a1c80f
+
 		end
 		#before filters
 		def signed_in
