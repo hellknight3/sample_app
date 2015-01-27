@@ -76,7 +76,7 @@ class PatientsController < ApplicationController
 			flash[:success]="removed patients' permission from pool"
 			redirect_to edit_patient_path(params[:id])
 		elsif(params[:patient][:func] == "addNotes")
-			@patient.update_attributes(patient_params)
+			@patient.update(patient_params)
 			redirect_to @patient
 		else
 			if @user.authenticate(params[:user][:old_password])
@@ -98,7 +98,11 @@ class PatientsController < ApplicationController
 		def patient_params
 			params.require(:patient).permit(:emergencyContact, :emergencyPhoneNumber, 
 			:dataOfBirth, :healthCardNumber, :phoneNumber, :weight, :height, :currentMedication,
+<<<<<<< HEAD
 			:currentIssue,:familyDoctor)
+=======
+			:currentIssue, :doctorNotes)
+>>>>>>> 290c4b7a6579ccc577ad8342e7461ab4badd549b
 		end
 		#before filters
 		def signed_in
