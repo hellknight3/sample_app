@@ -45,7 +45,9 @@
 	<%=text_area :message, :message ,:size => "3\20x10"%>
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>
-<%= link_to 'Back', messages_path %>
+
 <%if params[:messageable_type]==Appointment.name%>
+<%unless is_patient%>
 <button onclick="$('#popup').show();">add recipient</button>
+<%end%>
 <%end%>

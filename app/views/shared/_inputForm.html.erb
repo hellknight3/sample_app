@@ -21,7 +21,7 @@
 
 				<%= label :user, :password_confirmation, "Confirmation"%>
 				<%= password_field :user, :password_confirmation%>
-				<%if defined?(spec_type)%>
+				<%if defined?(spec_user)%>
 				<%if spec_user="Patient"%>
 					<%=label :patient, :EmergencyContact %>
 					<%=text_field :patient, :emergencyContact%>
