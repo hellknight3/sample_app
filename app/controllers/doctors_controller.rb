@@ -50,34 +50,36 @@ class DoctorsController < ApplicationController
 	def update
 		@doctor = Doctor.find(params[:id])
 		@user = @doctor.user
-		if(params[:doctor][:func] == "accept")
-			#
-			@patient=Patient.find(params[:doctor][:patient_id])
-			#updates the doctors patient that had the accepted sent with a true value
-			@patient.update_attribute(:accepted, true)
-			redirect_to doctors_path(id: @doctor)
-		elsif(params[:doctor][:func] == "reject")
-			#
-			@patient=Patient.find(params[:doctor][:patient_id])
-			#removes the doctors id from the patient with the request
-			@patient.update_attribute(:doctor_id, nil)
-			#sets the accepted value of the patient from the current doctor to false
-			@patient.update_attribute(:accepted, false)
-			redirect_to doctor_path(@doctor)
-		elsif(params[:doctor][:func] == "addPool")
-			@perm = Permission.new
-			@perm.user_id = @user.id
-			@perm.pool_id = params[:doctor][:pool_id]
-			if @perm.save
-				flash[:success]="permissions updated"
-			else
-				flash[:error]="a problem occurred updating the users permissions"
+		if defined?(params[:doctor][:func])
+			if( params[:doctor][:func] == "accept")
+				#
+				@patient=Patient.find(params[:doctor][:patient_id])
+				#updates the doctors patient that had the accepted sent with a true value
+				@patient.update_attribute(:accepted, true)
+				redirect_to doctors_path(id: @doctor)
+			elsif(params[:doctor][:func] == "reject")
+				#
+				@patient=Patient.find(params[:doctor][:patient_id])
+				#removes the doctors id from the patient with the request
+				@patient.update_attribute(:doctor_id, nil)
+				#sets the accepted value of the patient from the current doctor to false
+				@patient.update_attribute(:accepted, false)
+				redirect_to doctor_path(@doctor)
+			elsif(params[:doctor][:func] == "addPool")
+				@perm = Permission.new
+				@perm.user_id = @user.id
+				@perm.pool_id = params[:doctor][:pool_id]
+				if @perm.save
+					flash[:success]="permissions updated"
+				else
+					flash[:error]="a problem occurred updating the users permissions"
+				end
+				redirect_to edit_doctor_path(@doctor)
+			elsif(params[:doctor][:func] == "removePool")			
+				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:doctor][:pool_id]).delete_all
+				flash[:success]="removed doctors' permission from pool"
+				redirect_to edit_doctor_path(params[:id])
 			end
-			redirect_to edit_doctor_path(@doctor)
-		elsif(params[:doctor][:func] == "removePool")			
-			Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:doctor][:pool_id]).delete_all
-			flash[:success]="removed doctors' permission from pool"
-			redirect_to edit_doctor_path(params[:id])
 		else
 			if @user.authenticate(params[:user][:old_password])
 				@doctor.update(doctor_params)
@@ -88,7 +90,7 @@ class DoctorsController < ApplicationController
 				flash[:failure]="error updating your profile."
 				render 'edit'
 			end			
-			redirect_to doctor_path(@doctor)
+			#redirect_to doctor_path(@doctor)
 		end
 		#redirects to the current doctors home page
 		

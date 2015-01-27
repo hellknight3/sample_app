@@ -1,5 +1,6 @@
-
+<p><%=params[:user_type]%></p>
 <%if user==current_user || new%>
+
 	<div class="row">
 		<div class="span6 offset3">
 			<%= simple_form_for(user_type) do |f| %>
@@ -18,8 +19,8 @@
 
 				<%= label :user, :password_confirmation, "Confirmation"%>
 				<%= password_field :user, :password_confirmation%>
-				
-				<%if params[:user_type]="Patient"%>
+				<%if defined?(spec_type)%>
+				<%if spec_user="Patient"%>
 					<%=label :patient, :EmergencyContact %>
 					<%=text_field :patient, :emergencyContact%>
 					<%=label :patient, :emergencyPhoneNumber %>
@@ -34,7 +35,7 @@
 					<%=text_field :patient, :weight%>
 					<%=label :patient, :height %>
 					<%=text_field :patient, :height%>
-					
+					<%end%>
 				<%end%>
 				
 				

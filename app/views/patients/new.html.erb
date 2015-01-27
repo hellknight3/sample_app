@@ -1,4 +1,4 @@
 <% provide(:title, 'New patient') %>
 <h1>New patient</h1>
-<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient, new: true}%>
+<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient,spec_user="Patient", new: true}%>
 <%= link_to 'Back', patients_path %>
