@@ -4,6 +4,8 @@ class MessagesController < ApplicationController
   end
   def index
 	@users = Message.where("messageable_type = ? and( user_id = ? or messageable_id = ?)",'User', current_user.id,current_user.id).select(:messageable_id, :user_id).distinct.all
+	@contacts=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
+	@message=Message.new
 	#@messages=User.joins('INNER JOIN messages ON messages.messageable_id =user.id') 
 	#where(["user_id = :user and messageable_type = :messageable_type",{:user => current_user.id, :messageable_type => User.name}]).uniq
 	#find(:all,:conditions =>["user_id = :user and messageable_type = :messageable_type",{:user => current_user.id, :messageable_type => User.name}]).uniq(:messageable_id)
@@ -16,11 +18,12 @@ class MessagesController < ApplicationController
 		@messages=Message.where("messageable_type = ? and messageable_id = ?",'Appointment', params[:messageable_id]).select(:messageable_id, :user_id,:message).all
 		
 	else
-		@messages=Message.find(:all, :conditions =>["(messageable_id = :user or user_id = :user) and messageable_type = :messageable_type",{:user => params[:messageable_id], :messageable_type => User.name}])
+		@messages=Message.where("((messageable_id = ? and user_id = ?)   or (user_id = ? and messageable_id = ?)) and messageable_type = ?",current_user.id,params[:messageable_id],current_user.id,params[:messageable_id],User.name).all
+		#, :messageable_type => User.name, :messageable_id=>params[:messageable_id]}])
 		
 	end
+	@users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
 	
-	@users=@user.pools.select(:user_id).uniq.all
   
   end
 

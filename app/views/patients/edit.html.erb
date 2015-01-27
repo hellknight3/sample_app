@@ -15,9 +15,10 @@
 				<%= simple_form_for(@patient) do |f| %>
 					<label> Doctors Notes</label>
 					<%= f.hidden_field :func, :value => "addNotes" %>
-						<textarea rows="20" cols="20>
-							<%= text_field :patient, :doctorNotes%>
-						</textarea>
+						
+							<%=label :patient, :doctorNotes%>
+							<%=text_field :patient, :doctorNotes%>
+						
 					<%= f.button :submit %>
 					
 				<% end %>
@@ -38,7 +39,7 @@
 	<tbody>	
 		<%if @doctors.include?(@user)%>
 			<% @doctors.each do |doctor| %>
-				<%unless doctor ==@user%>	
+				<%unless doctor ==@user || is_doctor?(doctor) == false%>	
 					<tr>
 						<td><%=doctor.name%></td>
 						<%if @patient.doctor.nil?%>
@@ -50,7 +51,7 @@
 							<%= f.submit "add doctor", class: "btn" %>
 							<%end%>
 							</td>
-							<%elsif @patient.doctor_id == doctor.profile_id%>
+						<%elsif @patient.doctor_id == doctor.profile_id%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
 							<%=form_for(@patient) do |f| %> 

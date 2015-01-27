@@ -25,7 +25,7 @@ class AppointmentsController < ApplicationController
   end
 
   def index
-	@messages = Message.where("messageable_type = ? and user_id = ? ",'Appointment', current_user.id).select(:messageable_id).distinct.all
+	@messages = Message.where("messageable_type = ? and user_id = ? ",'Appointment', current_user.id).select(:messageable_id,:message).distinct.all
 
   end
 def update

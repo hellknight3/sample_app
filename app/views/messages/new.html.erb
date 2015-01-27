@@ -8,37 +8,33 @@
 		<th>name</th>
 		<th></th>
 		</thead>
+		<tbody>
 	<%@users.each do |user|%>
-	<tr>
-	<td><%=user.name%></td>
-		<td>
-		<% if params[:messageable_type]==Appointment.name%>
-		<%=simple_form_for(@message) do |f|%>
-			<%= hidden_field :message, :messageable_id, :value => params[:appointment_id] %>
-			<%= hidden_field :message, :messageable_type, :value => Appointment.name %>
-			<%= hidden_field :message, :user_id, :value => user.id %>
-			<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
-			<%=f.button :submit %>
-		<%end%>
-		
-		<% elsif params[:messageable_type]==User.name%>
-			<%=simple_form_for(@message) do |f|%>
-				<%= hidden_field :message, :messageable_id, :value => user.id %>
-				<%= hidden_field :message, :messageable_type, :value => User.name %>
-				<%= hidden_field :message, :user_id, :value => current_user.id %>
-				<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
-				<%=f.button :submit %>
+	<%unless user == current_user%>
+		<tr>
+		<td><%=user.name%></td>
+			<td>
+			<% if params[:messageable_type]==Appointment.name%>
+				<%=simple_form_for(@message) do |f|%>
+					<%= hidden_field :message, :messageable_id, :value => params[:messageable_id] %>
+					<%= hidden_field :message, :messageable_type, :value => Appointment.name %>
+					<%= hidden_field :message, :user_id, :value => user.id %>
+					<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
+					<%=f.button :submit %>
+				<%end%>
 			<%end%>
+			</td>
+			
 		<%end%>
-		</td>
-		
+		</tr>
 	<%end%>
-	</tr>
+	</tbody>
 	</table>
 </div>
+<p><%# @users%></p>
+<p><%# @messages%></p>
 
 <h1>New Message</h1>
-<%unless params[:messageable_id].nil?%>
 <%= form_for(@message) do |f| %>
 	<%= render 'shared/error_messages' %>
 	<%= hidden_field :message, :messageable_id, :value =>	params[:messageable_id] %>
@@ -48,6 +44,6 @@
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>
 <%= link_to 'Back', messages_path %>
-<%else%>
+<%if params[:messageable_type]==Appointment.name%>
 <button onclick="$('#popup').show();">add recipient</button>
 <%end%>
