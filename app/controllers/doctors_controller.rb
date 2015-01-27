@@ -44,7 +44,8 @@ class DoctorsController < ApplicationController
 		@doctor = Doctor.find(params[:id])
 		#using the profile found above will then get the user of that doctor aka the email, username, etc
 		@user = @doctor.user
-		@pools = Pool.all
+		@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
+			
 	end
 	def update
 		@doctor = Doctor.find(params[:id])

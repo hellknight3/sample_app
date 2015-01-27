@@ -48,4 +48,4 @@
 <%= link_to 'New Admin', new_admin_path %> |
 <% end %>
 <%= link_to 'New Doctor', new_doctor_path %> |
-<%= link_to 'New Patient', new_patient_path %>
+<%= link_to 'New Patient', new_patient_path({user_type: "Patient"}) %>
