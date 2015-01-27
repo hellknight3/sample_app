@@ -11,7 +11,7 @@ namespace :db do
 				     password: password,
 				     password_confirmation: password)
 			unless admin.save
-				puts "error"
+				puts "error creating admin"
 			end
 		end
 		1.times do |n|
@@ -24,7 +24,7 @@ namespace :db do
 				     password: password,
 				     password_confirmation: password)
 			unless admin.save
-				puts "error"
+				puts "error creating director"
 			end
 		end
 		2.times do |n|
@@ -37,7 +37,7 @@ namespace :db do
 				     password: password,
 				     password_confirmation: password)
 			unless doctor.save
-				puts "error"
+				puts "error creating doctor"
 			end
 		end
 		10.times do |n|
@@ -69,7 +69,7 @@ namespace :db do
 				     password: password,
 				     password_confirmation: password)
 			unless patient.save
-				puts "error"
+				puts "error creating patient"
 			end
 		end
 		
