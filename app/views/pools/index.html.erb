@@ -19,9 +19,6 @@
 					<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
 				<%end%>
 			<%end%>
-			<%if is_director%>
-				<td><%= link_to 'Destroy', pool, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-			<%end%>
 			</tr>
 		<%end%>
 	</tbody>
