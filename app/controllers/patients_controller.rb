@@ -53,31 +53,33 @@ class PatientsController < ApplicationController
 		#gets the user from the patient that was found
 		@user = @patient.user
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
-		if(params[:patient][:func] == "addDoc")
-			@patient.update_attribute(:doctor_id, params[:patient][:doctor_id])
-			@patient.update_attribute(:accepted, false)
-			redirect_to admin_path(current_user.profile_id)
-		elsif(params[:patient][:func] == "removeDoc")
-			@patient.update_attribute(:doctor_id, nil)
-			@patient.update_attribute(:accepted, false)
-			redirect_to admin_path(current_user.profile_id)
-		elsif(params[:patient][:func] == "addPool")
-			@perm = Permission.new
-			@perm.user_id = @user.id
-			@perm.pool_id = params[:patient][:pool_id]
-			if @perm.save
-				flash[:success]="permissions updated"
-			else
-				flash[:error]="a problem occurred updating the users permissions"
+		if defined?(params[:patient][:func])
+			if(params[:patient][:func] == "addDoc")
+				@patient.update_attribute(:doctor_id, params[:patient][:doctor_id])
+				@patient.update_attribute(:accepted, false)
+				redirect_to admin_path(current_user.profile_id)
+			elsif(params[:patient][:func] == "removeDoc")
+				@patient.update_attribute(:doctor_id, nil)
+				@patient.update_attribute(:accepted, false)
+				redirect_to admin_path(current_user.profile_id)
+			elsif(params[:patient][:func] == "addPool")
+				@perm = Permission.new
+				@perm.user_id = @user.id
+				@perm.pool_id = params[:patient][:pool_id]
+				if @perm.save
+					flash[:success]="permissions updated"
+				else
+					flash[:error]="a problem occurred updating the users permissions"
+				end
+				redirect_to edit_patient_path(@patient)
+			elsif(params[:patient][:func] == "removePool")			
+				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:patient][:pool_id]).delete_all
+				flash[:success]="removed patients' permission from pool"
+				redirect_to edit_patient_path(params[:id])
+			elsif(params[:patient][:func] == "addNotes")
+				@patient.update_attribute(:doctorNotes, params[:patient][:doctorNotes])
+				redirect_to @patient
 			end
-			redirect_to edit_patient_path(@patient)
-		elsif(params[:patient][:func] == "removePool")			
-			Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:patient][:pool_id]).delete_all
-			flash[:success]="removed patients' permission from pool"
-			redirect_to edit_patient_path(params[:id])
-		elsif(params[:patient][:func] == "addNotes")
-			@patient.update_attribute(:doctorNotes, params[:patient][:doctorNotes])
-			redirect_to @patient
 		else
 			if @user.authenticate(params[:user][:old_password])
 				@patient.update(patient_params)

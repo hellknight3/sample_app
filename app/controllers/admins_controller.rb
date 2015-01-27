@@ -47,21 +47,23 @@ class AdminsController < ApplicationController
 	def update
 		@admin = Admin.find(params[:id])
 		@user = @admin.user
-		if(params[:admin][:func] == "addPool")
-			@perm = Permission.new
-			@perm.user_id = @user.id
-			@perm.pool_id = params[:admin][:pool_id]
-			if @perm.save
-				flash[:success]="permissions updated"
-			else
-				flash[:error]="a problem occurred updating the users permissions"
+		if defined?(params[:admin][:func])
+			if(params[:admin][:func] == "addPool")
+				@perm = Permission.new
+				@perm.user_id = @user.id
+				@perm.pool_id = params[:admin][:pool_id]
+				if @perm.save
+					flash[:success]="permissions updated"
+				else
+					flash[:error]="a problem occurred updating the users permissions"
+				end
+				redirect_to edit_admin_path(@admin)
+			elsif(params[:admin][:func] == "removePool")
+				
+				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:admin][:pool_id]).delete_all
+				flash[:success]="removed admins permission from pool"
+				redirect_to edit_admin_path(params[:id])
 			end
-			redirect_to edit_admin_path(@admin)
-		elsif(params[:admin][:func] == "removePool")
-			
-			Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:admin][:pool_id]).delete_all
-			flash[:success]="removed admins permission from pool"
-			redirect_to edit_admin_path(params[:id])
 		else
 			if @user.authenticate(params[:user][:old_password])
 				#passes the attributes from the form to the admin_params function

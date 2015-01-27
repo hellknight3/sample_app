@@ -3,7 +3,7 @@ class MessagesController < ApplicationController
   @user=current_user
   end
   def index
-	@users = Message.where("messageable_type = ? and( user_id = ? or messageable_id = ?)",'User', current_user.id,current_user.id).select(:messageable_id, :user_id).distinct.all
+	@users = Message.where("messageable_type = ? and( user_id = ? or messageable_id = ?)",'User', current_user.id,current_user.id).select(:messageable_id, :user_id).uniq.all
 	@contacts=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
 	@message=Message.new
 	#@messages=User.joins('INNER JOIN messages ON messages.messageable_id =user.id') 
