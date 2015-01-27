@@ -1,5 +1,31 @@
 <h1>Messages</h1>
-
+<div id='popup'>
+<table>
+		<thead>
+		<th>name</th>
+		<th></th>
+		</thead>
+	<%@contacts.each do |user|%>
+	<%unless user == current_user%>
+		<tr>
+		<td><%=user.name%></td>
+			<td>
+				<%=simple_form_for(@message) do |f|%>
+					<%= hidden_field :message, :messageable_id, :value => user.id %>
+					<%= hidden_field :message, :messageable_type, :value => User.name %>
+					<%= hidden_field :message, :user_id, :value => current_user.id %>
+					<%= hidden_field :message, :message, :value =>current_user.name+ " started conversation with "+user.name %>
+					<%=f.button :submit %>
+				
+				<%end%>
+			
+			</td>
+			
+		<%end%>
+		</tr>
+	<%end%>
+	</table>
+</div>
 <table>
 <thead>
 <th>user name </th>
@@ -21,4 +47,4 @@
 <%end%>
 	</tbody>
 </table>
-<%= link_to 'New Conversation', new_message_path({messageable_type: User.name}) %>
+<button onclick="$('#popup').show();">Start Conversation</button>

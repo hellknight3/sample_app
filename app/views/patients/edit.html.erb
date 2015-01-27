@@ -50,7 +50,7 @@
 							<%= f.submit "add doctor", class: "btn" %>
 							<%end%>
 							</td>
-							<%elsif @patient.doctor_id == doctor.profile_id%>
+						<%elsif @patient.doctor_id == doctor.profile_id%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
 							<%=form_for(@patient) do |f| %> 

@@ -12,9 +12,9 @@
   </thead>
 
   <tbody>
-	
+
     <% @messages.each do |message| %>
-    <%if message.nil?%>
+    <%unless message.nil?%>
     <% @appointment=Appointment.find(message.messageable_id)%>
 	<tr>
 		<td><%=@appointment.name%></td>
@@ -22,7 +22,7 @@
 		
 
 		<td>
-		<%=@appointment.id%>
+
 		<%=form_for(@appointment) do |f| %> 
 			<%= f.hidden_field :messageable_id, :value => @appointment.id %>
 			<%= f.hidden_field :messageable_type, :value => Appointment.name %>
