@@ -33,7 +33,7 @@ class DoctorsController < ApplicationController
 			#flashes a success message for the doctor		
 			flash[:success]
 			#redirects to the pools index page
-			redirect_to pools_path
+			redirect_to @doctor
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'

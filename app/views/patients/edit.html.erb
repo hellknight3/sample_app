@@ -39,6 +39,9 @@
 	<tbody>	
 		<%if @doctors.include?(@user)%>
 			<% @doctors.each do |doctor| %>
+				<%doctor.pools.uniq.each do |dPool|%>
+-				<%current_user.pools.each do |pPool|%>
+-					<%if dPool == pPool%>
 				<%unless doctor ==@user || is_doctor?(doctor) == false%>	
 					<tr>
 						<td><%=doctor.name%></td>
@@ -63,6 +66,9 @@
 						<%end%>
 					</tr>
 				<%end%>
+			<%end%>
+		<%end%>
+		<%end%>
 			<%end%>
 		<%end%>
 	</tbody>
