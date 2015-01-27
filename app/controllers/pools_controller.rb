@@ -28,6 +28,7 @@ end
 	#creates a new pool variable that has the variables that the user tries to edit checked against the pool_params which specifies the allowed fields to be changed
 	  @pool=Pool.new(pool_params)
 	  if @pool.save
+<<<<<<< HEAD
 		  @permission = Permission.new
 	+	@permission.user_id =current_user.id
 	+	@permission.pool_id = @pool.id
@@ -37,6 +38,17 @@ end
 		else
 +			flash[:failure] = "Pool failed to be created"
 +		end
+=======
+		@permission = Permission.new
+		@permission.user_id =current_user.id
+		@permission.pool_id = @pool.id
+		if @permission.save
+		  flash[:success] = "Pool successfully created"
+		  redirect_to @pool
+		else
+			flash[:failure] = "Pool failed to be created"
+		end
+>>>>>>> aff42573c4ea10c48954d8e34c29e70d42a1c80f
 	  else
 		render 'new'	 
 	  end

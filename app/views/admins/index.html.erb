@@ -31,7 +31,10 @@
 	<%elsif user.profile_type =="Doctor"%>
 			<td><%= link_to 'Edit', edit_doctor_path(user.profile_id) %></td>
 	<%end%>
-	
+	<% if is_director?(current_user) || user.profile_type != "Admin"%>
+        <td><%= link_to 'Destroy', '#' %></td>
+	<%end%>
+	</tr>
 	</tr>
      
       
@@ -46,4 +49,8 @@
 <%= link_to 'New Admin', new_admin_path %> |
 <% end %>
 <%= link_to 'New Doctor', new_doctor_path %> |
+<<<<<<< HEAD
 <%= link_to 'New Patient', new_patient_path({user_type: "Patient"}) %>
+=======
+<%= link_to 'New Patient', new_patient_path({user_type: "Patient"}) %>
+>>>>>>> aff42573c4ea10c48954d8e34c29e70d42a1c80f

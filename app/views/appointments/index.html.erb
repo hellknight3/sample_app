@@ -31,12 +31,13 @@
 			<%end%>
 		</td>
 		<td>
+		<!--
 		<%=form_for(@appointment) do |f| %> 
 			<%= f.hidden_field :appointment_id, :value => @appointment.id %>
 			<%= f.hidden_field :func, :value => "destroy" %>
 			<%= f.submit "Destroy appointment", class: "btn" %>
 			<%end%>
-		</td>
+		</td>-->
 		
 	</tr>
     <%end%>
