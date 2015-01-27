@@ -4,7 +4,7 @@
 <%else%>
 	<h1>Update your profile</h1>
 <%end%>
-<!-<#%=render partial: "shared/inputForm", locals: {user: @user, user_type: @admin, new: false}%>
+<#%=render partial: "shared/inputForm", locals: {user: @user, user_type: @admin, new: false}%>
 <%if is_director%>
 	<%= render partial: "shared/updatePermissions", locals: {user: @admin, pools: @pools}%>
 <%end%>
