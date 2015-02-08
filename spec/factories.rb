@@ -63,17 +63,6 @@ FactoryGirl.define do
 	factory :message do
 		message{Faker::Name.name}
 	end
-	
-	factory :exercise do
-		name{Faker::Name.name}
-		description{Faker::Name.name}
-		association :question, => :question
-	end
-	
-	factory :question do
-		name{Faker::Name.name}
-		description{Faker::Name.name}
-		association :message, => :message
-	end 
+	 
 	
 end
