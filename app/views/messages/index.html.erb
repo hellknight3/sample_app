@@ -52,7 +52,7 @@
 <%end%>
 <tr>
 	<td><%=@user.name%> </td>
-	<td><%= link_to 'New Message', new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
+	<td><%= link_to 'View Message', new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>	
 </tr>
 
 <%end%>
