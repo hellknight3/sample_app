@@ -1,6 +1,7 @@
 namespace :db do
 	desc "Fill database with sample data"
 	task populate: :environment do
+		puts "creating admin"
 		1.times do |n|
 			name=Faker::Name.name
 			email="admin@example.org"
@@ -14,6 +15,7 @@ namespace :db do
 				puts "error creating admin"
 			end
 		end
+		puts "creating director"
 		1.times do |n|
 			name=Faker::Name.name
 			email="director@example.org"
@@ -27,6 +29,7 @@ namespace :db do
 				puts "error creating director"
 			end
 		end
+		puts "creating doctors"
 		2.times do |n|
 			name=Faker::Name.name
 			email="exampleDoc-#{n+1}@example.org"
@@ -40,6 +43,7 @@ namespace :db do
 				puts "error creating doctor"
 			end
 		end
+		puts "creating Patients"
 		10.times do |n|
 			name=Faker::Name.name
 			h=1 + n
@@ -54,11 +58,11 @@ namespace :db do
 			end
 			patient=Patient.create!(
 					emergencyContact: Faker::Name.name,
-					emergencyPhoneNumber: Faker::Name.name,
+					emergencyPhoneNumber: Faker::PhoneNumber.phone_number,
 					dateOfBirth: rand(11.year).ago,
 					familyDoctor: Faker::Name.name,
 					healthCardNumber: hNumber,
-					phoneNumber: Faker::Name.name,
+					phoneNumber: Faker::PhoneNumber.phone_number,
 					weight: w,
 					height: h,
 					currentMedication: Faker::Name.name,
@@ -73,8 +77,9 @@ namespace :db do
 			end
 		end
 		
+		puts "creating Pools"
 		10.times do |n|
-			name=Faker::Name.name
+			name=Faker::Commerce.department(1)
 			description="sample description"
 			specialization="sample specialization"
 			Pool.create!(name: name,

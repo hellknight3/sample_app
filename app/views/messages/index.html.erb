@@ -15,7 +15,7 @@
 					<%= hidden_field :message, :messageable_type, :value => User.name %>
 					<%= hidden_field :message, :user_id, :value => current_user.id %>
 					<%= hidden_field :message, :message, :value =>current_user.name+ " started conversation with "+user.name %>
-					<%=f.button :submit %>
+					<%=f.button :submit, {class: "btn btn-primary"} %>
 				
 				<%end%>
 			
@@ -30,9 +30,9 @@
 	<button onclick="$('#popup').hide();">Close</button>
 
 </div>
-<table>
+<table class="table">
 <thead>
-<th>user name </th>
+<th>name </th>
 
 
 </thead>
@@ -51,11 +51,11 @@
 	<%@user = User.find(user.messageable_id)%>
 <%end%>
 <tr>
-	<td><%=@user.name%> </td>
-	<td><%= link_to 'New Message', new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
+	
+	<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
 </tr>
 
 <%end%>
 	</tbody>
 </table>
-<button onclick="$('#popup').show();">Start Conversation</button>
+<button onclick="$('#popup').show();" class="btn btn-primary">Start Conversation</button>

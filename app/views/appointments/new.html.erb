@@ -1,12 +1,11 @@
 <h1>Compose New Message</h1>
 
 
-<%= form_for(@appointment) do |f| %>
+<%= simple_form_for(@appointment) do |f| %>
 	<%= render 'shared/error_messages' %>
-	<%= f.label :name %><br />
-	<%= f.text_field :name %>
+	<%= f.input :name %><br />
 	<%= f.hidden_field :profile_id, :value => @user.profile_id %>
-	<%=f.label  :description %>
-	<%=f.text_area  :description ,:size => "30x10"%>
+	<%=f.input  :description, as: :text %>
+	
 	<%= f.submit "Create Appointment", class: "btn btn-large btn-primary" %>
 <% end %>

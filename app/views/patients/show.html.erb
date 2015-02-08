@@ -11,53 +11,24 @@
 		</section>
 	</aside>
 </div>
-<p>
-	Date of Birth:
-	<%= @patient.dateOfBirth %>
-</p>
-<p>
-	Health Card Number:
-	<%= @patient.healthCardNumber %>
-</p>
-<p>
-	Phone Number:
-	<%= @patient.phoneNumber %>
-</p>
-<p>
-	Weight:
-	<%= @patient.weight %>
-</p>
-<p>
-	Height:
-	<%= @patient.height %>
-</p>
-<p>
-	Current Medication:
-	<%= @patient.currentMedication %>
-</p>
+<p><%= link_to 'Edit', edit_patient_path(@patient) %> </p>
+<ul class="list-group">
+	<li class="list-group-item">Date of Birth: <%= @patient.dateOfBirth %></li>
+	<li class="list-group-item">Health Card Number: <%= @patient.healthCardNumber %></li>
+	<li class="list-group-item">Phone Number: <%= @patient.phoneNumber %></li>
+	<li class="list-group-item">Weight: <%= @patient.weight %></li>
+	<li class="list-group-item">Height: <%= @patient.height %></li>
+	<li class="list-group-item">Current Medication: <%= @patient.currentMedication %></li>
+	<%unless is_patient%>
+		<li class="list-group-item">Patients Medical Condition: <%= @patient.currentIssue %></li>
+	<%end%>
+	<li class="list-group-item">Emergency Contact: <%= @patient.emergencyContact %></li>
+	<li class="list-group-item">Emergency Contact Phone Number: <%= @patient.emergencyPhoneNumber %></li>
 
+	<%unless is_patient%>
+		<li class="list-group-item">Doctors Notes: <%= @patient.doctorNotes%></li>
+		<%#flash[:success]=@patient.doctorNotes%>
+	<%end%>
+</ul>
 
-<%unless is_patient%>
-	<p>Patients Medical Condition:
-	<%= @patient.currentIssue %>
-	</p>
-<%end%>
-
-
-<p>
-	Emergency Contact:	
-	<%= @patient.emergencyContact %>
-</p>
-<p>
-	Emergency Contact Phone Number
-	<%= @patient.emergencyPhoneNumber %>
-</p>
-
-<%unless is_patient%>
-	<p>Doctors Notes:
-	<%= @patient.doctorNotes%>
-	</p>
-	<%#flash[:success]=@patient.doctorNotes%>
-<%end%>
-<%= link_to 'Edit', edit_patient_path(@patient) %> 
 

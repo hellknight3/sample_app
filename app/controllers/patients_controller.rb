@@ -3,7 +3,7 @@ class PatientsController < ApplicationController
 	#this will then run before every POST action that exists after -> :new, :create, :edit, :update
 	before_action :signed_in, only: [:edit, :update]
 	before_action :signed_in_admin, only: [:new, :create]
-	#before_action :correct_user, only: [:show,:edit, :update]
+	before_action :correct_user, only: [:show,:edit, :update]
 
 	def show
 		#shows the current users properties
@@ -125,6 +125,9 @@ class PatientsController < ApplicationController
 			#checks params hash for the user id storing that user into a variable
 			@user = User.find(params[:id])
 			#compares that user created above to the currently logged in user
-			redirect_to(root_url) unless current_user?(@user)
+			unless current_user?(@user) ||(is_admin && !is_director)	
+			flash[:error]="you do not have permission to do that."
+			redirect_to(user_path(current_user))  
+			end
 		end
 end

@@ -1,47 +1,49 @@
-<h1>Appointments</h1>
-<table>
+<h1>My Appointments</h1>
+<table class="table">
   <thead>
-    <tr>
-	<th>name</th>
+    <tr class="row">
+	<th class="sorting-asc">name</th>
 	<th>description</th>
 
 
 	<th></th>
-
-      </tr>
+</tr>
   </thead>
 
   <tbody>
 
     <% @messages.each do |message| %>
-    <%unless message.nil?%>
-    <% @appointment=Appointment.find(message.messageable_id)%>
-	<tr>
-		<td><%=@appointment.name%></td>
-		<td><%=@appointment.description%></td>
-		
+		<%unless message.nil?%>
+			<% @appointment=Appointment.find(message.messageable_id)%>
+				<tr class="row">
+					<td><%=@appointment.name%></td>
+					<td><%=@appointment.description%></td>	
+					<td>
 
-		<td>
+					<%=form_for(@appointment) do |f| %> 
+						<%= f.hidden_field :messageable_id, :value => @appointment.id %>
+						<%= f.hidden_field :messageable_type, :value => Appointment.name %>
+						<%= f.hidden_field :func, :value => "create" %>
+						<%= f.submit "Send new message", class: "btn btn-success" %>
+						<%end%>
+					</td>
+					<!--
 
-		<%=form_for(@appointment) do |f| %> 
-			<%= f.hidden_field :messageable_id, :value => @appointment.id %>
-			<%= f.hidden_field :messageable_type, :value => Appointment.name %>
-			<%= f.hidden_field :func, :value => "create" %>
-			<%= f.submit "Send new message", class: "btn" %>
+					<td>
+					<%=form_for(@appointment) do |f| %> 
+						<%= f.hidden_field :appointment_id, :value => @appointment.id %>
+						<%= f.hidden_field :func, :value => "destroy" %>
+						<%= f.submit "Destroy appointment", class: "btn" %>
+						<%end%>
+					</td>
+					-->
+					
+				</tr>
 			<%end%>
-		</td>
-		<td>
-		<!--
-		<%=form_for(@appointment) do |f| %> 
-			<%= f.hidden_field :appointment_id, :value => @appointment.id %>
-			<%= f.hidden_field :func, :value => "destroy" %>
-			<%= f.submit "Destroy appointment", class: "btn" %>
-			<%end%>
-		</td>-->
 		
-	</tr>
-    <%end%>
-    <%end%>
+	<%end%>
     </tbody>
     </table>
-<%= link_to 'New Appointment', new_appointment_path%> 
+<%unless is_patient%>
+<%= link_to 'New Appointment', new_appointment_path, {class: "btn btn-success"}%> 
+<%end%>

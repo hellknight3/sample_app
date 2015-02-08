@@ -1,7 +1,7 @@
 <h1>Listing Patients</h1>
 
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Users name</th>
@@ -14,19 +14,19 @@
       <tr>
       
 	<td><%= link_to patient.user.name, patient %></td>
-	<td><%= patient.accepted %></td>
+	<td><%='Accepted' if(patient.accepted)  %></td>
 	
 	
 	
 		<%if patient.accepted%>
 			<td>
-				<%= link_to 'View old Appointments	', appointment_path(patient.id) %>
+				<%= link_to 'View old Appointments	', appointment_path(patient.id), {class: "btn btn-primary"} %>
 			</td>
 			<td>
-				<%= link_to 'New Appointment	', new_appointment_path({patient_id: patient.id,doctor_id: @doctor.id}) %>
+				<%= link_to 'New Appointment	', new_appointment_path({patient_id: patient.id,doctor_id: @doctor.id}), {class: "btn btn-success"} %>
 			</td>
 			<td>
-				<%= link_to 'Edit', patient %>
+				<%= link_to 'Edit', patient, {class: "btn btn-warning"} %>
 			</td>
 			
 		<%else%>
@@ -34,14 +34,14 @@
 			<%=form_for(@doctor) do |f| %> 
 			<%= f.hidden_field :patient_id, :value => patient.id %>
 			<%= f.hidden_field :func, :value => "accept" %>
-			<%= f.submit "Accept patient", class: "btn" %>
+			<%= f.submit "Accept patient", class: "btn btn-success" %>
 			<%end%>
 		</td>
 		<td>
 			<%=form_for(@doctor) do |f| %> 
 			<%= f.hidden_field :patient_id, :value => patient.id %>
 			<%= f.hidden_field :func, :value => "reject" %>
-			<%= f.submit "Reject patient", class: "btn" %>
+			<%= f.submit "Reject patient", class: "btn btn-danger" %>
 			<%end%>
 		</td>
 		

@@ -3,7 +3,8 @@ class DoctorsController < ApplicationController
 	#this will then run before every POST action that exists after -> :new, :create
 	before_action :signed_in, only: [:show,:edit, :update]
 	before_action :signed_in_admin, only: [:new, :create]
-	#before_action :correct_user, only: [:show,:edit, :update]
+	before_action :correct_user, only: [:show,:edit, :update]
+	before_action :correct_doctor, only: [:index]
 	def index
 		#puts all of the doctors into a browsable list
 		#the list has a default length of 30 entries per page 
@@ -129,5 +130,10 @@ class DoctorsController < ApplicationController
 			#compares that user created above to the currently logged in user
 			redirect_to(root_url) unless current_user?(@user)
 		end
-
+		def correct_doctor
+			if params[:id].to_i != current_user.profile_id
+				flash[:error] = "You do not have permission do view this doctors patients"
+				redirect_back_or(signin_url)
+			end
+		end
 end

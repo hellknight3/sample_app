@@ -1,8 +1,9 @@
 class AdminsController < ApplicationController
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create, :index, :edit, :update
-	before_action :signed_in_admin, only: [:new,:create,:index,:edit, :update]
-	#before_action :correct_user, only: [:show, :edit, :update]
+	before_action :signed_in_director, only: [:new, :create]
+	before_action :signed_in_admin, only: [:index, :edit, :update]
+	before_action :correct_user, only: [:show, :edit, :update]
 	before_action :signed_in, only: [:show, :edit, :update]
 	def show
 		@admin = Admin.find(params[:id]) 
@@ -12,7 +13,9 @@ class AdminsController < ApplicationController
 	#puts all of the admins into a browsable list
 	#the list has a default length of 30 entries per page 
 	#uses will_paginate in the view to put the page bar in
-		@admins =User.paginate(page: params[:page])
+	@admins =User.where("profile_type =?",params[:user_type]).paginate(page: params[:page])
+
+		
 	end
 	def new
 		#creates temp variables for the new form to use for the views
@@ -99,8 +102,17 @@ class AdminsController < ApplicationController
 		#checks if the currently signed in user is an admin
 		def signed_in_admin
 			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
-				if current_user.profile_type=="Admin" #checks if the currently logged in user is an Admin
-				else
+				unless is_admin #checks if the currently logged in user is an Admin
+					redirect_to signin_url, notice: "You do not have permission to do that."
+				end
+			else
+				store_location
+				redirect_to signin_url, notice: "Please sign in." #signin_url is implicitly defined in the config/routes.rb file
+			end
+		end
+		def signed_in_director
+			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
+				unless is_director #checks if the currently logged in user is an Admin
 					redirect_to signin_url, notice: "You do not have permission to do that."
 				end
 			else
@@ -114,6 +126,8 @@ class AdminsController < ApplicationController
 			#checks params hash for the user id storing that user into a variable
 			@user = User.find(params[:id])
 			#compares that user created above to the currently logged in user
-			redirect_to(root_url) unless current_user?(@user)
+			unless current_user?(@user) ||  is_admin?(@user)
+				redirect_to(root_url) 
+			end
 		end
 end

@@ -5,7 +5,7 @@
 	<h1>Update your profile</h1>
 <%end%>
 <%=render partial: "shared/inputForm", locals: {user: @user, user_type: @admin, new: false}%>
-<%if is_director%>
+<%if is_director && params[:id].to_i != current_user.profile_id%>
 	<%= render partial: "shared/updatePermissions", locals: {user: @admin, pools: @pools}%>
 <%end%>
-<%= link_to 'Show', @admin %>
+<%= link_to 'Profile', @admin, {class: "btn btn-primary"} %>

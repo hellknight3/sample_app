@@ -1,5 +1,5 @@
 <h1>Pools</h1>
-<table>
+<table class="table">
 	<thead>
 		<th>Name</th>
 		<th>Description</th>
@@ -15,8 +15,8 @@
 			<td><%= pool.specialization %></td>
 			<% current_user.pools.each do |p| %>
 				<%if pool.id == p.id %>
-					<td><%= link_to 'Show', pool %></td>
-					<td><%= link_to 'Edit', edit_pool_path(pool) %></td>
+					<td><%= link_to 'Show', pool,{class: "btn btn-primary"} %></td>
+					<td><%= link_to 'Edit', edit_pool_path(pool),{class: "btn btn-warning"} %></td>
 				<%end%>
 			<%end%>
 			</tr>
@@ -25,5 +25,5 @@
 </table>
 <%=will_paginate%>
 <%if is_director?(current_user)%>
-	<%= link_to 'New Pool', new_pool_path %> 
+	<%= link_to 'New Pool', new_pool_path,{class: "btn btn-success"} %> 
 <%end%>

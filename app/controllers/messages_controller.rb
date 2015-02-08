@@ -1,9 +1,10 @@
 class MessagesController < ApplicationController
   def show
-  @user=current_user
+	@user=current_user
   end
   def index
 	@users = Message.where("messageable_type = ? and( user_id = ? or messageable_id = ?)",'User', current_user.id,current_user.id).select(:messageable_id, :user_id).uniq.all
+	#the list of your current contacts. it is displayed in the popup.
 	@contacts=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
 	@message=Message.new
 	#@messages=User.joins('INNER JOIN messages ON messages.messageable_id =user.id') 
@@ -16,7 +17,6 @@ class MessagesController < ApplicationController
 	@message=Message.new
 	if (params[:messageable_type] == Appointment.name)
 		@messages=Message.where("messageable_type = ? and messageable_id = ?",'Appointment', params[:messageable_id]).select(:messageable_id, :user_id,:message).all
-		
 	else
 		@messages=Message.where("((messageable_id = ? and user_id = ?)   or (user_id = ? and messageable_id = ?)) and messageable_type = ?",current_user.id,params[:messageable_id],current_user.id,params[:messageable_id],User.name).all
 		#, :messageable_type => User.name, :messageable_id=>params[:messageable_id]}])

@@ -2,23 +2,18 @@ SampleApp::Application.routes.draw do
 
 
 	resources :admins do
-		resources :users
 		
 	end
 	resources :patients do
-		resources :users
 	end
 	resources :doctors do
-	resources :users
 	end
-	resources :pools do
-	
+	resources :pools do	
 	end
 	resources :appointments do
-		
 	end
 	#should be nested are not, will need to fix when i understand more
-	resources :exercises 
+	resources :exercises
 	resources :questions 
 	resources :answers
 		
