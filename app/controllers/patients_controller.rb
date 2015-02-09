@@ -127,7 +127,7 @@ class PatientsController < ApplicationController
 			#compares that user created above to the currently logged in user
 			unless current_user?(@user) ||(is_admin && !is_director)	
 			flash[:error]="you do not have permission to do that."
-			redirect_to(user_path(current_user))  
+			redirect_to(admins_path({user_type: "Admin"}))  
 			end
 		end
 end

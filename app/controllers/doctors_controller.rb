@@ -126,12 +126,17 @@ class DoctorsController < ApplicationController
 		#checks that the user that is logged in matches the id of the user that is in the params hash matches that which is currently logged in
 		def correct_user
 			#checks params hash for the user id storing that user into a variable
-			@user = User.find(params[:id])
+			@doctor = Doctor.find(params[:id])
 			#compares that user created above to the currently logged in user
-			redirect_to(root_url) unless current_user?(@user)
+			
+			unless current_user?(@doctor.user) || is_admin
+				flash[:error] = "You do not have permission do view this doctors patients"
+				redirect_to(root_url) 
+			end
 		end
 		def correct_doctor
-			if params[:id].to_i != current_user.profile_id
+			@doctor =Doctor.find(params[:id])
+			unless current_user?(@doctor.user)
 				flash[:error] = "You do not have permission do view this doctors patients"
 				redirect_back_or(signin_url)
 			end
