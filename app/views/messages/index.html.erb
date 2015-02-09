@@ -6,7 +6,6 @@
 		<th>name </th>
 
 
-<<<<<<< HEAD
 	</thead>
 	<tbody>
 		<% @users.each do |user|%>
@@ -26,33 +25,6 @@
 				<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
 			</tr>
 		<%end%>
-=======
-</thead>
-<tbody>
-<% @users.each do |user|%>
-<p><%@temp=Message.where("user_id = ? and messageable_id=?",user.messageable_id,user.user_id).select(:user_id,:messageable_id).distinct.size%></p>
-<% if @temp == 2 %>
-	<%if current_user.id == user.messageable_id%>
-		<%@user = User.find(user.user_id)%>
-	<%else%>
-		<%next%>
-	<%end%>
-<% elsif current_user.id == user.messageable_id%>
-	<%@user = User.find(user.user_id)%>
-<%else%>
-	<%@user = User.find(user.messageable_id)%>
-<%end%>
-<tr>
-
-	<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
-
-	<td><%=@user.name%> </td>
-	<td><%= link_to 'View Message', new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>	
-
-</tr>
-
-<%end%>
->>>>>>> e8a37e412e42a93ffa7047f2a70f043feca68870
 	</tbody>
 </table>
 
