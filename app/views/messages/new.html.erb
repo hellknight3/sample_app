@@ -1,6 +1,10 @@
 <h1>Conversation history</h1>
 <% @messages.each do |message| %>
-<p><%=message.message%></p>
+<p><%=message.user.name +  ':  '%>
+	<%=message.message + '---'%>
+	<%=message.created_at%></p>
+
+
 <%end%>
 <div id='popup'>
 <table>
