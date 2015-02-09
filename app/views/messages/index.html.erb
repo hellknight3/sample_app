@@ -1,61 +1,74 @@
 <h1>Messages</h1>
-<div id='popup'>
-<table>
-		<thead>
-		<th>name</th>
-		<th></th>
-		</thead>
-	<%@contacts.each do |user|%>
-	<%unless user == current_user%>
-		<tr>
-		<td><%=user.name%></td>
-			<td>
-				<%=simple_form_for(@message) do |f|%>
-					<%= hidden_field :message, :messageable_id, :value => user.id %>
-					<%= hidden_field :message, :messageable_type, :value => User.name %>
-					<%= hidden_field :message, :user_id, :value => current_user.id %>
-					<%= hidden_field :message, :message, :value =>current_user.name+ " started conversation with "+user.name %>
-					<%=f.button :submit, {class: "btn btn-primary"} %>
-				
-				<%end%>
-			
-			</td>
-			
-		<%end%>
-		</tr>
-	<%end%>
-	
-	</table>
 
-	<button onclick="$('#popup').hide();">Close</button>
 
-</div>
 <table class="table">
-<thead>
-<th>name </th>
+	<thead>
+		<th>name </th>
 
 
-</thead>
-<tbody>
-<% @users.each do |user|%>
-<p><%@temp=Message.where("user_id = ? and messageable_id=?",user.messageable_id,user.user_id).select(:user_id,:messageable_id).distinct.size%></p>
-<% if @temp == 2 %>
-	<%if current_user.id == user.messageable_id%>
-		<%@user = User.find(user.user_id)%>
-	<%else%>
-		<%next%>
-	<%end%>
-<% elsif current_user.id == user.messageable_id%>
-	<%@user = User.find(user.user_id)%>
-<%else%>
-	<%@user = User.find(user.messageable_id)%>
-<%end%>
-<tr>
-	
-	<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
-</tr>
-
-<%end%>
+	</thead>
+	<tbody>
+		<% @users.each do |user|%>
+			<p><%@temp=Message.where("user_id = ? and messageable_id=?",user.messageable_id,user.user_id).select(:user_id,:messageable_id).distinct.size%></p>
+			<% if @temp == 2 %>
+				<%if current_user.id == user.messageable_id%>
+					<%@user = User.find(user.user_id)%>
+				<%else%>
+					<%next%>
+				<%end%>
+			<% elsif current_user.id == user.messageable_id%>
+				<%@user = User.find(user.user_id)%>
+			<%else%>
+				<%@user = User.find(user.messageable_id)%>
+			<%end%>
+			<tr>
+				<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
+			</tr>
+		<%end%>
 	</tbody>
 </table>
-<button onclick="$('#popup').show();" class="btn btn-primary">Start Conversation</button>
+
+
+<div class="popover-markup"> 
+	<a class="trigger btn btn-default">Start new conversation</a> 
+	<div class="head hide">Contacts</div>
+	<div class="content hide">
+		<table>
+		<tbody>
+		<%@contacts.each do |user|%>
+			<%unless user == current_user%>
+				<tr>
+				<td class='row' ><%=user.name%>	</td>		
+					<td><%=simple_form_for(@message) do |f|%>
+						<%= hidden_field :message, :messageable_id, :value => user.id %>
+						<%= hidden_field :message, :messageable_type, :value => User.name %>
+						<%= hidden_field :message, :user_id, :value => current_user.id %>
+						<%= hidden_field :message, :message, :value =>current_user.name+ " started conversation with "+user.name %>
+						<%=f.button :submit, {class: "btn btn-primary"} %>
+					<%end%>
+				</td>
+				<tr>
+			<%end%>
+		<%end%>
+		</tbody>
+		</table>
+	</div>
+</div>
+<script>
+$('.popover-markup>.trigger').each(function () {
+    var $elem = $(this);
+    $elem.popover({
+        placement: 'right',
+        trigger: 'hover',
+        html: true,
+		title: function () {
+		return $(this).parent().find('.head').html();
+		},
+		content: function () {
+		return $(this).parent().find('.content').html();
+		},
+        container: $elem
+    });
+});
+</script>
+	
