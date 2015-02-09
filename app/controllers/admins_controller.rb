@@ -33,7 +33,7 @@ class AdminsController < ApplicationController
 			#flashes a success message for the admin
 			flash[:success]
 			#redirects to the newly created admins' page
-			redirect_to @admin
+			redirect_to edit_doctor_path(@admin)
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
