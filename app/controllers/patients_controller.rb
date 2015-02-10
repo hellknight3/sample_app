@@ -125,7 +125,7 @@ class PatientsController < ApplicationController
 			#checks params hash for the user id storing that user into a variable
 			@user = User.find(params[:id])
 			#compares that user created above to the currently logged in user
-			unless current_user?(@user) ||(is_admin && !is_director)	
+			unless current_user?(@user) ||(is_admin && !is_director) || current_user?(@user.doctor)
 			flash[:error]="you do not have permission to do that."
 			redirect_to(admins_path({user_type: "Admin"}))  
 			end
