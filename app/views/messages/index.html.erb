@@ -16,8 +16,6 @@
 				<%else%>
 					<%next%>
 				<%end%>
-			<% elsif current_user.id == user.messageable_id%>
-				<%@user = User.find(user.user_id)%>
 			<%else%>
 				<%@user = User.find(user.messageable_id)%>
 			<%end%>
