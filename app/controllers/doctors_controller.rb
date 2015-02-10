@@ -136,7 +136,7 @@ class DoctorsController < ApplicationController
 		end
 		def correct_doctor
 			@doctor =Doctor.find(params[:id])
-			unless current_user?(@doctor.user)
+			unless current_user?(@doctor.user) 
 				flash[:error] = "You do not have permission do view this doctors patients"
 				redirect_back_or(signin_url)
 			end

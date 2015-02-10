@@ -33,7 +33,7 @@ class AdminsController < ApplicationController
 			#flashes a success message for the admin
 			flash[:success]
 			#redirects to the newly created admins' page
-			redirect_to edit_doctor_path(@admin)
+			redirect_to edit_admin_path(@admin, {NewUser: "1"})
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
@@ -126,7 +126,7 @@ class AdminsController < ApplicationController
 			#checks params hash for the user id storing that user into a variable
 			@user = User.find(params[:id])
 			#compares that user created above to the currently logged in user
-			unless current_user?(@user) ||  is_admin?(@user)
+			unless current_user?(@user) ||  is_admin?(current_user) 
 				redirect_to(root_url) 
 			end
 		end
