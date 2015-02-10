@@ -17,6 +17,7 @@ class MessagesController < ApplicationController
 	@message=Message.new
 	if (params[:messageable_type] == Appointment.name)
 		@messages=Message.where("messageable_type = ? and messageable_id = ?",'Appointment', params[:messageable_id]).select(:messageable_id, :user_id,:message).all
+		
 	else
 		@messages=Message.where("((messageable_id = ? and user_id = ?)   or (user_id = ? and messageable_id = ?)) and messageable_type = ?",current_user.id,params[:messageable_id],current_user.id,params[:messageable_id],User.name).all
 		#, :messageable_type => User.name, :messageable_id=>params[:messageable_id]}])
