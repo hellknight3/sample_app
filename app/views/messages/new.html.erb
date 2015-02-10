@@ -1,8 +1,10 @@
 <h1>Conversation history</h1>
 <% @messages.each do |message| %>
 <p><%=message.user.name +  ':  '%>
-	<%=message.message + '---'%>
-	<%=message.created_at%></p>
+	<%=message.message + '   -----'%>
+<%if message.has_attribute?(:updated_at)%>
+	<%=message.updated_at%>
+<%end%>
 
 
 <%end%>

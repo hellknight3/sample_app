@@ -10,6 +10,7 @@ class AppointmentsController < ApplicationController
 	if @appointment.save
 		
 		@message = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
+		@message.updated_at = DateTime.now
 		if @message.save
 			flash[:success]="Successfully created appointment"
 		else 
