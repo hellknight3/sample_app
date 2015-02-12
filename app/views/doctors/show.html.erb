@@ -12,8 +12,10 @@
 	</aside>
 </div>
 <%if is_doctor %>
-<p>Current Patients</p>
+
+
 <ul class="list-group">
+<li class="list-group-item list-group-item-info">Current Patients</li>
 <% @patients.find_each do |patient|%>
 	<li class="list-group-item"><%=patient.user.name%></li>
 	
