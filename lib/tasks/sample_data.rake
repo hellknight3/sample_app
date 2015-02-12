@@ -93,10 +93,11 @@ namespace :db do
 		Permission.create!(user_id: 2,
 		pool_id: n+1)
 		end
-		
-
-			
-		
-		
+		Message.create!(
+		message: "hello",
+		user_id: 1,
+		messageable_id: 2,
+		messageable_type: "User"
+		}
 	end
 end
