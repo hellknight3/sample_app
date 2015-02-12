@@ -9,15 +9,27 @@ class AppointmentsController < ApplicationController
 	@appointment =Appointment.new(appointment_params)	
 	if @appointment.save
 		
-		@message = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
-		@message.updated_at = DateTime.now
-		if @message.save
-			flash[:notice]="Successfully created appointment"
-		else 
-			flash[:alert]="Failed to create appointment"
 		
+		@messageDoc = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
+		@messageDoc.updated_at = DateTime.now
+		if defined?(params[:appointment][:patient_id]) && params[:appointment][:patient_id]!= ""
+		@patient = Patient.find(params[:appointment][:patient_id])
+		@messagePat = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => @patient.user.id, :message => current_user.name+" added to appointment")
+		@messagePat.updated_at = DateTime.now
 		end
-			
+		if defined?(@messagePat) 
+			if @messageDoc.save && @messagePat.save
+				flash[:notice]="Successfully created appointment"
+			else 
+				flash[:alert]="Failed to create appointment"
+			end
+		else
+			if @messageDoc.save
+				flash[:notice]="Successfully created appointment"
+			else 
+				flash[:alert]="Failed to create appointment"
+			end
+		end
 		redirect_to appointments_path
 	else
 		render 'new'

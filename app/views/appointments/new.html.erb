@@ -4,7 +4,11 @@
 <%= simple_form_for(@appointment) do |f| %>
 	<%= render 'shared/error_messages' %>
 	<%= f.input :name %><br />
-	<%= f.hidden_field :profile_id, :value => @user.profile_id %>
+	<%if defined?(params[:patient_id])%>
+		<%= f.hidden_field :patient_id, :value => params[:patient_id] %>
+	<%end%>
+
+	
 	<%=f.input  :description, as: :text %>
 	
 	<%= f.submit "Create Appointment", class: "btn btn-large btn-primary" %>

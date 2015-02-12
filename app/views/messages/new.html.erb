@@ -1,10 +1,42 @@
 <h1>Conversation history</h1>
 <% @messages.each do |message| %>
-<p><%=message.user.name +  ':  '%>
-	<%=message.message + '   -----'%>
-<%if message.has_attribute?(:updated_at)%>
-	<%=message.updated_at%>
+<style>
+.patient{
+width:50%; margin-left:50%
+}
+.other{
+width:50%;
+}
+.header-left{
+list-style:none;
+margin-left:-25px;
+float:left;
+}
+.header-right{
+list-style:none;
+margin-left:45%;
+float:left;
+}
+</style>
+<%if is_patient?(message.user)%>
+<div class="panel panel-default patient" >
+<%else%>
+<div class="panel panel-default other" >
 <%end%>
+  <div class="panel-heading">
+  <ul>
+	  <li class="header-left"><%=message.user.name%></li>
+	  <%if message.has_attribute?(:updated_at)%>
+		<li class="header-right">
+			<%=message.updated_at%>
+		</li>
+	<%end%>
+	</ul>	
+  </div>
+  <div class="panel-body">
+   <%=message.message%>
+  </div>
+</div>
 
 
 <%end%>
