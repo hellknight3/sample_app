@@ -1,66 +1,91 @@
 <% provide(:title, "Edit patient") %>
-<%if is_admin%>
+<%if is_admin || is_doctor%>
 	<h1>Update <%=@patient.user.name%></h1>
 <%else%>
-	<h1>Update your profile</h1>
+	<%if defined?(params[:settings]) && params[:settings]=="Personal"%>
+		<h1>Update your personal information</h1>
+	<%else%>
+		<h1>Update your profile</h1>
+	<%end%>
+<%end%>
+<%if is_patient%>
+<%=link_to "Account Settings", edit_patient_path(@patient,{settings: "Account"})%> | 
+<%=link_to "Personal Settings", edit_patient_path(@patient,{settings: "Personal"})%>
+<%elsif is_admin%>
+	<%=link_to "Available Doctors", edit_patient_path(@patient,{settings: "AvailableDocs"})%> | 
+	<%=link_to "Adjust Pools", edit_patient_path(@patient,{settings: "AdjustPools"})%>
+
 <%end%>
 <%#displays the edit page for the patient, different views will be created depending on the profile type%>
 <%if is_patient%>
-	<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient, new: false}%>
+	<%if defined?(params[:settings]) && params[:settings]=="Personal"%>
+		<%=render partial: "inputFormPatient", locals: {patient: @patient}%>
+	<%else defined?(params[:settings]) && params[:settings]=="Account"%>
+		<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient, new: false}%>
+	<%end%>
 	<%#The Admin is checked since he will be the one adding the doctor to the user%>
 <%elsif is_doctor%>
 	<tbody>
 		<div class="row">
 			<div class="span6 offset3">
 				<%= simple_form_for(@patient) do |f| %>
-					<label> Doctors Notes</label>
-					<%= f.hidden_field :func, :value => "addNotes" %>
+						<%= f.hidden_field :func, :value => "addNotes" %>
+							<%=f.input :doctorNotes%>
 						
-							<%=label :patient, :doctorNotes%>
-							<%=text_field :patient, :doctorNotes%>
-						
-					<%= f.button :submit %>
+					<%= f.button :submit ,{class: "btn btn-success"} %>
 					
 				<% end %>
 		</div>
 	</div>
 	</tbody>
 <%elsif is_admin%>
-	<table>
+	<%if defined?(params[:settings]) && params[:settings]=="AvailableDocs"%>
+	<table class="table">
 	<thead>
 		<tr>
 			<th>Available Doctors</th>
-			
-			
-
 		</tr>
 	</thead>
 
 	<tbody>	
 		<%if @doctors.include?(@user)%>
+			
 			<% @doctors.each do |doctor| %>
+			
+				
 				<%doctor.pools.uniq.each do |dPool|%>
--				<%current_user.pools.each do |pPool|%>
--					<%if dPool == pPool%>
+				<%current_user.pools.each do |pPool|%>
+				<%unless defined?(@lastDoc)%>
+					
+					<%@lastDoc=doctor%>
+				<%else%>
+				
+					<%if @lastDoc==doctor%>
+						<%next%>
+					<%else%>
+					<%@lastDoc=doctor%>
+					<%end%>
+				<%end%>
+					<%if dPool == pPool%>
 				<%unless doctor ==@user || is_doctor?(doctor) == false%>	
 					<tr>
 						<td><%=doctor.name%></td>
 						<%if @patient.doctor.nil?%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'addDoc' to the params hash%>
-							<%=form_for(@patient) do |f| %> 
+							<%=simple_form_for(@patient) do |f| %> 
 							<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
 							<%= f.hidden_field :func, :value => "addDoc" %>
-							<%= f.submit "add doctor", class: "btn" %>
+							<%= f.submit "add doctor", class: "btn btn-success" %>
 							<%end%>
 							</td>
 						<%elsif @patient.doctor_id == doctor.profile_id%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
-							<%=form_for(@patient) do |f| %> 
+							<%=simple_form_for(@patient) do |f| %> 
 							<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
 							<%= f.hidden_field :func, :value => "removeDoc" %>
-							<%= f.submit "remove doctor", class: "btn" %>
+							<%= f.button :submit, "remove doctor", {class: "btn btn-danger"} %>
 							<%end%>
 							</td>
 						<%end%>
@@ -73,10 +98,8 @@
 		<%end%>
 	</tbody>
 </table>	
-
-
-<%end%>
-<%if is_admin%>
+<%else%>
  <%= render partial: "shared/updatePermissions", locals: {user: @patient, pools: @pools}%>
 <%end%>
-<%= link_to 'Show', @patient %> 
+ <%end%>
+<%= link_to 'View patients Profile', @patient, {class: "btn btn-primary"} %> 

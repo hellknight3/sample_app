@@ -3,7 +3,7 @@
 	<thead>
 		<th>Name</th>
 		<th>Description</th>
-		<th>Institution</th>
+		<!--<th>Institution</th>-->
 		<th>Specialization</th>
 	</thead>
 	<tbody>
@@ -11,12 +11,14 @@
 		  <tr>
 			<td><%= pool.name %></td>
 			<td><%= pool.description %></td>
-			<td><%= pool.institution %></td>
+			<!--<td><%= pool.institution %></td>-->
 			<td><%= pool.specialization %></td>
 			<% current_user.pools.each do |p| %>
 				<%if pool.id == p.id %>
 					<td><%= link_to 'Show', pool,{class: "btn btn-primary"} %></td>
+					<%if is_admin%>
 					<td><%= link_to 'Edit', edit_pool_path(pool),{class: "btn btn-warning"} %></td>
+					<%end%>
 				<%end%>
 			<%end%>
 			</tr>

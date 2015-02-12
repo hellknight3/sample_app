@@ -3,8 +3,10 @@ class DoctorsController < ApplicationController
 	#this will then run before every POST action that exists after -> :new, :create
 	before_action :signed_in, only: [:show,:edit, :update]
 	before_action :signed_in_admin, only: [:new, :create]
-	before_action :correct_user, only: [:show,:edit, :update]
+	before_action :correct_user, only: [:edit, :update]
 	before_action :correct_doctor, only: [:index]
+	before_action :viewable, only: [:show]
+	
 	def index
 		#puts all of the doctors into a browsable list
 		#the list has a default length of 30 entries per page 
@@ -32,7 +34,7 @@ class DoctorsController < ApplicationController
 		#tries to save the doctor to the database
 		if @doctor.save		
 			#flashes a success message for the doctor		
-			flash[:success]
+			flash[:notice]="Doctor save successfully."
 			#redirects to the pools index page
 			redirect_to edit_doctor_path(@doctor)
 		else
@@ -71,24 +73,24 @@ class DoctorsController < ApplicationController
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:doctor][:pool_id]
 				if @perm.save
-					flash[:success]="permissions updated"
+					flash[:notice]="permissions updated"
 				else
-					flash[:error]="a problem occurred updating the users permissions"
+					flash[:alert]="a problem occurred updating the users permissions"
 				end
 				redirect_to edit_doctor_path(@doctor)
 			elsif(params[:doctor][:func] == "removePool")			
 				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:doctor][:pool_id]).delete_all
-				flash[:success]="removed doctors' permission from pool"
+				flash[:notice]="removed doctors' permission from pool"
 				redirect_to edit_doctor_path(params[:id])
 			end
 		else
 			if @user.authenticate(params[:user][:old_password])
 				@doctor.update(doctor_params)
 				@user.update(user_params)
-				flash[:success]="successfully updated your profile."
+				flash[:notice]="successfully updated your profile."
 				redirect_to @doctor
 			else
-				flash[:failure]="error updating your profile."
+				flash[:alert]="error updating your profile."
 				render 'edit'
 			end			
 			#redirect_to doctor_path(@doctor)
@@ -114,8 +116,7 @@ class DoctorsController < ApplicationController
 		end
 		def signed_in_admin
 			if signed_in?#checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
-				if current_user.profile_type=="Admin"#checks if the currently logged in user is an Admin
-				else
+				unless is_admin#checks if the currently logged in user is an Admin
 				redirect_to signin_url, notice: "You do not have permission to do that." #signin_url is implicitly defined in the config/routes.rb file
 				end
 			else
@@ -130,15 +131,25 @@ class DoctorsController < ApplicationController
 			#compares that user created above to the currently logged in user
 			
 			unless current_user?(@doctor.user) || is_admin
-				flash[:error] = "You do not have permission do view this doctors patients"
+				flash[:alert] = "You do not have permission do edit this doctor"
 				redirect_to(root_url) 
 			end
 		end
 		def correct_doctor
 			@doctor =Doctor.find(params[:id])
 			unless current_user?(@doctor.user) 
-				flash[:error] = "You do not have permission do view this doctors patients"
+				flash[:alert] = "You do not have permission do view this doctors patients"
 				redirect_back_or(signin_url)
+			end
+		end
+		def viewable
+			@doctor =Doctor.find(params[:id])
+			if is_patient
+				@patient = Patient.find(current_user.profile_id)
+			end
+			unless current_user?(@doctor.user) || is_admin || (defined?(@patient) && @patient.doctor_id ==@doctor.id)
+				flash[:alert] = "You do not have permission do view this doctor."
+				redirect_to(root_url) 
 			end
 		end
 end

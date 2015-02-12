@@ -12,9 +12,9 @@ class AppointmentsController < ApplicationController
 		@message = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
 		@message.updated_at = DateTime.now
 		if @message.save
-			flash[:success]="Successfully created appointment"
+			flash[:notice]="Successfully created appointment"
 		else 
-			flash[:failure]="Failed to create appointment"
+			flash[:alert]="Failed to create appointment"
 		
 		end
 			
@@ -31,7 +31,7 @@ class AppointmentsController < ApplicationController
 def update
 		if(params[:appointment][:func] == "destroy")
 			Appointment.find(params[:appointment][:appointment_id]).destroy
-			flash[:success]="Destroyed appointment"
+			flash[:notice]="Successfully destroyed appointment"
 			redirect_to appointments_path
 		elsif(params[:appointment][:func] == "create")
 			redirect_to new_message_path({messageable_id: params[:appointment][:messageable_id], messageable_type: "Appointment"})

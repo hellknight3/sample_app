@@ -13,12 +13,13 @@
 </div>
 <%if is_doctor %>
 <p>Current Patients</p>
+<ul class="list-group">
 <% @patients.find_each do |patient|%>
-	<p><%=patient.user.name%></p>
+	<li class="list-group-item"><%=patient.user.name%></li>
 	
 <%end%>
-
+</ul>
 <%end%>
 
-<%= link_to 'Edit', edit_doctor_path(@doctor) %> |
+<%= link_to 'Edit', edit_doctor_path(@doctor),{class: "btn btn-primary"} %>
 

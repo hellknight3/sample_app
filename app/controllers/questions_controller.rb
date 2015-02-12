@@ -7,7 +7,7 @@ class QuestionsController < ApplicationController
 	@question = Question.new(question_params)	
 	if @question.save
 		@question.update_attribute(:exercise_id, params[:question][:exercise_id])
-		flash["success"] = "successfully added question"
+		flash[:notice] = "successfully added question"
 		#redirects the user to the exercise that the question was added to.
 		redirect_to exercise_path(params[:question][:exercise_id])
 	else

@@ -65,4 +65,13 @@ module SessionsHelper
 	def store_location
 		session[:return_to] =request.url if request.get?
 	end
+	def profile(user)
+		if is_patient?(user)
+			return Patient.find(user.profile_id)
+		elsif is_doctor?(user)
+			return Doctor.find(user.profile_id)
+		elsif is_admin?(user)
+			return Admin.find(user.profile_id)
+		end
+	end		
 end

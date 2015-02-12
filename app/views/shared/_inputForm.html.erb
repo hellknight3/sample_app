@@ -22,21 +22,21 @@
 				<%= label :user, :password_confirmation, "Confirmation"%>
 				<%= password_field :user, :password_confirmation%>
 				<%if defined?(spec_user)%>
-				<%if spec_user="Patient"%>
-					<%=label :patient, :EmergencyContact %>
-					<%=text_field :patient, :emergencyContact%>
-					<%=label :patient, :emergencyPhoneNumber %>
-					<%=text_field :patient, :emergencyPhoneNumber%>
-					<%=label :dateOfBirth, :dateOfBirth %>
-					<%=text_field :dateOfBirth, :dateOfBirth%>
-					<%=label :patient, :familyDoctor %>
-					<%=text_field :patient, :familyDoctor%>
-					<%=label :patient, :phoneNumber %>
-					<%=text_field :patient, :phoneNumber%>
-					<%=label :patient, :weight %>
-					<%=text_field :patient, :weight%>
-					<%=label :patient, :height %>
-					<%=text_field :patient, :height%>
+					<%if spec_user="Patient"%>
+						<%=label :patient, :EmergencyContact %>
+						<%=text_field :patient, :emergencyContact%>
+						<%=label :patient, :emergencyPhoneNumber %>
+						<%=text_field :patient, :emergencyPhoneNumber%>
+						<%=label :dateOfBirth, :dateOfBirth %>
+						<%=text_field :dateOfBirth, :dateOfBirth%>
+						<%=label :patient, :familyDoctor %>
+						<%=text_field :patient, :familyDoctor%>
+						<%=label :patient, :phoneNumber %>
+						<%=text_field :patient, :phoneNumber%>
+						<%=label :patient, :weight %>
+						<%=text_field :patient, :weight%>
+						<%=label :patient, :height %>
+						<%=text_field :patient, :height%>
 					<%end%>
 				<%end%>
 				

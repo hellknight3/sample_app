@@ -4,12 +4,10 @@
 <table class="table">
 	<thead>
 		<th>name </th>
-
-
 	</thead>
 	<tbody>
 		<% @users.each do |user|%>
-			<p><%@temp=Message.where("user_id = ? and messageable_id=?",user.messageable_id,user.user_id).select(:user_id,:messageable_id).distinct.size%></p>
+			<%@temp=Message.where("user_id = ? and messageable_id=?",user.messageable_id,user.user_id).select(:user_id,:messageable_id).distinct.size%>
 			<% if @temp == 2 %>
 				<%if current_user.id == user.messageable_id%>
 					<%@user = User.find(user.user_id)%>
@@ -17,7 +15,11 @@
 					<%next%>
 				<%end%>
 			<%else%>
-				<%@user = User.find(user.messageable_id)%>
+				<%if user.user_id == current_user.id%>
+					<%@user = User.find(user.messageable_id)%>
+				<%else%>
+					<%@user = User.find(user.user_id)%>
+				<%end%>
 			<%end%>
 			<tr>
 				<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>

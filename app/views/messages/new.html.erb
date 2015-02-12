@@ -8,8 +8,7 @@
 
 
 <%end%>
-<div class="head hide">Contacts</div>
-<div id='popup' class="content hide">
+<div id='popup'>
 <table>
 		<thead>
 		<th>name</th>
@@ -27,7 +26,7 @@
 					<%= hidden_field :message, :messageable_type, :value => Appointment.name %>
 					<%= hidden_field :message, :user_id, :value => user.id %>
 					<%= hidden_field :message, :message, :value => user.name+" added to conversation" %>
-					<%=f.button :submit %>
+					<%=f.button :submit,{class: "btn btn-success"} %>
 				<%end%>
 			<%end%>
 			</td>

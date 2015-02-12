@@ -34,10 +34,10 @@ end
 		@permission.user_id =current_user.id
 		@permission.pool_id = @pool.id
 		if @permission.save
-		  flash[:success] = "Pool successfully created"
+		  flash[:notice] = "Pool successfully created"
 		  redirect_to @pool
 		else
-			flash[:failure] = "Pool failed to be created"
+			flash[:alert] = "Pool failed to be created"
 		end
 	  else
 		render 'new'	 
@@ -61,16 +61,13 @@ end
 	params.require(:pool).permit(:name, :description, :specialization)
   end
   def signed_in_as_admin
-  
   	if signed_in?
-		if current_user.profile_type=="Admin"
-		else
+		unless is_admin
 			redirect_to signin_url, notice: "You do not have permission to do that."
 		end
 	else
 		store_location
 		redirect_to signin_url, notice: "Please sign in."
 	end
-  
   end
 end

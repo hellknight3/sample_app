@@ -1,10 +1,10 @@
 class PatientsController < ApplicationController
+	helper UsersHelper
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create, :edit, :update
 	before_action :signed_in, only: [:edit, :update]
 	before_action :signed_in_admin, only: [:new, :create]
 	before_action :correct_user, only: [:show,:edit, :update]
-
 	def show
 		#shows the current users properties
 		@patient = Patient.find(params[:id])
@@ -24,7 +24,7 @@ class PatientsController < ApplicationController
 		#tries to save the patient to the database
 		if @patient.save
 			#flashes a success message for the admin		
-			flash[:success] ="successfully added patient"
+			flash[:notice] ="successfully added patient"
 			#redirects to the pool index page
 			redirect_to edit_doctor_path(@patient)
 		else
@@ -41,7 +41,7 @@ class PatientsController < ApplicationController
 			#if the current user is an admin it will create a doctor variable finding all the user profiles with a profile_type of doctor in the database
 			#@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
 			#@availableDocs= @doctors.pools.users.where("profile_type: = ?","Doctor").uniq.all
-			@doctors= User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("profile_type = 'Doctor' or profile_id = ?", params[:id]).uniq.all
+			@doctors= User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("profile_type = 'Doctor' or profile_id = ?", params[:id]).order("permissions.user_id ASC").uniq.all
 			#.joins(:user, :pool).where("profile_type = 'Doctor'").select(:name).uniq.all
 			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
 			
@@ -51,43 +51,56 @@ class PatientsController < ApplicationController
 		#finds the patient from the current params hash.
 		@patient = Patient.find(params[:id])
 		#gets the user from the patient that was found
-		@user = @patient.user
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
-		if defined?(params[:patient][:func])
-			if(params[:patient][:func] == "addDoc")
+		if defined?(params[:patient][:func]) &&params[:patient][:func] != nil
+
+		if(params[:patient][:func] == "addDoc")
 				@patient.update_attribute(:doctor_id, params[:patient][:doctor_id])
 				@patient.update_attribute(:accepted, false)
-				redirect_to admin_path(current_user.profile_id)
+				redirect_to edit_patient_path(@patient,{settings: "AvailableDocs"})
 			elsif(params[:patient][:func] == "removeDoc")
 				@patient.update_attribute(:doctor_id, nil)
 				@patient.update_attribute(:accepted, false)
-				redirect_to admin_path(current_user.profile_id)
+				redirect_to edit_patient_path(@patient, {settings: "AvailableDocs"})
 			elsif(params[:patient][:func] == "addPool")
 				@perm = Permission.new
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:patient][:pool_id]
 				if @perm.save
-					flash[:success]="permissions updated"
+					flash[:notice]="permissions updated"
 				else
-					flash[:error]="a problem occurred updating the users permissions"
+					flash[:alert]="a problem occurred updating the users permissions"
 				end
-				redirect_to edit_patient_path(@patient)
+				redirect_to edit_patient_path(@patient,{settings: "AdjustPools"})
 			elsif(params[:patient][:func] == "removePool")			
 				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:patient][:pool_id]).delete_all
-				flash[:success]="removed patients' permission from pool"
-				redirect_to edit_patient_path(params[:id])
+				flash[:notice]="removed patients' permission from pool"
+				redirect_to edit_patient_path(params[:id],{settings: "AdjustPools"})
 			elsif(params[:patient][:func] == "addNotes")
 				@patient.update_attribute(:doctorNotes, params[:patient][:doctorNotes])
 				redirect_to @patient
+			else 
+			flash[:alert]="problem updating"
+			redirect_to @patient
 			end
-		else
-			if @user.authenticate(params[:user][:old_password])
-				@patient.update(patient_params)
+		else	
+		
+			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
+				@user = @patient.user
 				@user.update(user_params)
-				flash[:success]="successfully updated your profile."
+				flash[:notice]="successfully updated your profile."
 				redirect_to @patient
+				
+			elsif defined?(params[:patient][:weight])
+				if @patient.update_attributes(patient_params)				
+					flash[:notice]="successfully updated your profile."
+					redirect_to @patient	
+				else 
+					flash[:alert]="error updating your profile."
+					render 'edit'
+				end
 			else
-				flash[:failure]="error updating your profile."
+				flash[:alert]="error updating your profile."
 				render 'edit'
 			end	
 		end
@@ -99,9 +112,8 @@ class PatientsController < ApplicationController
 		end
 		def patient_params
 			params.require(:patient).permit(:emergencyContact, :emergencyPhoneNumber, 
-			:dataOfBirth, :healthCardNumber, :phoneNumber, :weight, :height, :currentMedication,
+			:dateOfBirth, :healthCardNumber, :phoneNumber, :weight, :height, :currentMedication,
 			:currentIssue, :familyDoctor,:doctorNotes)
-
 		end
 		#before filters
 		def signed_in
@@ -112,8 +124,8 @@ class PatientsController < ApplicationController
 		end
 		def signed_in_admin
 			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analy sis
-				if is_admin #checks if the currently logged in user is an Admin
-				else
+				unless is_admin #checks if the currently logged in user is an Admin
+				
 				redirect_to signin_url, notice: "You do not have permission to do that."
 				end
 			else
@@ -123,10 +135,11 @@ class PatientsController < ApplicationController
 		end
 		def correct_user
 			#checks params hash for the user id storing that user into a variable
-			@user = User.find(params[:id])
+			@profile = Patient.find(params[:id])
+			@user = @profile.user
 			#compares that user created above to the currently logged in user
-			unless current_user?(@user) ||(is_admin && !is_director) || current_user?(@user.doctor)
-			flash[:error]="you do not have permission to do that."
+			unless current_user?(@user) ||(is_admin && !is_director) || (@profile.doctor_id == current_user.profile_id && current_user.profile_type =="Doctor")
+			flash[:alert]="you do not have permission to do that. " 
 			redirect_to(admins_path({user_type: "Admin"}))  
 			end
 		end

@@ -1,0 +1,20 @@
+
+
+<div class="row">
+	<div class="span6 offset3">
+		<%= simple_form_for(patient) do |f| %>
+				<%=f.input :emergencyContact %>
+				<%=f.input :emergencyPhoneNumber %>
+				<%=f.input :familyDoctor%>
+				<%=f.input :phoneNumber%>
+				<%=f.input :weight%>
+				<%=f.input :height%>
+			<%if is_admin%>
+				<%=f.input :dateOfBirth%>
+				<%=f.input :currentMedication%>
+				<%=f.input :currentIssue%>
+			<%end%>
+			<%= f.button :submit,{class: "btn btn-success"} %>
+		<% end %>
+	</div>
+</div>

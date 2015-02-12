@@ -31,9 +31,9 @@ class AdminsController < ApplicationController
 		#tries to save the admin to the database
 		if  @admin.save
 			#flashes a success message for the admin
-			flash[:success]
+			flash[:notice] = "Admin save successfully."
 			#redirects to the newly created admins' page
-			redirect_to edit_admin_path(@admin, {NewUser: "1"})
+			redirect_to edit_admin_path(@admin)
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
@@ -56,15 +56,15 @@ class AdminsController < ApplicationController
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:admin][:pool_id]
 				if @perm.save
-					flash[:success]="permissions updated"
+					flash[:notice]="permissions updated"
 				else
-					flash[:error]="a problem occurred updating the users permissions"
+					flash[:alert]="a problem occurred updating the users permissions"
 				end
 				redirect_to edit_admin_path(@admin)
 			elsif(params[:admin][:func] == "removePool")
 				
 				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:admin][:pool_id]).delete_all
-				flash[:success]="removed admins permission from pool"
+				flash[:notice]="removed admins permission from pool"
 				redirect_to edit_admin_path(params[:id])
 			end
 		else
@@ -73,10 +73,10 @@ class AdminsController < ApplicationController
 				@admin.update_attributes(admin_params)
 				#passes the attributes from the form to the user_params function
 				@user.update_attributes(user_params)
-				flash[:success]="successfully updated your profile."
+				flash[:notice]="successfully updated your profile."
 				redirect_to @admin
 			else
-				flash[:failure]="error updating your profile."
+				flash[:alert]="error updating your profile."
 				render 'edit'
 			end
 		end

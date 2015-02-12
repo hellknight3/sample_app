@@ -34,7 +34,7 @@ class MessagesController < ApplicationController
 	  if @message.save
 		#@message.update_attribute(:appointment_id, params[:internal][:appointment_id])
 		#@message.update_attribute(:user_id,current_user.id)
-		flash[:success] = "message sent successfully"
+		flash[:notice] = "message sent successfully"
 		redirect_to new_message_path({messageable_id:@message.messageable_id, messageable_type:@message.messageable_type})
 	  end
   end
