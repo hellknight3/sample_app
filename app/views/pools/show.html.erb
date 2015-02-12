@@ -1,15 +1,18 @@
 <h1><%=@pool.name%></h1>
 <p>description: <%=@pool.description%></p>
-<p>institution: <%=@pool.institution%></p>
+<!--<p>institution: <%=@pool.institution%></p>-->
 <p>specialization: <%=@pool.specialization%></p>
 <table class="table">
-<p>current users in the pool</p>
+<p></p>
 <%if is_admin %>
+	<ul class="list-group">
+	<li class="list-group-item list-group-item-info">current users in the pool</li>
 	<%@users.each do |user|%>
-		<tr class="row">
-		<td><%=user.name%></td>
-		</tr>
+		
+		<li class="list-group-item"><%=user.name%></li>
+		
 	<%end%>
+	</ul>
 <%end%>
 </table>
 <%= link_to 'Back', pools_path%>

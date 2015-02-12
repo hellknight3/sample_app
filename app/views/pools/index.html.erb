@@ -5,6 +5,8 @@
 		<th>Description</th>
 		<!--<th>Institution</th>-->
 		<th>Specialization</th>
+		<th></th>
+		<th></th>
 	</thead>
 	<tbody>
 	<% @pools.each do |pool| %>
@@ -13,13 +15,21 @@
 			<td><%= pool.description %></td>
 			<!--<td><%= pool.institution %></td>-->
 			<td><%= pool.specialization %></td>
+			<%addlinks=false%>
 			<% current_user.pools.each do |p| %>
 				<%if pool.id == p.id %>
 					<td><%= link_to 'Show', pool,{class: "btn btn-primary"} %></td>
 					<%if is_admin%>
 					<td><%= link_to 'Edit', edit_pool_path(pool),{class: "btn btn-warning"} %></td>
+					<%else%>
+					<td></td>
 					<%end%>
+					<%addlinks=true%>
 				<%end%>
+			<%end%>
+			<% unless addlinks%>
+				<td></td>
+				<td></td>
 			<%end%>
 			</tr>
 		<%end%>

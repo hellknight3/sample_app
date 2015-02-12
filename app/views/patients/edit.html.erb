@@ -44,6 +44,7 @@
 	<thead>
 		<tr>
 			<th>Available Doctors</th>
+			<th></th>
 		</tr>
 	</thead>
 
@@ -55,19 +56,20 @@
 				
 				<%doctor.pools.uniq.each do |dPool|%>
 				<%current_user.pools.each do |pPool|%>
-				<%unless defined?(@lastDoc)%>
-					
-					<%@lastDoc=doctor%>
-				<%else%>
 				
-					<%if @lastDoc==doctor%>
-						<%next%>
-					<%else%>
-					<%@lastDoc=doctor%>
-					<%end%>
-				<%end%>
 					<%if dPool == pPool%>
 				<%unless doctor ==@user || is_doctor?(doctor) == false%>	
+					<%unless defined?(@lastDoc)%>
+						
+							<%@lastDoc=doctor%>
+					<%else%>
+					
+						<%if @lastDoc==doctor%>
+							<%next%>
+						<%else%>
+						<%@lastDoc=doctor%>
+						<%end%>
+					<%end%>
 					<tr>
 						<td><%=doctor.name%></td>
 						<%if @patient.doctor.nil?%>
@@ -88,6 +90,8 @@
 							<%= f.button :submit, "remove doctor", {class: "btn btn-danger"} %>
 							<%end%>
 							</td>
+							<%else%>
+							<td></td>
 						<%end%>
 					</tr>
 				<%end%>
@@ -102,4 +106,7 @@
  <%= render partial: "shared/updatePermissions", locals: {user: @patient, pools: @pools}%>
 <%end%>
  <%end%>
-<%= link_to 'View patients Profile', @patient, {class: "btn btn-primary"} %> 
+ <br/>
+ <br/>
+ 
+<%= link_to 'View patients Profile', @patient, {class: "btn btn-primary", style: "margin-left:-15px;"} %> 

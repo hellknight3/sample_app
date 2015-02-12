@@ -26,7 +26,7 @@ class PatientsController < ApplicationController
 			#flashes a success message for the admin		
 			flash[:notice] ="successfully added patient"
 			#redirects to the pool index page
-			redirect_to edit_doctor_path(@patient)
+			redirect_to edit_patient_path(@patient)
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
@@ -41,7 +41,7 @@ class PatientsController < ApplicationController
 			#if the current user is an admin it will create a doctor variable finding all the user profiles with a profile_type of doctor in the database
 			#@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
 			#@availableDocs= @doctors.pools.users.where("profile_type: = ?","Doctor").uniq.all
-			@doctors= User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("profile_type = 'Doctor' or profile_id = ?", params[:id]).order("permissions.user_id ASC").uniq.all
+			@doctors= User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("profile_type = 'Doctor' or profile_id = ?", params[:id]).select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id").order("permissions.user_id ASC").uniq.all
 			#.joins(:user, :pool).where("profile_type = 'Doctor'").select(:name).uniq.all
 			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
 			
