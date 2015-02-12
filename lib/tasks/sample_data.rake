@@ -98,6 +98,6 @@ namespace :db do
 		user_id: 1,
 		messageable_id: 2,
 		messageable_type: "User"
-		}
+		)
 	end
 end
