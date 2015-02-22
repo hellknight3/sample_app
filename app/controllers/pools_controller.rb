@@ -1,5 +1,6 @@
   class PoolsController < ApplicationController
 	before_action :signed_in_as_admin, only: [:new, :create, :edit]
+	before_action :signed_in, only: [:index, :show]
   def index
 	  
 	  #if current_user.profile_type=="Doctor"
@@ -70,4 +71,10 @@ end
 		redirect_to signin_url, notice: "Please sign in."
 	end
   end
+  def signed_in
+			unless signed_in?#checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
+				store_location
+				redirect_to signin_url, notice: "Please sign in."
+			end
+		end
 end

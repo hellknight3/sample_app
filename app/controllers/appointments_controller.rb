@@ -1,4 +1,5 @@
 class AppointmentsController < ApplicationController
+	before_action :signed_in, only: [:new,:show,:edit, :update, :index]
   def new
 	  @user = current_user
 	  @appointment = Appointment.new
@@ -8,8 +9,6 @@ class AppointmentsController < ApplicationController
   def create
 	@appointment =Appointment.new(appointment_params)	
 	if @appointment.save
-		
-		
 		@messageDoc = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
 		@messageDoc.updated_at = DateTime.now
 		if defined?(params[:appointment][:patient_id]) && params[:appointment][:patient_id]!= ""
@@ -64,4 +63,10 @@ end
 	def message_params
 		params.require(:message).permit!
 	end
+	def signed_in
+			unless signed_in?#checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
+				store_location
+				redirect_to signin_url, notice: "Please sign in."
+			end
+		end
 end

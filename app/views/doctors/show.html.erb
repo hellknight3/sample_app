@@ -22,6 +22,7 @@
 <%end%>
 </ul>
 <%end%>
-
+<%unless is_patient%>
 <%= link_to 'Edit', edit_doctor_path(@doctor),{class: "btn btn-primary"} %>
+<%end%>
 

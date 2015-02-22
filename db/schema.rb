@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150126003046) do
+ActiveRecord::Schema.define(version: 20150220210354) do
 
   create_table "admins", force: true do |t|
     t.boolean "director"
@@ -40,6 +40,14 @@ ActiveRecord::Schema.define(version: 20150126003046) do
 
   add_index "appointments", ["pool_id"], name: "index_appointments_on_pool_id"
 
+  create_table "doc_relationships", force: true do |t|
+    t.integer  "doctor_id"
+    t.integer  "patient_id"
+    t.boolean  "accepted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "doctors", force: true do |t|
   end
 
@@ -56,7 +64,6 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "template"
   end
 
   create_table "institutions", force: true do |t|
@@ -74,9 +81,15 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.string   "messageable_type"
   end
 
+  create_table "notes", force: true do |t|
+    t.string   "content"
+    t.integer  "doctor_id"
+    t.integer  "patient_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "patients", force: true do |t|
-    t.integer "doctor_id"
-    t.boolean "accepted"
     t.string  "emergencyContact"
     t.string  "emergencyPhoneNumber"
     t.date    "dateOfBirth"
@@ -87,14 +100,12 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer "height"
     t.string  "currentMedication"
     t.string  "currentIssue"
-    t.string  "doctorNotes"
   end
-
-  add_index "patients", ["doctor_id"], name: "index_patients_on_doctor_id"
 
   create_table "permissions", id: false, force: true do |t|
     t.integer "user_id"
     t.integer "pool_id"
+    t.boolean "accepted"
   end
 
   create_table "pools", force: true do |t|

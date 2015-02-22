@@ -6,10 +6,28 @@
 				<%= gravatar_for @user %>
 				<%= @user.name %>
 			</h1>
+			<div class="panel-body left-header">
+			<%= link_to 'Personal Info', patient_path(params[:id],{info_type: "Personal"}), class: personalPage%> 
+			<%= link_to 'Current Doctors', patient_path(params[:id],{info_type: "Doctors"}), class: doctorsPage%> 
+			</div>
+			<div class="right-header">
+				<p><%= link_to 'Edit', edit_patient_path(@patient),{class: "btn btn-primary"} %> </p>
+			</div>
 		</section>
 	</aside>
 </div>
-
+<% if params[:info_type] =="Doctors"%>
+	<ul class="list-group">
+		<li class="list-group-item list-group-item-info">Current Doctors</li>
+		<%if @doctors.size>0%>
+			<%@doctors.each do |doctor|%>
+				<li class="list-group-item"><%= link_to doctor.user.name, doctor_path(doctor.id)%></li>
+			<%end%>
+		<%else%>
+			<li class="list-group-item list-group-item-warning	">No doctors currently assigned.</li>
+		<%end%>
+		</ul>
+<%else%>
 <ul class="list-group">
 	<li class="list-group-item list-group-item-info">Personal Information</li>
 	<li class="list-group-item">Date of Birth: <%= @patient.dateOfBirth %></li>
@@ -24,11 +42,10 @@
 	<li class="list-group-item">Emergency Contact: <%= @patient.emergencyContact %></li>
 	<li class="list-group-item">Emergency Contact Phone Number: <%= @patient.emergencyPhoneNumber %></li>
 
-	<%unless is_patient%>
-		<li class="list-group-item">Doctors Notes: <%= @patient.doctorNotes%></li>
+	<%#unless is_patient%>
+		<!--<li class="list-group-item">Doctors Notes: <%#@patient.doctorNotes%></li>-->
 		<%#flash[:success]=@patient.doctorNotes%>
-	<%end%>
+	<%#end%>
 </ul>
+<%end%>
 
-
-<p><%= link_to 'Edit', edit_patient_path(@patient),{class: "btn btn-primary"} %> </p>

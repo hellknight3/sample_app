@@ -8,14 +8,28 @@
 		<h1>Update your profile</h1>
 	<%end%>
 <%end%>
-<%if is_patient%>
-<%=link_to "Account Settings", edit_patient_path(@patient,{settings: "Account"})%> | 
-<%=link_to "Personal Settings", edit_patient_path(@patient,{settings: "Personal"})%>
-<%elsif is_admin%>
-	<%=link_to "Available Doctors", edit_patient_path(@patient,{settings: "AvailableDocs"})%> | 
-	<%=link_to "Adjust Pools", edit_patient_path(@patient,{settings: "AdjustPools"})%>
-
+<%@doctors.each do |doctor|%>
+<p><%=doctor.attributes%></p>
 <%end%>
+<div class="row">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+		<div class="panel-body left-header">
+			<%if is_patient%>
+				<%=link_to "Account Settings", edit_patient_path(@patient,{settings: "Account"}), class: accountSettings%> 
+				<%=link_to "Personal Settings", edit_patient_path(@patient,{settings: "Personal"}), class: personalSettings%>
+			<%elsif is_admin%>
+				<%=link_to "Available Doctors", edit_patient_path(@patient,{settings: "AvailableDocs"}), class: availableDocSettings%> 
+				<%=link_to "Adjust Pools", edit_patient_path(@patient,{settings: "AdjustPools"}), class: adjustPoolsSettings%>
+			<%end%>
+		</div>
+		<div class="right-header">
+			<%= link_to 'View Profile', @patient, {class: "btn btn-primary", style: "margin-left:-15px;"} %> 
+		</div>
+	</div>
+	<div class="col-md-3"></div>
+</div>
+<br/>
 <%#displays the edit page for the patient, different views will be created depending on the profile type%>
 <%if is_patient%>
 	<%if defined?(params[:settings]) && params[:settings]=="Personal"%>
@@ -25,19 +39,7 @@
 	<%end%>
 	<%#The Admin is checked since he will be the one adding the doctor to the user%>
 <%elsif is_doctor%>
-	<tbody>
-		<div class="row">
-			<div class="span6 offset3">
-				<%= simple_form_for(@patient) do |f| %>
-						<%= f.hidden_field :func, :value => "addNotes" %>
-							<%=f.input :doctorNotes%>
-						
-					<%= f.button :submit ,{class: "btn btn-success"} %>
-					
-				<% end %>
-		</div>
-	</div>
-	</tbody>
+	
 <%elsif is_admin%>
 	<%if defined?(params[:settings]) && params[:settings]=="AvailableDocs"%>
 	<table class="table">
@@ -49,57 +51,44 @@
 	</thead>
 
 	<tbody>	
-		<%if @doctors.include?(@user)%>
 			
-			<% @doctors.each do |doctor| %>
-			
-				
-				<%doctor.pools.uniq.each do |dPool|%>
-				<%current_user.pools.each do |pPool|%>
-				
-					<%if dPool == pPool%>
-				<%unless doctor ==@user || is_doctor?(doctor) == false%>	
-					<%unless defined?(@lastDoc)%>
-						
-							<%@lastDoc=doctor%>
-					<%else%>
-					
-						<%if @lastDoc==doctor%>
-							<%next%>
-						<%else%>
-						<%@lastDoc=doctor%>
-						<%end%>
-					<%end%>
+			<% @doctors.each do |doctor| %>		
 					<tr>
 						<td><%=doctor.name%></td>
-						<%if @patient.doctor.nil?%>
+						
+						<%if doctor.accepted.nil?%>
+							<td>
+							<button type="button" class="btn btn-warning" disabled="disabled">pending</button>
+							</td>
+						<%elsif doctor.accepted=='f' || doctor.patient_id != params[:id].to_i%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'addDoc' to the params hash%>
 							<%=simple_form_for(@patient) do |f| %> 
 							<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
+							<%= f.hidden_field :patient_id, :value => params[:id] %>
 							<%= f.hidden_field :func, :value => "addDoc" %>
 							<%= f.submit "add doctor", class: "btn btn-success" %>
 							<%end%>
 							</td>
-						<%elsif @patient.doctor_id == doctor.profile_id%>
+						<%elsif doctor.accepted=='t'%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
 							<%=simple_form_for(@patient) do |f| %> 
 							<%= f.hidden_field :doctor_id, :value => doctor.profile_id %>
+							<%= f.hidden_field :patient_id, :value => params[:id] %>
 							<%= f.hidden_field :func, :value => "removeDoc" %>
 							<%= f.button :submit, "remove doctor", {class: "btn btn-danger"} %>
 							<%end%>
 							</td>
-							<%else%>
+							<%#else%>
 							<td></td>
-						<%end%>
+						<%#end%>
 					</tr>
 				<%end%>
 			<%end%>
-		<%end%>
-		<%end%>
-			<%end%>
-		<%end%>
+		
+		
+		
 	</tbody>
 </table>	
 <%else%>
@@ -109,4 +98,3 @@
  <br/>
  <br/>
  
-<%= link_to 'View patients Profile', @patient, {class: "btn btn-primary", style: "margin-left:-15px;"} %> 
