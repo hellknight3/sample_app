@@ -20,4 +20,16 @@ module AdminsHelper
 			return "btn btn-default"
 		end
 	end
+	def show_user(user_type, user)
+		if user_type =="Doctor"
+			return doctor_path(user)
+		elsif user_type=="Admin"
+			return admin_path(user)
+
+		elsif user_type=="Patient"
+			return patient_path(user)
+
+		end
+		
+	end
 end

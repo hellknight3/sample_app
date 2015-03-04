@@ -2,14 +2,10 @@
 	before_action :signed_in_as_admin, only: [:new, :create, :edit]
 	before_action :signed_in, only: [:index, :show]
   def index
-	  
-	  #if current_user.profile_type=="Doctor"
-	  #@pools= Pool.find(:all, :conditions =>["doctor_id = :doc",{:doc => current_user.profile_id}])
-	  #elsif current_user.profile_type=="Patient"
-#		@pools= Pool.find(:all, :conditions =>["patient_id = :doc",{:doc => current_user.profile_id}])
-#	  elsif current_user.profile_type=="Admin"
-		#puts all the pools that exist into pages, I know this is not functionality desired but was having trouble getting working
+	  	#puts all the pools that exist into pages, I know this is not functionality desired but was having trouble getting working
 		@pools = Pool.paginate(page: params[:page])
+		@myPools = current_user.pools.paginate(page: params[:page])
+		@pools =  (@pools - @myPools).paginate(page: params[:page])
 #	  end
 end
   def show
@@ -51,8 +47,13 @@ end
   def update
 
 	@pool=Pool.find(params[:id])
-	@pool.update_attributes(pool_params)
+	if @pool.update_attributes(pool_params)
+		redirect_to pools_path({pools: "Personal"})
+	else
+		flash[:warning]="bad"
 	render 'edit'
+	
+	end
   end
   
 

@@ -1,4 +1,7 @@
 <h1>Listing <%=params[:user_type].pluralize%></h1>
+<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
 <div class="panel panel-default">
 	<div class="panel-body left-header">
 		<%= link_to 'Admins', admins_path({user_type: "Admin"}), class: adminPage%> 
@@ -14,7 +17,7 @@
 		<%= link_to 'New Doctor', new_doctor_path ,{class: "btn btn-success"}%> 
 		<%= link_to 'New Patient', new_patient_path({user_type: "Patient"}),{class: "btn btn-success"}  %>
 	</div>
-<table class="table">
+<table class="table table-hover">
   <tbody>	
   <%if params[:user_type]=="Patient" %>
 	<%unless is_director%>
@@ -28,7 +31,8 @@
 	<%if defined?(params[:user_type]) && temp%>
 		<% @admins.each do |user| %>
 			<%#unless user.profile_type.nil?%>
-				<tr class="active">
+				
+				<tr class="active" data-link="<%= show_user(user.profile_type,user.profile_type.constantize.find(user.profile_id))%>">
 				
 				<td><%= user.name%></td>
 			
@@ -38,7 +42,7 @@
 					<td>Director</td>
 				<%end%>
 			
-				<td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id),{class: "btn btn-primary"} %></td>
+				<!--<td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id),{class: "btn btn-primary"} %></td>-->
 				
 				<%if is_admin?(user)%>
 					<td><%= link_to 'Edit', edit_admin_path(user.profile_id),{class: "btn btn-warning"}  %></td>
@@ -58,4 +62,8 @@
 </table>
 <%=will_paginate%>
 </div>
+<div class="col-md-2"></div>
+		
 
+</div>
+</div>

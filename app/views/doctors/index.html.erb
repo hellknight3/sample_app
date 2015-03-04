@@ -6,12 +6,12 @@
 
 	 <%= link_to 'Rejected', doctors_path({patient_status: "Rejected", id: params[:id]}), class: rejectedPage%>
 	</div>
-<table class="table">
+<table class="table table-hover">
 
    <tbody>
    <%if @patients.size >0%>
 <% @patients.each do |patient| %>
-	<tr class="active">
+	<tr class="active" data-link="<%=patient_path(patient)%>">
 		<td><%= link_to patient.user.name, patient_path(patient.patient_id) %></td>	
 		<%if patient.accepted?%>
 			<td>

@@ -37,15 +37,23 @@ class AppointmentsController < ApplicationController
   end
 
   def index
-	@messages = Message.where("messageable_type = ? and user_id = ? ",'Appointment', current_user.id).select(:messageable_id).distinct.all
-  end
+		if params[:Appointment]=="Closed"
+			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is not null",'Appointment', current_user.id).select(:messageable_id).distinct.all
+		elsif params[:Appointment]=="Future"
+			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time > ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct.all
+		else
+			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time < ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct.all
+		end
+	end
 def update
 		if(params[:appointment][:func] == "destroy")
 			Appointment.find(params[:appointment][:appointment_id]).destroy
 			flash[:notice]="Successfully destroyed appointment"
 			redirect_to appointments_path
-		elsif(params[:appointment][:func] == "create")
-			redirect_to new_message_path({messageable_id: params[:appointment][:messageable_id], messageable_type: "Appointment"})
+		elsif(params[:appointment][:func] == "close")
+			@appointment=Appointment.find(params[:id])
+			@appointment.update_attribute(:end_time, params[:appointment][:end_time])
+			redirect_to appointments_path({Appointment: "Closed"})
 		end
 end
   
@@ -57,7 +65,7 @@ end
   private
   def appointment_params
 	
-	params.require(:appointment).permit(:name, :description)
+	params.require(:appointment).permit(:name, :description,:start_time)
 	
   end
 	def message_params

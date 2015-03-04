@@ -1,27 +1,15 @@
 <h1>Messages</h1>
-
-
-<table class="table">
-	<thead>
-		<th>name </th>
-	</thead>
+<table class="table table-hover">
 	<tbody>
+		<!--removes the duplicate messages that would cause duplicate names to be displayed -->
+		
 		<% @users.each do |user|%>
-			<%@temp=Message.where("user_id = ? and messageable_id=?",user.messageable_id,user.user_id).select(:user_id,:messageable_id).distinct.size%>
-			<% if @temp == 2 %>
-				<%if current_user.id == user.messageable_id%>
-					<%@user = User.find(user.user_id)%>
+				<%if user[1] == current_user.id%>
+					<%@user = User.find(user[0])%>
 				<%else%>
-					<%next%>
+					<%@user = User.find(user[1])%>
 				<%end%>
-			<%else%>
-				<%if user.user_id == current_user.id%>
-					<%@user = User.find(user.messageable_id)%>
-				<%else%>
-					<%@user = User.find(user.user_id)%>
-				<%end%>
-			<%end%>
-			<tr>
+			<tr data-link="<%=new_message_path({messageable_type: User.name, messageable_id: @user.id})%>">
 				<td><%= link_to @user.name, new_message_path({messageable_type: User.name, messageable_id: @user.id}) %></td>
 			</tr>
 		<%end%>

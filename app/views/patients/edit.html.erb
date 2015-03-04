@@ -8,9 +8,9 @@
 		<h1>Update your profile</h1>
 	<%end%>
 <%end%>
-<%@doctors.each do |doctor|%>
-<p><%=doctor.attributes%></p>
-<%end%>
+<%#@doctors.each do |doctor|%>
+<!--<p><%#doctor.attributes%></p>-->
+<%#end%>
 <div class="row">
 	<div class="col-md-3"></div>
 	<div class="col-md-6">
@@ -30,6 +30,8 @@
 	<div class="col-md-3"></div>
 </div>
 <br/>
+	
+
 <%#displays the edit page for the patient, different views will be created depending on the profile type%>
 <%if is_patient%>
 	<%if defined?(params[:settings]) && params[:settings]=="Personal"%>
@@ -42,6 +44,9 @@
 	
 <%elsif is_admin%>
 	<%if defined?(params[:settings]) && params[:settings]=="AvailableDocs"%>
+	<div class="row">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
 	<table class="table">
 	<thead>
 		<tr>
@@ -54,13 +59,13 @@
 			
 			<% @doctors.each do |doctor| %>		
 					<tr>
-						<td><%=doctor.name%></td>
+						<td><%=link_to doctor.name, doctor_path(doctor.profile_id)%></td>
 						
-						<%if doctor.accepted.nil?%>
+						<%if doctor.accepted.nil? && doctor.patient_id == params[:id].to_i%>
 							<td>
 							<button type="button" class="btn btn-warning" disabled="disabled">pending</button>
 							</td>
-						<%elsif doctor.accepted=='f' || doctor.patient_id != params[:id].to_i%>
+						<%elsif doctor.accepted==false || doctor.patient_id != params[:id].to_i%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'addDoc' to the params hash%>
 							<%=simple_form_for(@patient) do |f| %> 
@@ -70,7 +75,7 @@
 							<%= f.submit "add doctor", class: "btn btn-success" %>
 							<%end%>
 							</td>
-						<%elsif doctor.accepted=='t'%>
+						<%elsif doctor.accepted==true%>
 							<td>
 							<%#this will put the confirmation button for adding the current doctor to the patient. it will add [:patient][:func] = 'removeDoc' to the params hash%>
 							<%=simple_form_for(@patient) do |f| %> 
@@ -87,7 +92,9 @@
 				<%end%>
 			<%end%>
 		
-		
+		</div>
+	<div class="col-md-3"></div>
+	</div>
 		
 	</tbody>
 </table>	
@@ -95,6 +102,8 @@
  <%= render partial: "shared/updatePermissions", locals: {user: @patient, pools: @pools}%>
 <%end%>
  <%end%>
+
+
  <br/>
  <br/>
  
