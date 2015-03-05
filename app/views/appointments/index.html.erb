@@ -16,6 +16,8 @@
 	<th class="sorting-asc">name</th>
 	<th>description</th>
 	<th>Start time</th>
+	<th>End time</th>
+	
 	
   </thead>
 
@@ -28,16 +30,20 @@
 					<td><%=@appointment.name%></td>
 					<td><%=@appointment.description%></td>	
 					<td><%=@appointment.start_time%></td>
-					<!--
-
+					
+					<%if params[:Appointment]==nil || params[:Appointment]=="Open"%>
 					<td>
-					<%=form_for(@appointment) do |f| %> 
-						<%= f.hidden_field :appointment_id, :value => @appointment.id %>
-						<%= f.hidden_field :func, :value => "destroy" %>
-						<%= f.submit "Destroy appointment", class: "btn" %>
+					<%= form_for(@appointment) do |f| %>
+						<%= hidden_field :appointment, :end_time, :value => DateTime.now %>
+						<%= hidden_field :appointment, :func, :value => "close" %>
+						<%= f.submit "Close appointment", class: "btn btn-large btn-warning" %>
 						<%end%>
 					</td>
-					-->
+					<%else%>
+					<td>
+					<%=@appointment.end_time%>
+					</td>
+					<%end%>
 					
 				</tr>
 			<%end%>
@@ -51,6 +57,7 @@
 		<%end%>
 		appoinments
 		</td>
+		<td></td>
 		<td></td>
 		<td></td>
 		</tr>

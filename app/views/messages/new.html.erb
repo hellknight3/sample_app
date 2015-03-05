@@ -68,14 +68,6 @@
 	<%unless is_patient%>
 		<button class="btn btn-info" onclick="$('#popup').show();">add recipient</button>
 	<%end%>
-	<%if is_doctor %>
-		<%= form_for(@appointment) do |f| %>
-		<%= hidden_field :appointment, :end_time, :value => DateTime.now %>
-		<%= hidden_field :appointment, :func, :value => "close" %>
-		<%= f.submit "Close appointment", class: "btn btn-large btn-warning" %>
-	<%end%>
-	
-<% end %>
 <%end%>
 <%else%>
 <h1>Appointment closed</h1>

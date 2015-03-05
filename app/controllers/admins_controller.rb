@@ -4,7 +4,7 @@ class AdminsController < ApplicationController
 	before_action :signed_in_director, only: [:new, :create]
 	before_action :signed_in_admin, only: [:index, :edit, :update]
 	before_action :correct_user, only: [:show, :edit, :update]
-	before_action :signed_in, only: [:show, :edit, :update]
+	before_action :signed_in, only: [:show, :edit, :update, :new,:create,:index]
 	def show
 		@admin = Admin.find(params[:id]) 
 		@user = @admin.user
@@ -13,7 +13,7 @@ class AdminsController < ApplicationController
 	#puts all of the admins into a browsable list
 	#the list has a default length of 30 entries per page 
 	#uses will_paginate in the view to put the page bar in
-	@admins =User.where("profile_type =?",params[:user_type]).paginate(page: params[:page])
+	@admins =User.where("profile_type =?",params[:user_type]).order("name ASC").paginate(page: params[:page])
 
 		
 	end
@@ -93,32 +93,23 @@ class AdminsController < ApplicationController
 		#before filters
 		#functions called at the start of various actions. to see which is called by what function check first few lines of this code with before_action
 		def signed_in
-			if signed_in?#checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
-			else
+			unless signed_in?#checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
 				store_location
 				redirect_to signin_url, notice: "Please sign in."
 			end
 		end
 		#checks if the currently signed in user is an admin
 		def signed_in_admin
-			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
-				unless is_admin #checks if the currently logged in user is an Admin
-					redirect_to signin_url, notice: "You do not have permission to do that."
-				end
-			else
+			unless is_admin #checks if the currently logged in user is an Admin
 				store_location
-				redirect_to signin_url, notice: "Please sign in." #signin_url is implicitly defined in the config/routes.rb file
+				redirect_to signin_url, notice: "You do not have permission to do that."
 			end
 		end
 		def signed_in_director
-			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
 				unless is_director #checks if the currently logged in user is an Admin
+					store_location
 					redirect_to signin_url, notice: "You do not have permission to do that."
 				end
-			else
-				store_location
-				redirect_to signin_url, notice: "Please sign in." #signin_url is implicitly defined in the config/routes.rb file
-			end
 		end
 		
 		#checks that the user that is logged in matches the id of the user that is in the params hash matches that which is currently logged in

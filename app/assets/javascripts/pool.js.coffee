@@ -3,5 +3,5 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 $ ->
 	$("tr[data-link]").click (e) ->
-		if e.target.innerHTML not in ["Edit","Update","New Appointment","Accept","Reject"]
+		if e.target.innerHTML not in ["Edit","Update","New Appointment","Accept Patient","Reject Patient","Close Appointment"]
 			window.location =  $(this).data("link")

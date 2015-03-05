@@ -71,7 +71,7 @@ class DoctorsController < ApplicationController
 				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:doctor][:doctor_id], params[:doctor][:patient_id]).first
 				#updates the doctors patient that had the accepted sent with a true value
 				@docRelationship.update_attribute(:accepted, true)
-				redirect_to doctors_path(id: @doctor)
+				redirect_to doctors_path(id: @doctor,patient_status: "Pending" )
 			elsif(params[:doctor][:func] == "reject")
 				#
 				@patient=Patient.find(params[:doctor][:patient_id])
@@ -82,7 +82,7 @@ class DoctorsController < ApplicationController
 				
 				#removes the doctors id from the patient with the request
 				#sets the accepted value of the patient from the current doctor to false
-				redirect_to doctors_path(id: @doctor)
+				redirect_to doctors_path(id: @doctor,patient_status: "Pending")
 			elsif(params[:doctor][:func] == "addPool")
 				@user = @doctor.user
 				@perm = Permission.new

@@ -1,4 +1,5 @@
 <% provide(:title, "Edit patient") %>
+
 <%if is_admin || is_doctor%>
 	<h1>Update <%=@patient.user.name%></h1>
 <%else%>
@@ -106,4 +107,3 @@
 
  <br/>
  <br/>
- 

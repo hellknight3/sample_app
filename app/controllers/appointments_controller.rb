@@ -12,9 +12,9 @@ class AppointmentsController < ApplicationController
 		@messageDoc = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => current_user.id, :message => current_user.name+" Started appointment")
 		@messageDoc.updated_at = DateTime.now
 		if defined?(params[:appointment][:patient_id]) && params[:appointment][:patient_id]!= ""
-		@patient = Patient.find(params[:appointment][:patient_id])
-		@messagePat = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => @patient.user.id, :message => current_user.name+" added to appointment")
-		@messagePat.updated_at = DateTime.now
+			@patient = Patient.find(params[:appointment][:patient_id])
+			@messagePat = Message.new(:messageable_id => @appointment.id,:messageable_type => "Appointment", :user_id => @patient.user.id, :message => @patient.user.name+" added to appointment")
+			@messagePat.updated_at = DateTime.now
 		end
 		if defined?(@messagePat) 
 			if @messageDoc.save && @messagePat.save
@@ -42,6 +42,7 @@ class AppointmentsController < ApplicationController
 		elsif params[:Appointment]=="Future"
 			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time > ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct.all
 		else
+			#the Open case which is default
 			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time < ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct.all
 		end
 	end
@@ -53,7 +54,7 @@ def update
 		elsif(params[:appointment][:func] == "close")
 			@appointment=Appointment.find(params[:id])
 			@appointment.update_attribute(:end_time, params[:appointment][:end_time])
-			redirect_to appointments_path({Appointment: "Closed"})
+			redirect_to appointments_path({Appointment: "Open"})
 		end
 end
   

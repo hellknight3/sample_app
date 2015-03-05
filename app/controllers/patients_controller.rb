@@ -44,13 +44,14 @@ class PatientsController < ApplicationController
 			#if the current user is an admin it will create a doctor variable finding all the user profiles with a profile_type of doctor in the database
 			#@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
 			#@availableDocs= @doctors.pools.users.where("profile_type: = ?","Doctor").uniq.all
-			
-			
-			@SelDocs= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id INNER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' and doc_relationships.patient_id = ?", params[:id]).select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").uniq.all
+			@SelDocs= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id INNER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id')
+			@SelDocs=@SelDocs.where("profile_type = 'Doctor' and doc_relationships.patient_id = ?", params[:id])
+			@SelDocs=@SelDocs.select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted")
+			@SelDocs=@SelDocs.order("permissions.user_id ASC").uniq
 			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq.all
 			@doctors =  @SelDocs | @SelRelations
 			#.joins(:user, :pool).where("profile_type = 'Doctor'").select(:name).uniq.all
-			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
+			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq
 			
 		end		
 	end

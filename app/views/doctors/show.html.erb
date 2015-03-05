@@ -15,7 +15,7 @@
 
 
 <ul class="list-group">
-<li class="list-group-item list-group-item-info">Current Patients</li>
+<li class="list-group-item list-group-item-info boldHead">Current Patients</li>
 <% @patients.find_each do |patient|%>
 	<li class="list-group-item"><%=link_to patient.user.name, patient_path(patient.id)%></li>
 	

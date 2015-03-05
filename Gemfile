@@ -3,6 +3,7 @@ ruby '2.0.0'
 #ruby-gemset=railstutorial_rails_4_0
   gem 'pg', '0.15.1'
 gem 'rails', '4.0.8'
+gem 'rack-mini-profiler'
 gem 'bootstrap-sass', '~> 3.3.3'
 gem 'sprockets', '2.11.0'
 gem 'bcrypt-ruby', '3.1.2'
