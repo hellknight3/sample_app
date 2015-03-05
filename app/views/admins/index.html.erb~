@@ -1,7 +1,7 @@
 <h1>Listing <%=params[:user_type].pluralize%></h1>
 <div class="panel panel-default">
   <div class="panel-body">
-	<%= link_to 'Administrators', admins_path({user_type: "Admin"})%> |
+	<%= link_to 'Admins', admins_path({user_type: "Admin"})%> |
 	<%= link_to 'Doctors', admins_path({user_type: "Doctor"})%> 
 	<%unless is_director%>
 	| <%= link_to 'Patients', admins_path({user_type: "Patient"})%>
@@ -11,7 +11,7 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Name</th>
+      <th>name</th>
 		<th></th>
 		<th></th>
 		<th></th>
@@ -29,15 +29,10 @@
 		<%temp=true%>
   <%end%>
 	<%if defined?(params[:user_type]) && temp%>
-		<%= form_tag admins_path :method =>'search' do %>
-		 <p>
-			<%= text_field_tag :search, params[:search]%>
-			<%=submit_tag "Search"%>
-		</p>
-		<% end %>
 		<% @admins.each do |user| %>
 			<%#unless user.profile_type.nil?%>
 				<tr>
+				
 				<td><%= user.name%></td>
 			
 				<%unless is_director?(user)%>
@@ -51,7 +46,6 @@
 				<%if is_admin?(user)%>
 					<td><%= link_to 'Edit', edit_admin_path(user.profile_id),{class: "btn btn-warning"}  %></td>
 				<%elsif is_patient?(user)%>
-				
 					<td><%= link_to 'Edit', edit_patient_path(user.profile_id),{class: "btn btn-warning"}  %></td>
 				<%elsif is_doctor?(user)%>
 						<td><%= link_to 'Edit', edit_doctor_path(user.profile_id),{class: "btn btn-warning"} 	 %></td>
