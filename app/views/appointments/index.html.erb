@@ -1,12 +1,24 @@
 <h1>My Appointments</h1>
-<table class="table">
+<div class="panel panel-default">	
+		<div class="panel-body left-header">
+			<%= link_to 'Open Appointments', appointments_path({Appointment: "Open"}), {class: openAppointmentPage}%> 
+			<%= link_to 'Future Appointments', appointments_path({Appointment: "Future"}), {class: futureAppointmentPage}%> 
+			<%= link_to 'Closed Appointments', appointments_path({Appointment: "Closed"}), {class: closedAppointmentPage}%> 
+		</div>
+		<div class="right-header">
+		<%unless is_patient%>
+			<%= link_to 'New Appointment', new_appointment_path, {class: "btn btn-success"}%> 
+		<%end%>
+		</div>
+<table class="table table-hover">
   <thead>
-    <tr class="row">
+   
 	<th class="sorting-asc">name</th>
 	<th>description</th>
-	<th></th>
-	<th></th>
-</tr>
+	<th>Start time</th>
+	<th>End time</th>
+	
+	
   </thead>
 
   <tbody>
@@ -14,36 +26,43 @@
     <% @messages.each do |message| %>
 		<%unless message.nil?%>
 			<% @appointment=Appointment.find(message.messageable_id)%>
-				<tr class="row">
+				<tr class="active" data-link="<%=new_message_path({messageable_id: @appointment.id, messageable_type: Appointment.name})%>">
 					<td><%=@appointment.name%></td>
 					<td><%=@appointment.description%></td>	
-					<td><%=@appointment.updated_at%></td>	
+					<td><%=@appointment.start_time%></td>
+					
+					<%if params[:Appointment]==nil || params[:Appointment]=="Open"%>
 					<td>
-
-					<%=form_for(@appointment) do |f| %> 
-						<%= f.hidden_field :messageable_id, :value => @appointment.id %>
-						<%= f.hidden_field :messageable_type, :value => Appointment.name %>
-						<%= f.hidden_field :func, :value => "create" %>
-						<%= f.submit "Send new message", class: "btn btn-success" %>
+					<%= form_for(@appointment) do |f| %>
+						<%= hidden_field :appointment, :end_time, :value => DateTime.now %>
+						<%= hidden_field :appointment, :func, :value => "close" %>
+						<%= f.submit "Close appointment", class: "btn btn-large btn-warning" %>
 						<%end%>
 					</td>
-					<!--
-
+					<%else%>
 					<td>
-					<%=form_for(@appointment) do |f| %> 
-						<%= f.hidden_field :appointment_id, :value => @appointment.id %>
-						<%= f.hidden_field :func, :value => "destroy" %>
-						<%= f.submit "Destroy appointment", class: "btn" %>
-						<%end%>
+					<%=@appointment.end_time%>
 					</td>
-					-->
+					<%end%>
 					
 				</tr>
 			<%end%>
-		
+	<%end%>
+	<%if @messages.size==0%>
+		<tr class="warning">
+		<td>You currently have no <%if params[:Appointment] == nil%>
+			<%="Open" %>
+		<%else %>
+			<%=params[:Appointment].downcase%>
+		<%end%>
+		appoinments
+		</td>
+		<td></td>
+		<td></td>
+		<td></td>
+		</tr>
 	<%end%>
     </tbody>
     </table>
-<%unless is_patient%>
-<%= link_to 'New Appointment', new_appointment_path, {class: "btn btn-success"}%> 
-<%end%>
+
+</div>

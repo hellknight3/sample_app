@@ -15,3 +15,30 @@
     border: 2px solid;
     border-radius: 1em;
 }
+.patient{
+width:50%; margin-left:49%
+
+}
+.other{
+width:50%;
+}
+.header-left{
+list-style:none;
+margin-left:-40px;
+margin-top:-5px;
+float:left;
+}
+.header-right{
+list-style:none;
+margin-top:-5px;
+float:right;
+
+}
+.message-history{
+	overflow-y:scroll;
+	height:30em;
+	.panel{
+	margin-bottom:5px;
+	
+	}
+}

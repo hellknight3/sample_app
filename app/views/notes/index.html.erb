@@ -1,0 +1,27 @@
+<% provide(:title, 'Add note') %>
+<h1>Notes for <%=@patient.user.name%></h1>
+<table class="table">
+<%@notes.each do |note|%>
+	<tr class="row"><td><%=note.content%></td></tr>
+<%end%>
+</table>
+<table class="table">
+<tbody>
+
+
+	<%if is_doctor%>
+		
+		<div class="row">
+			<div class="span6 offset3">
+				<%= simple_form_for(@note, :url => url_for(:action => 'create', :controller => 'notes'),:method => 'post') do |f| %>
+						<%= f.hidden_field :patient_id, :value => params[:patient_id]%>
+						<%= f.hidden_field :doctor_id, :value => current_user.profile_id%>	
+						<%=f.input :content, :label =>"Note"%>
+					<%= f.button :submit ,{class: "btn btn-success"} %>
+					
+				<% end %>
+		</div>
+	</div>
+	<%end%>
+	</tbody>
+	</table>

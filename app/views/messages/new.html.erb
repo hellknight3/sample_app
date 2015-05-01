@@ -1,45 +1,27 @@
 <h1>Conversation history</h1>
-<% @messages.each do |message| %>
-<style>
-.patient{
-width:50%; margin-left:50%
-}
-.other{
-width:50%;
-}
-.header-left{
-list-style:none;
-margin-left:-25px;
-float:left;
-}
-.header-right{
-list-style:none;
-margin-left:30%;
-float:left;
-}
-</style>
-<%if is_patient?(message.user)%>
-<div class="panel panel-default patient" >
-<%else%>
-<div class="panel panel-default other" >
-<%end%>
-  <div class="panel-heading">
-  <ul>
-	  <li class="header-left"><%=message.user.name%></li>
-	  <%if message.has_attribute?(:updated_at)%>
-		<li class="header-right">
-			<%=message.updated_at%>
-		</li>
+<div class="message-history">
+	<% @messages.each do |message| %>
+		<%if is_patient?(message.user)%>
+			<div class="panel panel-default patient" >
+		<%else%>
+			<div class="panel panel-default other" >
+		<%end%>
+		<div class="panel-heading">
+			<ul>
+				<li class="header-left"><%=message.user.name%></li>
+				<%if message.has_attribute?(:updated_at)%>
+					<li class="header-right">
+						<%=message.updated_at%>
+					</li>
+				<%end%>
+			</ul>	
+		</div>
+		<div class="panel-body">
+			<%=message.message%>
+		</div>
+		</div>
 	<%end%>
-	</ul>	
-  </div>
-  <div class="panel-body">
-   <%=message.message%>
-  </div>
 </div>
-
-
-<%end%>
 <div id='popup'>
 <table>
 		<thead>
@@ -71,21 +53,22 @@ float:left;
 	<button onclick="$('#popup').hide();">Close</button>
 
 </div>
-<p><%# @users%></p>
-<p><%# @messages%></p>
-
+<%if params[:messageable_type] == User.name ||(params[:messageable_type]==Appointment.name && @appointment.end_time.nil?)%>
 <h1>New Message</h1>
 <%= form_for(@message) do |f| %>
 	<%= render 'shared/error_messages' %>
 	<%= hidden_field :message, :messageable_id, :value =>	params[:messageable_id] %>
 	<%= hidden_field :message, :messageable_type, :value => params[:messageable_type] %>
 	<%= hidden_field :message, :user_id, :value => current_user.id %>
-	<%=text_area :message, :message ,:size => "3\20x10"%>
+	<%=text_area :message, :message ,:size => "1x10"%>
 	<%= f.submit "Send message", class: "btn btn-large btn-primary" %>
 <% end %>
 
 <%if params[:messageable_type]==Appointment.name%>
-<%unless is_patient%>
-<button onclick="$('#popup').show();">add recipient</button>
+	<%unless is_patient%>
+		<button class="btn btn-info" onclick="$('#popup').show();">add recipient</button>
+	<%end%>
 <%end%>
+<%else%>
+<h1>Appointment closed</h1>
 <%end%>

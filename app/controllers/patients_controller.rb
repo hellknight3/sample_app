@@ -9,6 +9,8 @@ class PatientsController < ApplicationController
 		#shows the current users properties
 		@patient = Patient.find(params[:id])
 		@user = @patient.user
+		@doctors=Doctor.joins("INNER JOIN doc_relationships ON doctors.id = doc_relationships.doctor_id").where("patient_id= ? and accepted = ?",@patient.id,true).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, doctors.id").all #@doctor.patients.paginate(page: params[:page])
+
 	end
 	def new
 		#creates variables for the views to initialize
@@ -37,13 +39,19 @@ class PatientsController < ApplicationController
 		@patient = Patient.find(params[:id])
 		#finds the user profile of the patient that is found
 		@user = @patient.user
+		@note = Note.new
 		if(is_admin)
 			#if the current user is an admin it will create a doctor variable finding all the user profiles with a profile_type of doctor in the database
 			#@doctors=User.find(:all, :conditions => ["profile_type = :doc",{:doc => 'Doctor'}])
 			#@availableDocs= @doctors.pools.users.where("profile_type: = ?","Doctor").uniq.all
-			@doctors= User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("profile_type = 'Doctor' or profile_id = ?", params[:id]).select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id").order("permissions.user_id ASC").uniq.all
+			@SelDocs= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id INNER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id')
+			@SelDocs=@SelDocs.where("profile_type = 'Doctor' and doc_relationships.patient_id = ?", params[:id])
+			@SelDocs=@SelDocs.select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted")
+			@SelDocs=@SelDocs.order("permissions.user_id ASC").uniq
+			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq.all
+			@doctors =  @SelDocs | @SelRelations
 			#.joins(:user, :pool).where("profile_type = 'Doctor'").select(:name).uniq.all
-			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
+			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq
 			
 		end		
 	end
@@ -55,12 +63,33 @@ class PatientsController < ApplicationController
 		if defined?(params[:patient][:func]) &&params[:patient][:func] != nil
 
 		if(params[:patient][:func] == "addDoc")
-				@patient.update_attribute(:doctor_id, params[:patient][:doctor_id])
-				@patient.update_attribute(:accepted, false)
+		
+				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
+				if @docRelationship
+					@docRelationship.update_attribute(:accepted, nil)
+				else
+					@newRelationship=DocRelationship.new
+					@newRelationship.doctor_id = params[:patient][:doctor_id]
+					@newRelationship.patient_id= params[:patient][:patient_id]
+					@newRelationship.accepted= nil
+					if @newRelationship.save
+						flash[:notice] ="added doctor"
+					end
+				end
 				redirect_to edit_patient_path(@patient,{settings: "AvailableDocs"})
 			elsif(params[:patient][:func] == "removeDoc")
-				@patient.update_attribute(:doctor_id, nil)
-				@patient.update_attribute(:accepted, false)
+				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
+				if @docRelationship
+					@docRelationship.update_attribute(:accepted, false)
+				else
+					@newRelationship=DocRelationship.new
+					@newRelationship.doctor_id= params[:doctor][:doctor_id]
+					@newRelationship.patient_id= params[:doctor][:patient_id]
+					@newRelationship.accepted= false
+					if @newRelationship.save
+						flash[:notice] ="added doctor"
+					end
+				end
 				redirect_to edit_patient_path(@patient, {settings: "AvailableDocs"})
 			elsif(params[:patient][:func] == "addPool")
 				@perm = Permission.new
@@ -138,7 +167,9 @@ class PatientsController < ApplicationController
 			@profile = Patient.find(params[:id])
 			@user = @profile.user
 			#compares that user created above to the currently logged in user
-			unless current_user?(@user) ||(is_admin && !is_director) || (@profile.doctor_id == current_user.profile_id && current_user.profile_type =="Doctor")
+			@docRelation=DocRelationship.where("doctor_id=? and patient_id=?",current_user.profile_id,@profile.id).all.size
+			
+			unless current_user?(@user) ||(is_admin && !is_director) || (@docRelation >0 && current_user.profile_type =="Doctor")
 			flash[:alert]="you do not have permission to do that. " 
 			redirect_to(admins_path({user_type: "Admin"}))  
 			end

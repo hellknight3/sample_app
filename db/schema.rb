@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150126003046) do
+ActiveRecord::Schema.define(version: 20150220210354) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "admins", force: true do |t|
     t.boolean "director"
@@ -25,8 +28,8 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer  "user_id"
   end
 
-  add_index "answers", ["question_id"], name: "index_answers_on_question_id"
-  add_index "answers", ["user_id"], name: "index_answers_on_user_id"
+  add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
+  add_index "answers", ["user_id"], name: "index_answers_on_user_id", using: :btree
 
   create_table "appointments", force: true do |t|
     t.datetime "start_time"
@@ -38,7 +41,15 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer  "pool_id"
   end
 
-  add_index "appointments", ["pool_id"], name: "index_appointments_on_pool_id"
+  add_index "appointments", ["pool_id"], name: "index_appointments_on_pool_id", using: :btree
+
+  create_table "doc_relationships", force: true do |t|
+    t.integer  "doctor_id"
+    t.integer  "patient_id"
+    t.boolean  "accepted"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "doctors", force: true do |t|
   end
@@ -56,7 +67,6 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "template"
   end
 
   create_table "institutions", force: true do |t|
@@ -74,9 +84,15 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.string   "messageable_type"
   end
 
+  create_table "notes", force: true do |t|
+    t.string   "content"
+    t.integer  "doctor_id"
+    t.integer  "patient_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "patients", force: true do |t|
-    t.integer "doctor_id"
-    t.boolean "accepted"
     t.string  "emergencyContact"
     t.string  "emergencyPhoneNumber"
     t.date    "dateOfBirth"
@@ -87,14 +103,12 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer "height"
     t.string  "currentMedication"
     t.string  "currentIssue"
-    t.string  "doctorNotes"
   end
-
-  add_index "patients", ["doctor_id"], name: "index_patients_on_doctor_id"
 
   create_table "permissions", id: false, force: true do |t|
     t.integer "user_id"
     t.integer "pool_id"
+    t.boolean "accepted"
   end
 
   create_table "pools", force: true do |t|
@@ -106,7 +120,7 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer  "institutions_id"
   end
 
-  add_index "pools", ["institutions_id"], name: "index_pools_on_institutions_id"
+  add_index "pools", ["institutions_id"], name: "index_pools_on_institutions_id", using: :btree
 
   create_table "questions", force: true do |t|
     t.string   "name"
@@ -116,7 +130,7 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer  "exercise_id"
   end
 
-  add_index "questions", ["exercise_id"], name: "index_questions_on_exercise_id"
+  add_index "questions", ["exercise_id"], name: "index_questions_on_exercise_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -130,7 +144,7 @@ ActiveRecord::Schema.define(version: 20150126003046) do
     t.integer  "pool_id"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["remember_token"], name: "index_users_on_remember_token"
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
 
 end

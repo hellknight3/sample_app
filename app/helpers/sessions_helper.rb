@@ -1,7 +1,7 @@
 module SessionsHelper
 	def sign_in(user)
 		remember_token = User.new_remember_token
-		cookies[:remember_token] = remember_token
+		cookies[:remember_token] = {value: remember_token, expires: 20.minutes.from_now.utc}
 		user.update_attribute(:remember_token, User.digest(remember_token))
 		self.current_user = user
 	end
@@ -16,8 +16,7 @@ module SessionsHelper
 		@current_user ||= User.find_by(remember_token: remember_token)
 	end
 	def get_patient(user)
-	return Patient.find(user.profile_id)
-	
+		return Patient.find(user.profile_id)	
 	end
 	def current_doctor
 		Doctor.find(current_user.profile_id)

@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
 			elsif is_doctor
 				redirect_back_or doctor_path(@user.profile_id)
 			elsif is_patient
-				redirect_back_or patient_path(@user.profile_id)
+				redirect_back_or patient_path(@user.profile_id,{info_type: "Personal"})
 			end			
 		else
 			flash.now[:alert] = 'Invalid email/password combination'

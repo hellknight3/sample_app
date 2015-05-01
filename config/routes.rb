@@ -16,7 +16,7 @@ SampleApp::Application.routes.draw do
 	resources :exercises
 	resources :questions 
 	resources :answers
-		
+	resources :notes
 	
 	resources :messages
 	#resources :users

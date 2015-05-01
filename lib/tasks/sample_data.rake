@@ -66,14 +66,20 @@ namespace :db do
 					weight: w,
 					height: h,
 					currentMedication: Faker::Name.name,
-					currentIssue: Faker::Name.name,
-					doctor_id: doctorId)
+					currentIssue: Faker::Name.name)
 			 patient.build_user(name: name,
 				     email: email,
 				     password: password,
 				     password_confirmation: password)
 			unless patient.save
 				puts "error creating patient"
+			end
+			docRelationship = DocRelationship.create!(
+			doctor_id:doctorId,
+			patient_id:patient.id,
+			accepted:nil)
+			unless docRelationship.save
+				puts "error adding doctor"
 			end
 		end
 		

@@ -12,7 +12,20 @@ class DoctorsController < ApplicationController
 		#the list has a default length of 30 entries per page 
 		#uses will_paginate in the view to put the page bar in
 		@doctor=Doctor.find(params[:id])
-		@patients=@doctor.patients.paginate(page: params[:page])
+		if params[:patient_status]=="Accepted"
+		@acceptedStatus=true
+		elsif params[:patient_status]=="Rejected"
+		@acceptedStatus=false
+		else
+		@acceptedStatus=nil
+		end
+		if @acceptedStatus.nil?
+		@patients=Patient.joins("INNER JOIN doc_relationships ON patients.id = doc_relationships.patient_id").where("doctor_id= ? and accepted is null",@doctor.id).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, patients.id").all #@doctor.patients.paginate(page: params[:page])
+		
+		else
+		@patients=Patient.joins("INNER JOIN doc_relationships ON patients.id = doc_relationships.patient_id").where("doctor_id= ? and accepted = ?",@doctor.id,@acceptedStatus).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, patients.id").all #@doctor.patients.paginate(page: params[:page])
+		end
+		#@docRelation=@doctor.doc_relationships
 	end
 	def show
 		#looks up the user that has the id in the params hash
@@ -52,23 +65,26 @@ class DoctorsController < ApplicationController
 	end
 	def update
 		@doctor = Doctor.find(params[:id])
-		@user = @doctor.user
 		if defined?(params[:doctor][:func])
 			if( params[:doctor][:func] == "accept")
 				#
-				@patient=Patient.find(params[:doctor][:patient_id])
+				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:doctor][:doctor_id], params[:doctor][:patient_id]).first
 				#updates the doctors patient that had the accepted sent with a true value
-				@patient.update_attribute(:accepted, true)
-				redirect_to doctors_path(id: @doctor)
+				@docRelationship.update_attribute(:accepted, true)
+				redirect_to doctors_path(id: @doctor,patient_status: "Pending" )
 			elsif(params[:doctor][:func] == "reject")
 				#
 				@patient=Patient.find(params[:doctor][:patient_id])
+				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:doctor][:doctor_id], params[:doctor][:patient_id]).first
+				#updates the doctors patient that had the accepted sent with a true value
+				@docRelationship.update_attribute(:accepted, false)
+
+				
 				#removes the doctors id from the patient with the request
-				@patient.update_attribute(:doctor_id, nil)
 				#sets the accepted value of the patient from the current doctor to false
-				@patient.update_attribute(:accepted, false)
-				redirect_to doctor_path(@doctor)
+				redirect_to doctors_path(id: @doctor,patient_status: "Pending")
 			elsif(params[:doctor][:func] == "addPool")
+				@user = @doctor.user
 				@perm = Permission.new
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:doctor][:pool_id]
@@ -78,12 +94,15 @@ class DoctorsController < ApplicationController
 					flash[:alert]="a problem occurred updating the users permissions"
 				end
 				redirect_to edit_doctor_path(@doctor)
-			elsif(params[:doctor][:func] == "removePool")			
+			elsif(params[:doctor][:func] == "removePool")		
+				@user = @doctor.user			
 				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:doctor][:pool_id]).delete_all
 				flash[:notice]="removed doctors' permission from pool"
 				redirect_to edit_doctor_path(params[:id])
 			end
 		else
+				@user = @doctor.user
+
 			if @user.authenticate(params[:user][:old_password])
 				@doctor.update(doctor_params)
 				@user.update(user_params)
@@ -145,9 +164,9 @@ class DoctorsController < ApplicationController
 		def viewable
 			@doctor =Doctor.find(params[:id])
 			if is_patient
-				@patient = Patient.find(current_user.profile_id)
+				@patient = DocRelationship.where("doctor_id=? and patient_id=?",@doctor.id,current_user.profile_id).first
 			end
-			unless current_user?(@doctor.user) || is_admin || (defined?(@patient) && @patient.doctor_id ==@doctor.id)
+			unless current_user?(@doctor.user) || is_admin || (defined?(@patient) && @patient.accepted)
 				flash[:alert] = "You do not have permission do view this doctor."
 				redirect_to(root_url) 
 			end

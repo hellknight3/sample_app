@@ -1,41 +1,76 @@
+<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
 <h1>Pools</h1>
-<table class="table">
-	<thead>
+<div class="panel panel-default">	
+		<div class="panel-body left-header">
+			<%= link_to 'My Pools', pools_path({pools: "Personal"}),{class: myPoolPage} %> 
+			<%= link_to 'Other Pools', pools_path({pools: "Other"}),{class: otherPoolPage} %> 
+		</div>
+		<div class="right-header">
+		<%if is_director?(current_user)%>			
+				<%= link_to 'New Pool', new_pool_path,{class: "btn btn-success"} %> 
+			<%end%>
+		</div>
+	
+<table class="table table-hover">
+	<thead class="active">
 		<th>Name</th>
-		<th>Description</th>
+		<!--<th>Description</th>-->
 		<!--<th>Institution</th>-->
 		<th>Specialization</th>
 		<th></th>
 		<th></th>
 	</thead>
 	<tbody>
-	<% @pools.each do |pool| %>
-		  <tr>
+	<%if params[:pools]=="Other"%>
+		<% @pools.each do |pool| %>
+		  <tr class="warning not-active ">
 			<td><%= pool.name %></td>
-			<td><%= pool.description %></td>
+			<!--<td><%= pool.description %></td>-->
 			<!--<td><%= pool.institution %></td>-->
 			<td><%= pool.specialization %></td>
-			<%addlinks=false%>
-			<% current_user.pools.each do |p| %>
-				<%if pool.id == p.id %>
-					<td><%= link_to 'Show', pool,{class: "btn btn-primary"} %></td>
-					<%if is_admin%>
-					<td><%= link_to 'Edit', edit_pool_path(pool),{class: "btn btn-warning"} %></td>
-					<%else%>
-					<td></td>
-					<%end%>
-					<%addlinks=true%>
-				<%end%>
-			<%end%>
-			<% unless addlinks%>
-				<td></td>
-				<td></td>
-			<%end%>
+			<td></td>
+			<td></td>
 			</tr>
 		<%end%>
+		<%if @pools.size==0%>
+			<tr class="warning not-active ">
+			<td>There are no pools to join
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+
+			</tr>
+		<%end%>
+	<%else%>
+		<% @myPools.each do |myPool|%>
+			<tr class="active" data-link="<%= pool_path(myPool)%>">
+				<td><%=link_to myPool.name, pool_path(myPool) %></td>
+				<!--<td><%= myPool.description %></td>-->
+				<!--<td><%= myPool.institution %></td>-->
+				<td><%= myPool.specialization %></td>
+				<td><%# link_to 'Show', myPool,{class: "btn btn-primary"} %></td>
+				<%if is_admin%>
+					<td><%= link_to 'Edit', edit_pool_path(myPool),{class: "btn btn-warning"} %></td>
+				<%else%>
+					<td></td>
+				<%end%>
+			</tr>
+			<%end%>
+	<%end%>
 	</tbody>
 </table>
 <%=will_paginate%>
-<%if is_director?(current_user)%>
-	<%= link_to 'New Pool', new_pool_path,{class: "btn btn-success"} %> 
-<%end%>
+</div>
+<div class="col-md-2"></div>
+</div>
+</div>
+
+<style>
+.not-active {
+   pointer-events: none;
+   cursor: default;
+}
+</style>

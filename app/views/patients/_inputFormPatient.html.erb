@@ -1,7 +1,8 @@
 
 
 <div class="row">
-	<div class="span6 offset3">
+	<div class="col-md-3"></div>
+		<div class="col-md-6">
 		<%= simple_form_for(patient) do |f| %>
 				<%=f.input :emergencyContact %>
 				<%=f.input :emergencyPhoneNumber %>
@@ -14,7 +15,8 @@
 				<%=f.input :currentMedication%>
 				<%=f.input :currentIssue%>
 			<%end%>
-			<%= f.button :submit,{class: "btn btn-success"} %>
+			<%= f.button :submit,"Update Profile",{class: "btn btn-success"} %>
 		<% end %>
 	</div>
+	<div class="col-md-3"></div>
 </div>
