@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20150220210354) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "admins", force: true do |t|
     t.boolean "director"
   end
@@ -28,8 +25,8 @@ ActiveRecord::Schema.define(version: 20150220210354) do
     t.integer  "user_id"
   end
 
-  add_index "answers", ["question_id"], name: "index_answers_on_question_id", using: :btree
-  add_index "answers", ["user_id"], name: "index_answers_on_user_id", using: :btree
+  add_index "answers", ["question_id"], name: "index_answers_on_question_id"
+  add_index "answers", ["user_id"], name: "index_answers_on_user_id"
 
   create_table "appointments", force: true do |t|
     t.datetime "start_time"
@@ -41,7 +38,7 @@ ActiveRecord::Schema.define(version: 20150220210354) do
     t.integer  "pool_id"
   end
 
-  add_index "appointments", ["pool_id"], name: "index_appointments_on_pool_id", using: :btree
+  add_index "appointments", ["pool_id"], name: "index_appointments_on_pool_id"
 
   create_table "doc_relationships", force: true do |t|
     t.integer  "doctor_id"
@@ -103,6 +100,7 @@ ActiveRecord::Schema.define(version: 20150220210354) do
     t.integer "height"
     t.string  "currentMedication"
     t.string  "currentIssue"
+    t.string  "doctorNotes"
   end
 
   create_table "permissions", id: false, force: true do |t|
@@ -120,7 +118,7 @@ ActiveRecord::Schema.define(version: 20150220210354) do
     t.integer  "institutions_id"
   end
 
-  add_index "pools", ["institutions_id"], name: "index_pools_on_institutions_id", using: :btree
+  add_index "pools", ["institutions_id"], name: "index_pools_on_institutions_id"
 
   create_table "questions", force: true do |t|
     t.string   "name"
@@ -130,7 +128,7 @@ ActiveRecord::Schema.define(version: 20150220210354) do
     t.integer  "exercise_id"
   end
 
-  add_index "questions", ["exercise_id"], name: "index_questions_on_exercise_id", using: :btree
+  add_index "questions", ["exercise_id"], name: "index_questions_on_exercise_id"
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -144,7 +142,7 @@ ActiveRecord::Schema.define(version: 20150220210354) do
     t.integer  "pool_id"
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["remember_token"], name: "index_users_on_remember_token", using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["remember_token"], name: "index_users_on_remember_token"
 
 end
