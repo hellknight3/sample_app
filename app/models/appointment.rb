@@ -6,4 +6,6 @@ class Appointment < ActiveRecord::Base
 	accepts_nested_attributes_for :messages
 	
 	belongs_to :pool
+	validates :name,  presence: true
+	validates :description, presence: true
 end

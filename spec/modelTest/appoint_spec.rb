@@ -5,8 +5,8 @@ describe Appointment do
 	
 	#check object responds to its attributes
 	subject{@appoint}
-	it{should respond_to(description)}
-	it{should respond_to(name)}	
+	it{should respond_to(:description)}
+	it{should respond_to(:name)}	
 
 	#check answer object can be created
 	it "has a valid factory" do
