@@ -13,7 +13,14 @@ class AdminsController < ApplicationController
 	#puts all of the admins into a browsable list
 	#the list has a default length of 30 entries per page 
 	#uses will_paginate in the view to put the page bar in
+	if params[:search]
+#		redirect_to(root_url) 
+		@admin = User.(:all, :conditions => ['name LIKE ?', params[:name]])
+	else
+		@admins =User.where("profile_type =?",params[:user_type]).paginate(page: params[:page])
+	end
 	@admins =User.where("profile_type =?",params[:user_type]).order("name ASC").paginate(page: params[:page])
+
 
 		
 	end
@@ -80,6 +87,9 @@ class AdminsController < ApplicationController
 				render 'edit'
 			end
 		end
+	end
+	def get
+		@admin = User.where(params[:name])
 	end
 	private
 	#params

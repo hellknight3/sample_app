@@ -6,13 +6,13 @@ describe Answer do
 	#check object responds to its attributes
 	subject{@answer}
 	#it{should respond_to(question_id)}
-	it{should respond_to(response)}
+	it{should respond_to(:response)}
 #	it{should respond_to(user_id)}
 	
 
 	#check answer object can be created
 	it "has a valid factory" do
-		create(:answer, name: nil).should be_valid
+		create(:answer).should be_valid
 	end 
 	
 	#check responce cannot be nil

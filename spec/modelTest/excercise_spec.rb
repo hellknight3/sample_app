@@ -5,7 +5,7 @@ describe Message do
 	
 	#check object responds to its attributes
 	subject{@msg}
-	it{should respond_to(message)}	
+	it{should respond_to(:message)}	
 
 	#check answer object can be created
 	it "has a valid factory" do

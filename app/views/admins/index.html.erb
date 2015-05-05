@@ -3,6 +3,24 @@
 		<div class="col-md-2"></div>
 		<div class="col-md-8">
 <div class="panel panel-default">
+  <div class="panel-body">
+	<%= link_to 'Administrators', admins_path({user_type: "Admin"})%> |
+	<%= link_to 'Doctors', admins_path({user_type: "Doctor"})%> 
+	<%unless is_director%>
+	| <%= link_to 'Patients', admins_path({user_type: "Patient"})%>
+	<%end%>
+	</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+		<th></th>
+		<th></th>
+		<th></th>
+      </tr>
+  </thead>
+
 	<div class="panel-body left-header">
 		<%= link_to 'Admins', admins_path({user_type: "Admin"}), class: adminPage%> 
 		<%= link_to 'Doctors', admins_path({user_type: "Doctor"}), class: doctorPage%> 
@@ -18,6 +36,7 @@
 		<%= link_to 'New Patient', new_patient_path({user_type: "Patient"}),{class: "btn btn-success"}  %>
 	</div>
 <table class="table table-hover">
+
   <tbody>	
   <%if params[:user_type]=="Patient" %>
 	<%unless is_director%>
@@ -29,8 +48,15 @@
 		<%temp=true%>
   <%end%>
 	<%if defined?(params[:user_type]) && temp%>
+		<%= form_tag admins_path :method =>'search' do %>
+		 <p>
+			<%= text_field_tag :search, params[:search]%>
+			<%=submit_tag "Search"%>
+		</p>
+		<% end %>
 		<% @admins.each do |user| %>
 			<%#unless user.profile_type.nil?%>
+				<tr>
 				
 				<tr class="active" data-link="<%= show_user(user.profile_type,user.profile_type.constantize.find(user.profile_id))%>">
 				
@@ -47,6 +73,7 @@
 				<%if is_admin?(user)%>
 					<td><%= link_to 'Edit', edit_admin_path(user.profile_id),{class: "btn btn-warning"}  %></td>
 				<%elsif is_patient?(user)%>
+				
 					<td><%= link_to 'Edit', edit_patient_path(user.profile_id),{class: "btn btn-warning"}  %></td>
 				<%elsif is_doctor?(user)%>
 						<td><%= link_to 'Edit', edit_doctor_path(user.profile_id),{class: "btn btn-warning"} 	 %></td>

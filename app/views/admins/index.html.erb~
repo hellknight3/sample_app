@@ -1,0 +1,69 @@
+<h1>Listing <%=params[:user_type].pluralize%></h1>
+<div class="panel panel-default">
+  <div class="panel-body">
+	<%= link_to 'Admins', admins_path({user_type: "Admin"})%> |
+	<%= link_to 'Doctors', admins_path({user_type: "Doctor"})%> 
+	<%unless is_director%>
+	| <%= link_to 'Patients', admins_path({user_type: "Patient"})%>
+	<%end%>
+	</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>name</th>
+		<th></th>
+		<th></th>
+		<th></th>
+      </tr>
+  </thead>
+
+  <tbody>	
+  <%if params[:user_type]=="Patient" %>
+	<%unless is_director%>
+			<%temp=true%>
+		<%else%>
+			<%temp=false%>
+		<%end%>
+	<%else%>
+		<%temp=true%>
+  <%end%>
+	<%if defined?(params[:user_type]) && temp%>
+		<% @admins.each do |user| %>
+			<%#unless user.profile_type.nil?%>
+				<tr>
+				
+				<td><%= user.name%></td>
+			
+				<%unless is_director?(user)%>
+					<td></td>
+				<%else%>
+					<td>Director</td>
+				<%end%>
+			
+				<td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id),{class: "btn btn-primary"} %></td>
+				
+				<%if is_admin?(user)%>
+					<td><%= link_to 'Edit', edit_admin_path(user.profile_id),{class: "btn btn-warning"}  %></td>
+				<%elsif is_patient?(user)%>
+					<td><%= link_to 'Edit', edit_patient_path(user.profile_id),{class: "btn btn-warning"}  %></td>
+				<%elsif is_doctor?(user)%>
+						<td><%= link_to 'Edit', edit_doctor_path(user.profile_id),{class: "btn btn-warning"} 	 %></td>
+				<%end%>
+				
+				</tr>
+			<%#end%> 
+		  
+		<%end%>
+		  
+    <% end %>
+  </tbody>
+</table>
+<%=will_paginate%>
+<br>
+<%if is_director?(current_user) %>  
+	<%= link_to 'New Admin', new_admin_path,{class: "btn btn-success"} %> 
+<% end %>
+<%= link_to 'New Doctor', new_doctor_path ,{class: "btn btn-success"}%> 
+<%= link_to 'New Patient', new_patient_path({user_type: "Patient"}),{class: "btn btn-success"}  %>
+

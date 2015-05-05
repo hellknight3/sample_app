@@ -15,15 +15,23 @@ FactoryGirl.define do
 	#create a pool
 	factory :pool do 
 		#assign randomly generated values to the attributes
+		institution
 		name{Faker::Name.name}
-		institution{Faker::Name.name}
 		description{Faker::Name.name}
 		specialization{Faker::Name.name}
+ 
+	#	institution_id{Faker::Number.number(2)}
 	end
 	
 	#create patient
 	factory :patient do 
 		user#create a user
+		emergencyContact{Faker::Name.name}
+		emergencyPhoneNumber{Faker::PhoneNumber::phone_number}
+		familyDoctor{Faker::Name.name}
+		phoneNumber{Faker::PhoneNumber::phone_number}
+		height{Faker::Number.number(8)}
+		weight{Faker::Number.number(9)}	
 	end
 	#create a doctor
 	factory :doctor do |f|
@@ -64,5 +72,7 @@ FactoryGirl.define do
 		message{Faker::Name.name}
 	end
 	 
-	
+	factory :institution do 
+		name{Faker::Name.name}
+	end
 end
