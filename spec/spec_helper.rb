@@ -41,4 +41,7 @@ RSpec.configure do |config|
   config.order = "random"
   config.include Capybara::DSL
   config.include FactoryGirl::Syntax::Methods
+config.expect_with :rspec do |c|
+    c.syntax = :expect
+  end
 end

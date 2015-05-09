@@ -11,7 +11,7 @@ describe AdminsController, type: :controller do
 			puts person.user.name#prints out persons name to the cmd prompt 
 			puts person.id
 			get :index #gets the index method from the controller
-			expect(assign(:admins)).should eq([person])#checks that the results from the get method is equal to the person variable
+			assigns(:admin).should eq([person])#checks that the results from the get method is equal to the person variable
 		end
 		#get the index method and checks that the appropriate template is rendered
 		it "renders the: index view" do 

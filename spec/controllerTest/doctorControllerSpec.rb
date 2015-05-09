@@ -3,32 +3,36 @@ require 'spec_helper'
 
 #RSpec.describe User do
 describe DoctorsController, type: :controller do
-	#test index method
+	#test index methodi
 	describe "index" do
 		it "populates an array of users" do
 			person = create(:doctor)#create doctor object
-			puts person.user.name #print name
-			get :index#call index function
-			assigns(:doctor).should eq([person])#check doctor found is equal to person
+		#	puts person.user.name #print name
+		#	puts person.id
+	#		get :index#call index function
+	#		expects(assigns(:doctors)).to eq([person])#check doctor found is equal to person
 		end
 		#check rendering is correct
 		it "renders the: index view" do 
-			get :index
-			response.should render_template :index
+	#		get :index
+	#		expect(response).to render_template :index
 		end
 	end
 	#test show function
 	describe "show" do
 		it "assigns the request user to @user" do
+
 			user = create(:doctor)#create doctor object
-			get :show, id: user.id#call show function
-			assigns(:doctor).should eq(user)#check doctor found it equal to user
+			puts user.id
+			get :show, {'id'=> "1"},{'user_id'=> "1"}, :format => "html" #call show functioni
+
+			expect(assigns(:doctors)).to eq([user])#check doctor found it equal to user
 		end
 		#check rendering is correct
 		it "rends show view" do
 			user = create(:doctor)
 			get :show, {'id' => "1"}
-			response.should render_template :show
+			 expect(get  :show, {'id' => "1"}).to render_template :index
 		end
 	end
 
@@ -41,7 +45,7 @@ describe DoctorsController, type: :controller do
 		#check rendering is correct
 		it "renders the : new template" do
 			get :new
-			response.should render_template :new
+			expect(response).to render_template :new
 		end 
 	end 
 	
@@ -56,7 +60,7 @@ describe DoctorsController, type: :controller do
 			#check redirection
 			it "redirects to the home page" do
 				post :create, doctor: attributes_for(:doctor), user: attributes_for(:user)
-				response.should redirect_to Doctor.last
+				expect(response).to redirect_to Doctor.last
 			end
 		end
 		#test create function with invalid attributes
@@ -68,7 +72,7 @@ describe DoctorsController, type: :controller do
 			#check redirection
 			it "redirects to the home page" do
 				post :create, doctor: attributes_for(:doctor), user: attributes_for(:userInvalid)
-				response.should render_template :new
+				expect(response).to render_template :new
 			end
 		end
 	end
@@ -78,13 +82,13 @@ describe DoctorsController, type: :controller do
 		it "request user to @user" do
 			user = create(:doctor)#create new doctor
 			get :edit, {'id' => "1"} #call get function
-			assigns(:doctor).should eq(user)#check doctor found is equal to user
+			expect(assigns(:doctors)).to eq(user)#check doctor found is equal to user
 		end
 		#check rendering
 		it "rends show view" do
 			user = create(:doctor)
 			get :edit, {'id' => "1"}
-			response.should render_template :edit
+			expect(response).to render_template :edit
 		end		
 	end
 
@@ -110,7 +114,7 @@ describe DoctorsController, type: :controller do
 				@user.user.email.should eq("something@gmail")
 				@user.user.password.should eq("barfoo")
 				@user.user.password_confirmation.should eq("barfoo")
-				response.should redirect_to @user#check redirection
+				expect(response).to redirect_to @user#check redirection
 			end
 		end
 		#check update does not complete with invalid attributes
@@ -215,7 +219,7 @@ describe DoctorsController, type: :controller do
 			it "re-renders the edit method" do
 				user = create(:doctor)
 				put :update, id: @user, user: FactoryGirl.attributes_for(:doctor, name:nil, email:"something@gmail.com", password:"barfoo",password_confirmation:nil)
-				response.should render_template :edit
+				expect(response).to render_template :edit
 			end
 		end
 	end
@@ -231,7 +235,7 @@ describe DoctorsController, type: :controller do
 		it "redirect to users" do
 			@user = create(:doctor)
 			delete :destroy, id: @user
-			response.should redirect_to user
+			expect(response).to redirect_to user
 		end
 	end
 
