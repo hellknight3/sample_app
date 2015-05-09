@@ -1,12 +1,17 @@
 require 'spec_helper'
-
+#being reworked to test that user cannot be created by itself
 
 #RSpec.describe User do
 describe UsersController, type: :controller do
+	describe "controller" do
+		user = create(:user)
+	#	expect{get :index}.should_not be_valid
+	end
+
+=begin
 	describe "index" do
 		it "populates an array of users" do
 			user = create(:user)
-		#	user = User.create
 			get:index
 			assigns(:users).should eq([user])
 		end
@@ -31,9 +36,9 @@ describe UsersController, type: :controller do
 
 	describe "new" do
 		it "assigns a new user to @user" do
-		#	get :new
-		#	assigns(:user).should be_valid
-		end
+			get :new
+			expect(assigns(:user)).to be_a_new(User)
+			end
 		it "renders the : new template" do
 			get :new
 			response.should render_template :new
@@ -189,4 +194,5 @@ describe UsersController, type: :controller do
 			response.should redirect_to user
 		end
 	end
+=end
 end

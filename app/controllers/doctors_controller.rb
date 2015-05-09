@@ -5,7 +5,7 @@ class DoctorsController < ApplicationController
 	before_action :signed_in_admin, only: [:new, :create]
 	before_action :correct_user, only: [:edit, :update]
 	before_action :correct_doctor, only: [:index]
-	before_action :viewable, only: [:show]
+#	before_action :viewable, only: [:show]
 	
 	def index
 		#puts all of the doctors into a browsable list
@@ -29,6 +29,7 @@ class DoctorsController < ApplicationController
 	end
 	def show
 		#looks up the user that has the id in the params hash
+
 		@doctor = Doctor.find(params[:id])
 		@user = @doctor.user
 		@patients=@doctor.patients
