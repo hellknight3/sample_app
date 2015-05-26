@@ -44,35 +44,52 @@ describe PatientsController, type: :controller do
 		get :edit, {'id' => @patient.id }
 		expect(assigns(:patient)).to eq(@patient)
 	end
-
-	it "should update patient" do
-		puts @patient.user.name
-		put :update, id: @patient.id, user: FactoryGirl.attributes_for(:user, name:"Bob", email:"something@gmail.com", password:"barfoo",password_confirmation:"barfoo")
-	 	puts @patient.user.name	
-		expect(response).to be_success	
-		assert_equal "Bob", assigns(:patient).user.name
-		assert_equal "something@gmail.com", assigns(:patient).user.email
-		assert_equal "barfoo",  assigns(:password).user.password
-	end
-
-	it "shouldnt update only the patient name " do 
-		put :update, id: @patient.id, user: FactoryGirl.attributes_for(:user, name: "Lisa")
-		assert_equal "Lisa", assigns(:patient).user.name
-	end
 	
-	it "shouldnt update only the patient name " do
-                put :update, id: @patient.id, user: FactoryGirl.attributes_for(:user, email: "this@gmail.com")
-                assert_equal "this@gmail.com", assigns(:patient).user.email
-        end
+it "should update the all patients info" do
+	put :update,{'id' => @patient.id, 'patient' => {:weight => 2, :emergencyContact => "Bob", :emergencyPhoneNumber => 12345, :height => 2, :familyDoctor => "Lisa"}}
+	assert_equal 2, assigns(:patient).weight
+	assert_equal "Bob", assigns(:patient).emergencyContact
+	assert_equal "12345", assigns(:patient).emergencyPhoneNumber
+	assert_equal 2, assigns(:patient).height
+	assert_equal "Lisa", assigns(:patient).familyDoctor
+end
 
-	it "shouldnt update with invalid email" do
-		put :update, id: @patient.id, user: FactoryGirl.attributes_for(:user, email: "this@gmailcom")
-                assert_not_equal "this@gmailcom", assigns(:patient).user.name
-	end 
+it "should update the patients weight" do
+        put :update,{'id' => @patient.id, 'patient' => {:weight => 2}}
+        assert_equal 2, assigns(:patient).weight
+end
+it "should update the patients height" do
+        put :update,{'id' => @patient.id, 'patient' => {:height => 2}}
+        assert_equal 2, assigns(:patient).height
+end
+it "should update the patients weight" do
+        put :update,{'id' => @patient.id, 'patient' => {:weight => "wrong"}}
+        assert_not_equal "wrong", assigns(:patient).weight
+end
+
+it "should update user attributes of the patient" do
+	put :update, {'id'=> @patient.id, 'user'=>{:name => "Bob", :email =>"something@gmail.com", :password=>"barfoo",:password_confirmation => "barfoo", :old_password => @patient.user.password }}
+	assert_equal "Bob", assigns(:patient).user.name
+	assert_equal "something@gmail.com", assigns(:patient).user.email
+	assert_equal "barfoo", assigns(:patient).user.password
+end
+it "should not  update user attributes of the patient" do
+        put :update, {'id'=> @patient.id, 'user'=>{:name => "Bob", :email =>"something@gmail.com", :password=>"barfoo",:password_confirmation => "barfoo", :old_password => "wrongpw" }}
+        assert_not_equal "Bob", assigns(:patient).user.name
+        assert_not_equal "something@gmail.com", assigns(:patient).user.email
+        assert_not_equal "barfoo", assigns(:patient).user.password
+end
+
+it "should update user attributes of the patient" do
+        put :update, {'id'=> @patient.id, 'user'=>{:name => "Bob", :email =>"somethinggmail.com", :password=>"barfoo",:password_confirmation => "barfoo", :old_password => @patient.user.password }}
+
+        assert_not_equal "somethinggmail.com", assigns(:patient).user.email
+
+end
 
 	it"shouldnt update the pw" do
-		put :update, id: @patient.id, user: FactoryGirl.attributes_for(:user, password: "barfoo", password_confirmation: "barfooo")
-		expect(responce).to_not be_sucess
+		put :update, {'id'=> @patient.id, 'user'=>{:name => @patient.user.name, :email =>@patient.user.email, :password=> "barfoo",:password_confirmation => "barfooo", :old_password => @patient.user.password }}
+   		expect(response).to_not be_success
 		assert_not_equal "barfoo", assigns(:patient).user.password
 		assert_not_equal "barfooo", assigns(:patient).user.password
 
