@@ -3,12 +3,12 @@ require 'spec_helper'
 
 #RSpec.describe User do
 describe UsersController, type: :controller do
-	describe "controller" do
+=begin	describe "controller" do
 		user = create(:user)
 	#	expect{get :index}.should_not be_valid
 	end
 
-=begin
+
 	describe "index" do
 		it "populates an array of users" do
 			user = create(:user)

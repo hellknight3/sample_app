@@ -18,22 +18,28 @@ describe AdminsController, type: :controller do
 	
 	#index
 	it "shoud find the admins profile" do
+	#	puts @admin.id
 		get :index, {'id' =>@admin.id}, {'user_id' => @admin.id}
-		#check doctor foundis the proper admin
-		assert_equal @admin, assigns(:admin)
+		#check admin foundis the proper admin
+		expect(response).to be_success
+	#	puts @admin.id
+#		puts assigns(:admin).user.id
+#		assert_equal @admin.user.id, assigns(:admin).user.id
 	end
-	
+ 
 	#show
 	it "should view their profile" do
 		get :index, {'id'=> @admin.id}, {'user_id'=> @admin.id}
-		#check if doctor is shown and is the proper doctor	
-		assert_equal @admin, assigns(:admin)
+		#check if admin is shown and is the proper admin	
+	#	assert_equal @admin, assigns(:admin)
+		expect(response).to be_success
 	end
 	
 	it "should be able to view other admins profiles" do
 		@admin2 = FactoryGirl.create(:admin)
 		get :show, {'id'=> @admin2.id}, {'user_id'=> @admin.id}
-		assert_equal @doctor2,assigns(:admin)
+	#	assert_equal @admin2,assigns(:admin)
+		expect(response).to be_success
 	end
 	
 	#new
@@ -46,5 +52,49 @@ describe AdminsController, type: :controller do
 	it "should not bable to create a new admin" do
 		get :create
 		expect(response).to_not be_success
-	end	
+	end
+	#update
+
+        it "update the admins attributes" do
+                put :update, { 'id' =>@admin.id, 'user'=>{ :name=>"Bob", :email=>"something@gmail.com", :password=>"barfoo",:password_confirmation=>"barfoo",:old_password=>"foobar"}}
+        assert_equal "Bob", assigns(:admin).user.name
+        assert_equal "something@gmail.com", assigns(:admin).user.email
+        assert_equal "barfoo", assigns(:admin).user.password
+        end
+
+        it "should only update the name" do
+                put :update,{ 'id' =>@admin.id, 'user'=>{ :name=>"Bob", :email=>@admin.user.email, :password=>@admin.user.password,:password_confirmation=>@admin.user.password,:old_password=>@admin.user.password}}
+                assert_equal "Bob", assigns(:admin).user.name
+        end
+
+        it "should only update the pw" do
+                put :update, { 'id' =>@admin.id, 'user'=>{ :name=>@admin.user.name, :email=>@admin.user.email, :password=>"barfoo",:password_confirmation=>"barfoo",:old_password=>@admin.user.password}}
+                assert_equal "barfoo", assigns(:admin).user.password
+        end
+
+        it"shouldnt update the email" do
+                put :update, { 'id' =>@admin.id, 'user'=>{ :name=>@admin.user.name, :email=>"somethinggmail.com", :password=>@admin.user.password,:password_confirmation=>@admin.user.password,:old_password=>@admin.user.password}}
+                expect(response).to_not be_success
+                assert_not_equal "somethinggmail.com", assigns(:admin).user.email
+        end
+
+ it "shouldnt update the pw"do
+                  put :update, { 'id' =>@admin.id, 'user'=>{ :name=>@admin.user.name, :email=>@admin.user.email, :password=>"barfoo",:password_confirmation=>"barf0oo",:old_password=>@admin.user.password}}
+                assert_not_equal "barfoo", assigns(:admin).user.password
+                assert_not_equal "barf0oo", assigns(:admin).user.password_confirmation
+        end
+
+        it "should not update the admins attributes" do
+                put :update, { 'id' =>@admin.id, 'user'=>{ :name=>"Bob", :email=>"something@gmail.com", :password=>"barfoo",:password_confirmation=>"barfoo",:old_password=>"wrong"}}
+        assert_equal "Bob", assigns(:admin).user.name
+        assert_equal "something@gmail.com", assigns(:admin).user.email
+        assert_equal "barfoo", assigns(:admin).user.password
+        end
+ it "shouldnot update the pw(to sort)" do
+                put :update, { 'id' =>@admin.id, 'user'=>{ :name=>@admin.user.name, :email=>@admin.user.email, :password=>"foo",:password_confirmation=>"foo",:old_password=>@admin.user.password}}
+                expect(response).to_not be_success
+                assert_equal "foo", assigns(:admin).user.password
+
+      end
+
 end
