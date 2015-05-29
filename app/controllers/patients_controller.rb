@@ -113,8 +113,9 @@ class PatientsController < ApplicationController
 			redirect_to @patient
 			end
 		else	
-		
-			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
+							
+			if defined?(params[:user][:old_password])# && @user.authenticate(params[:user][:old_password])
+			
 				@user = @patient.user
 				@user.update(user_params)
 				flash[:notice]="successfully updated your profile."

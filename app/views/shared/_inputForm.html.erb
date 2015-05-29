@@ -8,6 +8,7 @@
 			<%= simple_form_for(user_type) do |f| %>
 			
 				<%= render 'shared/error_messages' %>
+				<p>To modify account information it is required to input your current password under old password</p>
 				<%=label :user, :name %>
 				<%=text_field :user, :name, class: "form-control" %>
 

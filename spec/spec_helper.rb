@@ -20,7 +20,9 @@ RSpec.configure do |config|
   # config.mock_with :mocha
   # config.mock_with :flexmock
   # config.mock_with :rr
-
+ config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
@@ -41,7 +43,5 @@ RSpec.configure do |config|
   config.order = "random"
   config.include Capybara::DSL
   config.include FactoryGirl::Syntax::Methods
-config.expect_with :rspec do |c|
-    c.syntax = :expect
-  end
+
 end
