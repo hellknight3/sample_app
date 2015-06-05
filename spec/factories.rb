@@ -22,6 +22,7 @@ FactoryGirl.define do
  
 	#	institution_id{Faker::Number.number(2)}
 	end
+
 	
 	#create patient
 	factory :patient do 
@@ -42,6 +43,11 @@ FactoryGirl.define do
 		user#create a user
 	end
 	
+	factory :director do 
+		admin
+		director true
+	end
+
 	factory :userInvalid, parent: :user do 
 		name{Faker::Name.name}
 		password'foo'
@@ -74,5 +80,6 @@ FactoryGirl.define do
 	 
 	factory :institution do 
 		name{Faker::Name.name}
+		description{Faker::Name.name}
 	end
 end
