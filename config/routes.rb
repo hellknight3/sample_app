@@ -1,5 +1,6 @@
 SampleApp::Application.routes.draw do
-
+	resources :institutions do
+	end
 
 	resources :admins do
 		

@@ -30,7 +30,7 @@ module SessionsHelper
 	def is_doctor
 		is_doctor?(current_user)==true
 	end
-	def is_admin?(user)
+	def is_admin?(user)		
 		user.profile_type=="Admin"
 	end
 	def is_admin
@@ -43,13 +43,15 @@ module SessionsHelper
 		is_patient?(current_user)==true
 	end
 	def is_director?(user)
+		puts Admin.find(user.profile_id).director
 		 if is_admin?(user)
 			Admin.find(user.profile_id).director==true
 		else
 			false
 		end
 	end
-	def is_director
+	def is_director	
+	
 		 is_director?(current_user)==true
 	end
 	def sign_out

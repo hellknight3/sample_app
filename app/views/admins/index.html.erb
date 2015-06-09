@@ -48,10 +48,10 @@
 		<%temp=true%>
   <%end%>
 	<%if defined?(params[:user_type]) && temp%>
-		<%= form_tag admins_path :method =>'search' do %>
+		<%= form_tag admins_path, :method => 'get' do %>
 		 <p>
 			<%= text_field_tag :search, params[:search]%>
-			<%=submit_tag "Search"%>
+			<%=submit_tag "Search", :name => nil%>
 		</p>
 		<% end %>
 		<% @admins.each do |user| %>

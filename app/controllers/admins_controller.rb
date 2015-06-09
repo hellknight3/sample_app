@@ -15,7 +15,7 @@ class AdminsController < ApplicationController
 	#uses will_paginate in the view to put the page bar in
 	if params[:search]
 #		redirect_to(root_url) 
-		@admin = User.(:all, :conditions => ['name LIKE ?', params[:name]])
+#		@patient = User.find(:all, :conditions => ['name LIKE ?',"%#{params[:search]}%"])
 	else
 		@admins =User.where("profile_type =?",params[:user_type]).paginate(page: params[:page])
 	end

@@ -12,7 +12,7 @@
 							<li><%= link_to "Users", admins_path({user_type: "Admin"}) %></li>
 							<li><%= link_to "Pools", pools_path({pools: "Personal"}) %></li>
 							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
-							
+					<l1><%= link_to "Institution", institutions_path%> </li>					
 							<li id="fat-menu" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								<%=current_user.name%> <b class="caret"></b>
@@ -29,8 +29,9 @@
 						<%elsif is_doctor %>
 							<li><%= link_to "Patients", doctors_path({id:current_user.profile_id, patient_status: "Accepted"}) %></li>
 							<li><%= link_to "Pools", pools_path %></li>
+					<!--	%= link_to "Institution", institutions_path%></li>  -->
 							<li><%= link_to "Appointments", appointments_path %></li>
-							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
+							<!--<li>%= link_to "Exercises", exercises_path %></li>-->
 							
 							<li id="fat-menu" class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -46,6 +47,7 @@
 							</ul>
 							</li>
 						<%elsif is_patient%>
+			 				<!--  <li>%= link_to "Institution", institutions_path%></li>  -->
 							<li><%= link_to "Appointments", appointments_path %></li>
 							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
 							<li id="fat-menu" class="dropdown">

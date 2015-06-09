@@ -50,7 +50,7 @@ end
 	if @pool.update_attributes(pool_params)
 		redirect_to pools_path({pools: "Personal"})
 	else
-		flash[:warning]="bad"
+		flash[:warning]="You entered bad data"
 	render 'edit'
 	
 	end
