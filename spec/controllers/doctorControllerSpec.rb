@@ -67,8 +67,7 @@ describe DoctorsController, type: :controller do
 	
 	it"shouldnt update the email" do
 		put :update, { 'id' =>@doctor.id, 'user'=>{ :name=>@doctor.user.name, :email=>"somethinggmail.com", :password=>@doctor.user.password,:password_confirmation=>@doctor.user.password,:old_password=>@doctor.user.password}}
-		expect(response).to_not be_success
-                assert_not_equal "somethinggmail.com", assigns(:doctor).user.email
+	         assert_not_equal "somethinggmail.com", assigns(:doctor).user.email
 	end
 	
 	it "shouldnt update the pw"do
@@ -79,9 +78,9 @@ describe DoctorsController, type: :controller do
 
 	it "should not update the doctors attributes" do
                 put :update, { 'id' =>@doctor.id, 'user'=>{ :name=>"Bob", :email=>"something@gmail.com", :password=>"barfoo",:password_confirmation=>"barfoo",:old_password=>"wrong"}}
-        assert_equal "Bob", assigns(:doctor).user.name
-        assert_equal "something@gmail.com", assigns(:doctor).user.email
-        assert_equal "barfoo", assigns(:doctor).user.password
+        assert_not_equal "Bob", assigns(:doctor).user.name
+        assert_not_equal "something@gmail.com", assigns(:doctor).user.email
+        assert_not_equal "barfoo", assigns(:doctor).user.password
         end
  it "shouldnot update the pw(to sort)" do
                 put :update, { 'id' =>@doctor.id, 'user'=>{ :name=>@doctor.user.name, :email=>@doctor.user.email, :password=>"foo",:password_confirmation=>"foo",:old_password=>@doctor.user.password}}

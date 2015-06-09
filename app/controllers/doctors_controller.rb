@@ -6,7 +6,7 @@ class DoctorsController < ApplicationController
 	before_action :correct_user, only: [:edit, :update]
 	before_action :correct_doctor, only: [:index]
 #	before_action :viewable, only: [:show]
-	
+	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 	def index
 		#puts all of the doctors into a browsable list
 		#the list has a default length of 30 entries per page 
@@ -105,14 +105,36 @@ class DoctorsController < ApplicationController
 				@user = @doctor.user
 
 			if @user.authenticate(params[:user][:old_password])
-				@doctor.update(doctor_params)
-				@user.update(user_params)
-				flash[:notice]="successfully updated your profile."
-				redirect_to @doctor
-			else
-				flash[:alert]="error updating your profile."
-				render 'edit'
-			end			
+                                #passes the attributes from the form to the admin_params function
+                                if(params[:user][:email].match(VALID_EMAIL_REGEX))
+                                         if defined?(params[:user][:password]) || defined?(params[:user][:password_confirmation])
+                                                 if (params[:user][:password] != params[:user][:password_confirmation])
+                                                         flash[:alert]="Password and Password Confirmation must match"
+                                                         render 'edit'
+                                                else
+
+                                                        @doctor.update_attributes(doctor_params)
+        #passes the attributes from the form to the user_params function
+                                                        @user.update_attributes(user_params)
+                                                        flash[:notice]="successfully updated your profile."
+                                                        redirect_to @doctor
+
+                                                end
+                                        else
+                                                @doctor.update_attributes(doctor_params)
+        #passes the attributes from the form to the user_params function
+                                                        @user.update_attributes(user_params)
+                                                        flash[:notice]="successfully updated your profile."
+                                                        redirect_to @doctor
+                                        end
+                                else
+                                        flash[:alert]="Please enter a valid email"
+                                        render 'edit'
+                                end
+                        else
+                                flash[:alert]="Old password is not corrent"
+                                render 'edit'
+                        end			
 			#redirect_to doctor_path(@doctor)
 		end
 		#redirects to the current doctors home page

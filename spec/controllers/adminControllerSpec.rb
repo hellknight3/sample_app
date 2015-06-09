@@ -74,7 +74,6 @@ describe AdminsController, type: :controller do
 
         it"shouldnt update the email" do
                 put :update, { 'id' =>@admin.id, 'user'=>{ :name=>@admin.user.name, :email=>"somethinggmail.com", :password=>@admin.user.password,:password_confirmation=>@admin.user.password,:old_password=>@admin.user.password}}
-                expect(response).to_not be_success
                 assert_not_equal "somethinggmail.com", assigns(:admin).user.email
         end
 
@@ -86,13 +85,14 @@ describe AdminsController, type: :controller do
 
         it "should not update the admins attributes" do
                 put :update, { 'id' =>@admin.id, 'user'=>{ :name=>"Bob", :email=>"something@gmail.com", :password=>"barfoo",:password_confirmation=>"barfoo",:old_password=>"wrong"}}
-        assert_equal "Bob", assigns(:admin).user.name
-        assert_equal "something@gmail.com", assigns(:admin).user.email
-        assert_equal "barfoo", assigns(:admin).user.password
+        assert_not_equal "Bob", assigns(:admin).user.name
+        assert_not_equal "something@gmail.com", assigns(:admin).user.email
+        assert_not_equal "barfoo", assigns(:admin).user.password
         end
  it "shouldnot update the pw(to sort)" do
                 put :update, { 'id' =>@admin.id, 'user'=>{ :name=>@admin.user.name, :email=>@admin.user.email, :password=>"foo",:password_confirmation=>"foo",:old_password=>@admin.user.password}}
                 expect(response).to_not be_success
+
                 assert_equal "foo", assigns(:admin).user.password
 
       end

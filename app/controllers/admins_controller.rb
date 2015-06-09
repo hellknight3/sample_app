@@ -5,6 +5,8 @@ class AdminsController < ApplicationController
 	before_action :signed_in_admin, only: [:index, :edit, :update]
 	before_action :correct_user, only: [:show, :edit, :update]
 	before_action :signed_in, only: [:show, :edit, :update, :new,:create,:index]
+	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+
 	def show
 		@admin = Admin.find(params[:id]) 
 		@user = @admin.user
@@ -77,14 +79,34 @@ class AdminsController < ApplicationController
 		else
 			if @user.authenticate(params[:user][:old_password])
 				#passes the attributes from the form to the admin_params function
-				@admin.update_attributes(admin_params)
-				#passes the attributes from the form to the user_params function
-				@user.update_attributes(user_params)
-				flash[:notice]="successfully updated your profile."
-				redirect_to @admin
+				if(params[:user][:email].match(VALID_EMAIL_REGEX))
+					 if defined?(params[:user][:password]) || defined?(params[:user][:password_confirmation])
+                                       		 if (params[:user][:password] != params[:user][:password_confirmation])
+                                                	 flash[:alert]="Password and Password Confirmation must match"
+                                               		 render 'edit'
+                                        	else
+		
+							@admin.update_attributes(admin_params)
+	#passes the attributes from the form to the user_params function
+							@user.update_attributes(user_params)
+							flash[:notice]="successfully updated your profile."
+							redirect_to @admin
+			
+						end
+					else
+						@admin.update_attributes(admin_params)
+        #passes the attributes from the form to the user_params function
+                                                        @user.update_attributes(user_params)
+                                                        flash[:notice]="successfully updated your profile."
+                                                        redirect_to @admin
+					end
+				else
+					flash[:alert]="Please enter a valid email"
+					render 'edit'
+				end
 			else
-				flash[:alert]="error updating your profile."
-				render 'edit'
+				flash[:alert]="Old password is not corrent"
+                                render 'edit'
 			end
 		end
 	end
