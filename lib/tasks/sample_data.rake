@@ -83,6 +83,11 @@ namespace :db do
 			end
 		end
 		
+		puts "creating institutions"
+	                name = "Institution1"
+        	        description = "something"
+        	       	Institution.create!(name: name, description: description)
+	
 		puts "creating Pools"
 		10.times do |n|
 			name=Faker::Commerce.department(1)
@@ -90,7 +95,7 @@ namespace :db do
 			specialization="sample specialization"
 			Pool.create!(name: name,
 			description: description,
-			specialization: specialization)
+			specialization: specialization, institution_id: 1 )
 			
 			
 		
@@ -106,4 +111,5 @@ namespace :db do
 		messageable_type: "User"
 		)
 	end
+	
 end

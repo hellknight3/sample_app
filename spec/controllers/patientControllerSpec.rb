@@ -5,7 +5,6 @@ require 'spec_helper'
 describe PatientsController, type: :controller do
 	before (:each) do 
 		@patient = FactoryGirl.create(:patient)
-		sign_in  @patient
 		controller.current_user = @patient.user
 	end 
 	
@@ -80,7 +79,7 @@ it "should not  update user attributes of the patient" do
         assert_not_equal "barfoo", assigns(:patient).user.password
 end
 
-it "should update user attributes of the patient" do
+it "should not  update user attributes of the patient" do
         put :update, {'id'=> @patient.id, 'user'=>{:name => "Bob", :email =>"somethinggmail.com", :password=>"barfoo",:password_confirmation => "barfoo", :old_password => @patient.user.password }}
 
         assert_not_equal "somethinggmail.com", assigns(:patient).user.email
@@ -89,7 +88,7 @@ end
 
 	it"shouldnt update the pw" do
 		put :update, {'id'=> @patient.id, 'user'=>{:name => @patient.user.name, :email =>@patient.user.email, :password=> "barfoo",:password_confirmation => "barfooo", :old_password => @patient.user.password }}
-   		expect(response).to_not be_success
+   		@patient.reload
 		assert_not_equal "barfoo", assigns(:patient).user.password
 		assert_not_equal "barfooo", assigns(:patient).user.password
 

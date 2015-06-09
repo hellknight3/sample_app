@@ -101,7 +101,6 @@ ActiveRecord::Schema.define(version: 20150605003411) do
     t.integer "height"
     t.string  "currentMedication"
     t.string  "currentIssue"
-    t.string  "doctorNotes"
   end
 
   create_table "permissions", id: false, force: true do |t|

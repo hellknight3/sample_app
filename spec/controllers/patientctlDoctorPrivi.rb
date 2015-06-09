@@ -30,7 +30,6 @@ describe PatientsController, type: :controller do
 # test update
 	it "should not be allowed to updat the patient" do
 		puts :update, {'id' => @patient.id, 'patient' => {:weight=> 2} }
-	#	expect(response).to_not be_success
-		assert_not_equal 2, assigns(:patient).weight
+		expect(flash[:alert]).to eq("you do not have permission to do that.")
 	end
 end

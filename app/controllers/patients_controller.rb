@@ -1,5 +1,6 @@
 class PatientsController < ApplicationController
 	helper UsersHelper
+	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create, :edit, :update
 	before_action :signed_in, only: [:edit, :update]
@@ -114,12 +115,31 @@ class PatientsController < ApplicationController
 			end
 		else	
 							
-			if defined?(params[:user][:old_password])# && @user.authenticate(params[:user][:old_password])
-			
-				@user = @patient.user
-				@user.update(user_params)
-				flash[:notice]="successfully updated your profile."
-				redirect_to @patient
+			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
+			 if(params[:user][:email].match(VALID_EMAIL_REGEX))
+				if defined?(params[:user][:password]) || defined?(params[:user][:password_confirmation])
+					if (params[:user][:password] != params[:user][:password_confirmation])
+						 flash[:alert]="Password and Password Confirmation must match"
+                                        	render 'edit'
+					else	
+				
+						@user = @patient.user
+						@user.update(user_params)
+						flash[:notice]="successfully updated your profile."
+						redirect_to @patient
+					end
+				else
+					user = @patient.user
+              	                 	 @user.update(user_params)
+                	                flash[:notice]="successfully updated your profile."
+                        	        redirect_to @patient
+
+				end
+			else
+				 flash[:alert]="Please enter a valid email"
+                                                render 'edit'
+			end
+
 				
 			elsif defined?(params[:patient][:weight])
 				if @patient.update_attributes(patient_params)				
@@ -169,10 +189,11 @@ class PatientsController < ApplicationController
 			@user = @profile.user
 			#compares that user created above to the currently logged in user
 			@docRelation=DocRelationship.where("doctor_id=? and patient_id=?",current_user.profile_id,@profile.id).all.size
-			
+	
 			unless current_user?(@user) ||(is_admin && !is_director) || (@docRelation >0 && current_user.profile_type =="Doctor")
-			flash[:alert]="you do not have permission to do that. " 
-			redirect_to(admins_path({user_type: "Admin"}))  
+			
+		#	flash[:alert]="you do not have permission to do that. " 
+			redirect_to(admins_path({user_type: "Admin"}), alert: "you do not have persmission to do that.")
 			end
 		end
 end
