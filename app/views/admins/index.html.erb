@@ -49,6 +49,7 @@
   <%end%>
 	<%if defined?(params[:user_type]) && temp%>
 		<%= form_tag admins_path, :method => 'get' do %>
+			<%= hidden_field_tag 'user_type', params[:user_type] %>
 		 <p>
 			<%= text_field_tag :search, params[:search]%>
 			<%=submit_tag "Search", :name => nil%>
