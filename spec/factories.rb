@@ -1,7 +1,6 @@
 require 'faker'
 
 FactoryGirl.define do
-
 	#create user
 	factory :user do 
 		#assign randomly generated values to the attributes
@@ -81,5 +80,11 @@ FactoryGirl.define do
 	factory :institution do 
 		name{Faker::Name.name}
 		description{Faker::Name.name}
+	end
+	#create activity
+	factory :activity do |f|
+		f.association :user
+	#	association :trackable, factory: :user
+		f.action "create"
 	end
 end

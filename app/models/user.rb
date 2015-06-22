@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	belongs_to :profile, polymorphic: true
 	has_many :permissions
+	has_many :activities
 	accepts_nested_attributes_for :permissions
 	has_many :pools, :through => :permissions
 	#accepts_nested_attributes_for :pools

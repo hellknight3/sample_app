@@ -17,7 +17,7 @@ describe AdminsController, type: :controller do
 	end
 	
 	#index
-	it "shoud find the admins profile" do
+	it "should find the admins profile" do
 	#	puts @admin.id
 		get :index, {'id' =>@admin.id}, {'user_id' => @admin.id}
 		#check admin foundis the proper admin
@@ -43,15 +43,21 @@ describe AdminsController, type: :controller do
 	end
 	
 	#new
-	it "should not beable to call the new function " do
+	it "should not be able to call the new function " do
 	 	get :new
 		expect(response).to_not be_success
 	end
 
 	#create
-	it "should not bable to create a new admin" do
+	it "should not be able to create a new admin" do
+		@admin.director=false
 		get :create
 		expect(response).to_not be_success
+	end
+	it "should be able to create an admin if is a director"
+		@admin.director=true
+		get :create
+		expect(response).to be_success
 	end
 	#update
 

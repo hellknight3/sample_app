@@ -18,23 +18,25 @@ describe User do
 	it {should respond_to(:authenticate)}
 	
 	#check user object can be created
-	it "has a valid factory" do
-		create(:user).should be_valid
+	describe "has a valid factory" do
+		before {@user=build(:user)}
+
+		it { should be_valid }
 	end
 	#check user is invalid without a name
-	it "it is invalid without a name" do 
+	it "is invalid without a name" do 
 		build(:user, name: nil).should_not be_valid
 	end 
 	#check user is invalid without a email
-	it "it is invalid without a email" do
+	it "is invalid without a email" do
 		build(:user, email: nil).should_not be_valid
 	end
 	#check user is invalid without a pw
-	it "it is invalid without a pw" do
+	it "is invalid without a pw" do
 		build(:user, password: nil).should_not be_valid
 	end
 	#check user is invalid without a pwConf
-	it "it is invalid without a pwConf" do
+	it "is invalid without a pwConf" do
 		build(:user, password_confirmation: nil).should_not be_valid
 	end
 	
@@ -94,7 +96,7 @@ describe User do
 		
 	end
 	#test remember token is lost
-	it "remember token" do
+	it "removes remember token" do
 		testUser = create(:user)
 		testUser.remember_token{should_not be_blank}
 		

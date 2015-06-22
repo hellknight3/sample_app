@@ -5,8 +5,8 @@ describe 'admins\new.html.erb', type: :view do
 		
 		@user= create(:admin)
 		assigns(:user)
-		puts @user.user.name
-		puts @user.user.profile_type
+		#puts @user.user.name
+		#puts @user.user.profile_type
 		render  :template => 'admins/new.html.erb'
 	end
 end 
