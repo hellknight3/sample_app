@@ -16,9 +16,10 @@
 
 <ul class="list-group">
 <li class="list-group-item list-group-item-info boldHead">Current Patients</li>
+<% if @patient != nil%>
 <% @patients.find_each do |patient|%>
 	<li class="list-group-item"><%=link_to patient.user.name, patient_path(patient.id)%></li>
-	
+<%end%>
 <%end%>
 </ul>
 <%end%>

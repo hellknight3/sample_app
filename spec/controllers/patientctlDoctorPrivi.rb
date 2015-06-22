@@ -12,6 +12,13 @@ describe PatientsController, type: :controller do
 		get :show, {'id' =>@doctor.id}, {'user_id'=> @patient.id}
 		expect(response).to_not be_success
 	end
+
+	it "patient show with assigned doctor" do
+#testing will pools		
+#		get :show, {'id' =>@doctor.id}, {'user_id'=> @patient.id}
+#		assert_equal @patient, assigns(:patient)
+	end
+
 #test new 
 	it "should not be allowed to create a new patient" do
 		get:new
@@ -29,7 +36,10 @@ describe PatientsController, type: :controller do
 	end
 # test update
 	it "should not be allowed to updat the patient" do
-		puts :update, {'id' => @patient.id, 'patient' => {:weight=> 2} }
-		expect(flash[:alert]).to eq("you do not have permission to do that.")
+		get :update, {'id' => @patient.id, 'patient' => {:weight=> 2} }
+		expect(flash[:notice]).to eq("you do not have permission to do that.")
+		expect(response).to_not be_success
 	end
+
+
 end

@@ -57,12 +57,14 @@ class PatientsController < ApplicationController
 		end		
 	end
 	def update
+
+		
 		#finds the patient from the current params hash.
 		@patient = Patient.find(params[:id])
 		#gets the user from the patient that was found
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
 		if defined?(params[:patient][:func]) &&params[:patient][:func] != nil
-
+		
 		if(params[:patient][:func] == "addDoc")
 		
 				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
@@ -93,6 +95,7 @@ class PatientsController < ApplicationController
 				end
 				redirect_to edit_patient_path(@patient, {settings: "AvailableDocs"})
 			elsif(params[:patient][:func] == "addPool")
+				puts "here"
 				@perm = Permission.new
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:patient][:pool_id]
@@ -191,9 +194,10 @@ class PatientsController < ApplicationController
 			@docRelation=DocRelationship.where("doctor_id=? and patient_id=?",current_user.profile_id,@profile.id).all.size
 	
 			unless current_user?(@user) ||(is_admin && !is_director) || (@docRelation >0 && current_user.profile_type =="Doctor")
-			
+		
 		#	flash[:alert]="you do not have permission to do that. " 
-			redirect_to(admins_path({user_type: "Admin"}), alert: "you do not have persmission to do that.")
+			redirect_to(admins_path({user_type: "Admin"}), notice: "you do not have permission to do that.")
 			end
+	
 		end
 end

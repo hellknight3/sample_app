@@ -5,7 +5,7 @@ class DoctorsController < ApplicationController
 	before_action :signed_in_admin, only: [:new, :create]
 	before_action :correct_user, only: [:edit, :update]
 	before_action :correct_doctor, only: [:index]
-#	before_action :viewable, only: [:show]
+	before_action :viewable, only: [:show]
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 	def index
 		#puts all of the doctors into a browsable list
@@ -173,15 +173,21 @@ class DoctorsController < ApplicationController
 			#compares that user created above to the currently logged in user
 			
 			unless current_user?(@doctor.user) || is_admin
-				flash[:alert] = "You do not have permission do edit this doctor"
+				@doctor = nil
+				flash[:alert] = "You do not have permission to edit this doctor"
 				redirect_to(root_url) 
 			end
 		end
 		def correct_doctor
-			@doctor =Doctor.find(params[:id])
-			unless current_user?(@doctor.user) 
-				flash[:alert] = "You do not have permission do view this doctors patients"
-				redirect_back_or(signin_url)
+			if is_patient || is_director
+				 flash[:alert] = "You do not have permission do view this doctors patients."
+                                redirect_back_or(signin_url)
+			elsif is_doctor
+				@doctor =Doctor.find(params[:id])
+				unless current_user?(@doctor.user) 
+					flash[:alert] = "You do not have permission do view this doctors patients."
+					redirect_back_or(signin_url)
+				end
 			end
 		end
 		def viewable
@@ -189,7 +195,10 @@ class DoctorsController < ApplicationController
 			if is_patient
 				@patient = DocRelationship.where("doctor_id=? and patient_id=?",@doctor.id,current_user.profile_id).first
 			end
-			unless current_user?(@doctor.user) || is_admin || (defined?(@patient) && @patient.accepted)
+
+# this needs to be fixed so that only accepted patients can view the doctor profile
+			unless current_user?(@doctor.user) || is_admin #|| (defined?(@patient) && @patient.accepted)
+				@doctor = nil
 				flash[:alert] = "You do not have permission do view this doctor."
 				redirect_to(root_url) 
 			end

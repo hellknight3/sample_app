@@ -134,9 +134,13 @@ describe InstitutionsController, type: :controller do
 		controller.current_user = @director.user
          	    put :update,{'id' => subject.id, 'institution' => {:name => "Institution1", :description => "new one"}}
                 assert_equal "Institution1", assigns(:inst).name 
-		assert_equal "new one", assigns(:inst).description
-		expect(response).to be_success
-              
+		assert_equal "new one", assigns(:inst).description      
 	end
 
+	it 'update as director, redirction' do
+		 controller.stub(:is_director).and_return(true)
+                 controller.current_user = @director.user
+                 put :update,{'id' => subject.id, 'institution' => {:name => "Institution1", :description => "new one"}}
+		expect(response).to redirect_to :action => :show, :id => 1
+	end
 end

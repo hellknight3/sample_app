@@ -9,7 +9,7 @@
 <table class="table table-hover">
 
    <tbody>
-   <%if @patients.size >0%>
+ <%if @patients.size >0%>
 <% @patients.each do |patient| %>
 	<tr class="active" data-link="<%=patient_path(patient)%>">
 		<td><%= link_to patient.user.name, patient_path(patient.patient_id) %></td>	
@@ -47,7 +47,7 @@
 			<td></td>
 			<td></td>
 		<%end%>
-	
+
     </tr>
 	<% end %>
 	<%else%>

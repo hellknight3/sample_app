@@ -8,23 +8,27 @@ class AdminsController < ApplicationController
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
 	def show
+	
 		@admin = Admin.find(params[:id]) 
 		@user = @admin.user
 	end
 	def index
+	
 	#puts all of the admins into a browsable list
 	#the list has a default length of 30 entries per page 
 	#uses will_paginate in the view to put the page bar in
-	if params[:search]
-#		redirect_to(root_url) 
-#		@patient = User.find(:all, :conditions => ['name LIKE ?',"%#{params[:search]}%"])
-	else
-		@admins =User.where("profile_type =?",params[:user_type]).paginate(page: params[:page])
+	if defined? params[:search]
+		unless is_director
+			@admins = User.where('name LIKE ? and profile_type = ?',"%#{params[:search]}%",params[:user_type]).order("name ASC").paginate(page: params[:page])
+		else
+			if params[:user_type] != Patient	
+			@admins = User.where('name LIKE ? and profile_type = ?',"%#{params[:search]}%",params[:user_type]).order("name ASC").paginate(page: params[:page])
+			else
+				flash[:notice] = "You do not have permission to view patients"
+				render 'index'
+			end
+		end
 	end
-	@admins =User.where("profile_type =?",params[:user_type]).order("name ASC").paginate(page: params[:page])
-
-
-		
 	end
 	def new
 		#creates temp variables for the new form to use for the views
@@ -59,9 +63,11 @@ class AdminsController < ApplicationController
 	def update
 		@admin = Admin.find(params[:id])
 		@user = @admin.user
+	
 		if defined?(params[:admin][:func])
 			if(params[:admin][:func] == "addPool")
 				@perm = Permission.new
+	
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:admin][:pool_id]
 				if @perm.save
@@ -149,7 +155,7 @@ class AdminsController < ApplicationController
 			#checks params hash for the user id storing that user into a variable
 			@user = User.find(params[:id])
 			#compares that user created above to the currently logged in user
-			unless current_user?(@user) ||  is_admin?(current_user) 
+			unless current_user?(@user) ||  is_admin?(current_user) #|| is_doctor?(current_user)
 				redirect_to(root_url) 
 			end
 		end

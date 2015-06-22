@@ -22,9 +22,7 @@ end
 def update
 	@inst = Institution.find(params[:id])
 	if @inst.update_attributes(institution_params)
-	puts "h"	
-                redirect_to institution_path(:id)	
-        puts "t"
+                redirect_to  @inst	
 	else
                 flash[:warning]="You entered bad data"
         render 'edit'
