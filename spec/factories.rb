@@ -71,10 +71,18 @@ FactoryGirl.define do
 	factory :appointment do
 		name{Faker::Name.name}
 		description{Faker::Name.name}
+        pool
 	end
 	
-	factory :message do
+	factory :directMessage, class: :message do
 		message{Faker::Name.name}
+        user
+        messageable {user}
+	end
+	factory :groupMessage, class: :message do
+		message{Faker::Name.name}
+        user
+        messageable {appointment}
 	end
 	 
 	factory :institution do 
