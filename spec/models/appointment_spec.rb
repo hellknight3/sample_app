@@ -15,4 +15,8 @@ describe Appointment do
   it "should be valid" do
     FactoryGirl.build(:appointment).should be_valid
   end
+  it {should have_many(:activities)}
+  it {should have_many(:messages)}
+  it {should have_many(:users)}
+  it {should belong_to(:pool)}
 end

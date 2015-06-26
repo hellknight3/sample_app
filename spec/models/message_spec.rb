@@ -19,7 +19,6 @@ describe Message do
     FactoryGirl.build(:directMessage).should be_valid
   end
   it "should be able to be sent to an appointment" do
-
     FactoryGirl.build(:groupMessage).should be_valid
   end
   it "should not be sent to self" do

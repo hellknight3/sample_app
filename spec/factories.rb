@@ -90,9 +90,10 @@ FactoryGirl.define do
 		description{Faker::Name.name}
 	end
 	#create activity
-	factory :activity do |f|
-		f.association :user
-	#	association :trackable, factory: :user
-		f.action "create"
+	factory :activity do 
+		association :user
+		association :trackable, factory: :user
+        message {"some informative message about action taking place"}
+		action "an HTTP action"
 	end
 end
