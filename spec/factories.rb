@@ -77,12 +77,12 @@ FactoryGirl.define do
 	factory :directMessage, class: :message do
 		message{Faker::Name.name}
         user
-        messageable {user}
+        association :messageable, factory: :user
 	end
 	factory :groupMessage, class: :message do
 		message{Faker::Name.name}
         user
-        messageable {appointment}
+        association :messageable, factory: :appointment
 	end
 	 
 	factory :institution do 

@@ -2,7 +2,7 @@ require 'spec_helper'
 describe Appointment do
   it {should respond_to(:name)}
   it {should respond_to(:description)}
-
+  it {should respond_to(:pool)}
   it "should have a description" do 
     FactoryGirl.build(:appointment,:description => nil).should_not be_valid
   end

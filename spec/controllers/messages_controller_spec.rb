@@ -12,8 +12,14 @@ describe MessagesController, type: :controller do
     it "should have all associated users"
     it "should not have duplicate users"
     it "should list all current conversations"
-    it ""
       
+  end
+  context "new" do
+    it "should have the history of the conversation for an appointment" 
+    it "should have the history of the conversation for an user" 
+    it "should be able to send to an appointment"
+    it "should be able to send to a user"
+
   end
 end
 

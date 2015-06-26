@@ -15,11 +15,15 @@ describe Message do
   it "needs to have a recipient" do
       FactoryGirl.build(:directMessage, :messageable => nil).should_not be_valid
   end
-  it "should be able to be created to a given user" do
+  it "should be able to be created to a user" do
     FactoryGirl.build(:directMessage).should be_valid
   end
-  it "should be able to send to an appointment" do
+  it "should be able to be sent to an appointment" do
 
     FactoryGirl.build(:groupMessage).should be_valid
+  end
+  it "should not be sent to self" do
+    @user = FactoryGirl.create(:user)
+    @message = FactoryGirl.build(:directMessage, :user => @user,:messageable => @user).should_not be_valid
   end
 end
