@@ -2,14 +2,58 @@ require 'faker'
 
 FactoryGirl.define do
 	#create user
-	factory :user do 
+  factory :userPatient, class: User do 
 		#assign randomly generated values to the attributes
 		#expect for the pw 
 		name{Faker::Name.name}
 		password'foobar'
 		email{Faker::Internet.email}
-		password_confirmation'foobar'		
-	end
+        password_confirmation'foobar'		
+        association :profile, factory: :patient
+        #    after(:build) do |user|
+	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
+    #    end
+    end
+   factory :user do 
+		#assign randomly generated values to the attributes
+		#expect for the pw 
+		name{Faker::Name.name}
+		password'foobar'
+		email{Faker::Internet.email}
+        password_confirmation'foobar'		
+#        association :profile, factory: :doctor
+        #    after(:build) do |user|
+	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
+    #    end
+    end
+
+
+
+   factory :userDoctor, class: User do 
+		#assign randomly generated values to the attributes
+		#expect for the pw 
+		name{Faker::Name.name}
+		password'foobar'
+		email{Faker::Internet.email}
+        password_confirmation'foobar'		
+        association :profile, factory: :doctor
+        #    after(:build) do |user|
+	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
+    #    end
+    end
+
+  factory :userAdmin, class: User do 
+		#assign randomly generated values to the attributes
+		#expect for the pw 
+		name{Faker::Name.name}
+		password'foobar'
+		email{Faker::Internet.email}
+        password_confirmation'foobar'		
+        association :profile, factory: :admin
+        #    after(:build) do |user|
+	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
+    #    end
+    end
 
 	#create a pool
 	factory :pool do 
@@ -25,7 +69,7 @@ FactoryGirl.define do
 	
 	#create patient
 	factory :patient do 
-		user#create a user
+	#	usePatientr#create a user
 		emergencyContact{Faker::Name.name}
 		emergencyPhoneNumber{Faker::PhoneNumber::phone_number}
 		familyDoctor{Faker::Name.name}
@@ -35,13 +79,22 @@ FactoryGirl.define do
 	end
 	#create a doctor
 	factory :doctor do |f|
-		user#create a user
+	#	userDoctor#create a user
 	end
 	#create an admin
 	factory :admin do |f|
-		user#create a user
+
+     #   f.after_create {|a| FactoryGirl(:user, :profile => a)}
+      #  userAdmin
+      #   after(:build) do |admin|
+      #      admin.user ||= FactoryGirl.build(:user, :admin => admin) 
+      #  end
 	end
-	
+
+factory :adminCreate, class: Admin do
+  user
+end
+
 	factory :director do 
 		admin
 		director true
@@ -71,18 +124,10 @@ FactoryGirl.define do
 	factory :appointment do
 		name{Faker::Name.name}
 		description{Faker::Name.name}
-        pool
 	end
 	
-	factory :directMessage, class: :message do
+	factory :message do
 		message{Faker::Name.name}
-        user
-        association :messageable, factory: :user
-	end
-	factory :groupMessage, class: :message do
-		message{Faker::Name.name}
-        user
-        association :messageable, factory: :appointment
 	end
 	 
 	factory :institution do 
@@ -91,9 +136,9 @@ FactoryGirl.define do
 	end
 	#create activity
 	factory :activity do 
-		association :user
-		association :trackable, factory: :user
-        message {"some informative message about action taking place"}
-		action "an HTTP action"
-	end
++		association :user
++		association :trackable, factory: :user
++        message {"some informative message about action taking place"}
++		action "an HTTP action"
+ 	end
 end

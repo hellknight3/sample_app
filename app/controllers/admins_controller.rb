@@ -2,9 +2,10 @@ class AdminsController < ApplicationController
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create, :index, :edit, :update
 	before_action :signed_in_director, only: [:new, :create]
-	before_action :signed_in_admin, only: [:index, :edit, :update]
-	before_action :correct_user, only: [:show, :edit, :update]
+	before_action :signed_in_admin, only: [:index]
+	before_action :correct_user, only: [:show]
 	before_action :signed_in, only: [:show, :edit, :update, :new,:create,:index]
+	before_action :is_current_user, only: [:edit, :update]
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
 	def show
@@ -17,7 +18,8 @@ class AdminsController < ApplicationController
 	#puts all of the admins into a browsable list
 	#the list has a default length of 30 entries per page 
 	#uses will_paginate in the view to put the page bar in
-	if defined? params[:search]
+
+=begin      if defined? params[:search]
 		unless is_director
 			@admins = User.where('name LIKE ? and profile_type = ?',"%#{params[:search]}%",params[:user_type]).order("name ASC").paginate(page: params[:page])
 		else
@@ -28,7 +30,7 @@ class AdminsController < ApplicationController
 				render 'index'
 			end
 		end
-	end
+=end	end
 	end
 	def new
 		#creates temp variables for the new form to use for the views
@@ -41,8 +43,9 @@ class AdminsController < ApplicationController
 		#creates a user and attaches it to the admin with the user parameter restrictions required
 		@user = @admin.build_user(user_params)
 		@admin.director =false
-		#tries to save the admin to the database
-		if  @admin.save
+        puts @admin.profile 
+        #tries to save the admin to the database
+        if  @admin.save
 			#flashes a success message for the admin
 			flash[:notice] = "Admin save successfully."
 			#redirects to the newly created admins' page
@@ -62,12 +65,12 @@ class AdminsController < ApplicationController
 	end
 	def update
 		@admin = Admin.find(params[:id])
-		@user = @admin.user
-	
+	@user = @admin.user
+=begin
 		if defined?(params[:admin][:func])
+
 			if(params[:admin][:func] == "addPool")
-				@perm = Permission.new
-	
+				@perm = Permission.new	
 				@perm.user_id = @user.id
 				@perm.pool_id = params[:admin][:pool_id]
 				if @perm.save
@@ -82,7 +85,7 @@ class AdminsController < ApplicationController
 				flash[:notice]="removed admins permission from pool"
 				redirect_to edit_admin_path(params[:id])
 			end
-		else
+=end		else
 			if @user.authenticate(params[:user][:old_password])
 				#passes the attributes from the form to the admin_params function
 				if(params[:user][:email].match(VALID_EMAIL_REGEX))
@@ -111,10 +114,10 @@ class AdminsController < ApplicationController
 					render 'edit'
 				end
 			else
-				flash[:alert]="Old password is not corrent"
+				flash[:alert]="Old password is not current"
                                 render 'edit'
 			end
-		end
+	#	end
 	end
 	def get
 		@admin = User.where(params[:name])
@@ -124,7 +127,8 @@ class AdminsController < ApplicationController
 	#used to specify which attributes of the model should be accepted
 		def user_params
 			params.require(:user).permit(:name, :email, :password, :password_confirmation)
-		end
+	
+        end
 		def admin_params
 			
 		end
@@ -138,7 +142,8 @@ class AdminsController < ApplicationController
 		end
 		#checks if the currently signed in user is an admin
 		def signed_in_admin
-			unless is_admin #checks if the currently logged in user is an Admin
+		
+            unless is_admin #checks if the currently logged in user is an Admin
 				store_location
 				redirect_to signin_url, notice: "You do not have permission to do that."
 			end
@@ -157,6 +162,12 @@ class AdminsController < ApplicationController
 			#compares that user created above to the currently logged in user
 			unless current_user?(@user) ||  is_admin?(current_user) #|| is_doctor?(current_user)
 				redirect_to(root_url) 
+			end
+		end
+		def is_current_user
+			@user = User.find(params[:id])
+			unless current_user?(@user)
+				redirect_to(root_url)
 			end
 		end
 end
