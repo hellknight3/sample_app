@@ -37,13 +37,15 @@ class AppointmentsController < ApplicationController
   end
 
   def index
+      #@activity=Activity.new
+      #@activity = {:user => current_user, :action => :index, :trackable => self,:message => "#{current_user.name} viewed their appointments"}
 		if params[:Appointment]=="Closed"
-			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is not null",'Appointment', current_user.id).select(:messageable_id).distinct.all
+			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is not null",'Appointment', current_user.id).select(:messageable_id).distinct
 		elsif params[:Appointment]=="Future"
-			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time > ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct.all
+			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time > ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct
 		else
 			#the Open case which is default
-			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time < ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct.all
+			@messages = Message.joins("INNER JOIN appointments on appointments.id = messages.messageable_id").where("messageable_type = ? and user_id = ?  and end_time is null and start_time < ?",'Appointment', current_user.id, DateTime.now).select(:messageable_id).distinct
 		end
 	end
 def update

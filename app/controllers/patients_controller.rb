@@ -10,7 +10,7 @@ class PatientsController < ApplicationController
 		#shows the current users properties
 		@patient = Patient.find(params[:id])
 		@user = @patient.user
-		@doctors=Doctor.joins("INNER JOIN doc_relationships ON doctors.id = doc_relationships.doctor_id").where("patient_id= ? and accepted = ?",@patient.id,true).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, doctors.id").all #@doctor.patients.paginate(page: params[:page])
+		@doctors=Doctor.joins("INNER JOIN doc_relationships ON doctors.id = doc_relationships.doctor_id").where("patient_id= ? and accepted = ?",@patient.id,true).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, doctors.id")#@doctor.patients.paginate(page: params[:page])
 
 	end
 	def new
@@ -49,7 +49,7 @@ class PatientsController < ApplicationController
 			@SelDocs=@SelDocs.where("profile_type = 'Doctor' and doc_relationships.patient_id = ?", params[:id])
 			@SelDocs=@SelDocs.select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted")
 			@SelDocs=@SelDocs.order("permissions.user_id ASC").uniq
-			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq.all
+			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq
 			@doctors =  @SelDocs | @SelRelations
 			#.joins(:user, :pool).where("profile_type = 'Doctor'").select(:name).uniq.all
 			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq
@@ -191,7 +191,7 @@ class PatientsController < ApplicationController
 			@profile = Patient.find(params[:id])
 			@user = @profile.user
 			#compares that user created above to the currently logged in user
-			@docRelation=DocRelationship.where("doctor_id=? and patient_id=?",current_user.profile_id,@profile.id).all.size
+			@docRelation=DocRelationship.where("doctor_id=? and patient_id=?",current_user.profile_id,@profile.id).size
 	
 			unless current_user?(@user) ||(is_admin && !is_director) || (@docRelation >0 && current_user.profile_type =="Doctor")
 		
