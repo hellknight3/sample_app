@@ -71,10 +71,18 @@ FactoryGirl.define do
 	factory :appointment do
 		name{Faker::Name.name}
 		description{Faker::Name.name}
+        pool
 	end
 	
-	factory :message do
+	factory :directMessage, class: :message do
 		message{Faker::Name.name}
+        user
+        association :messageable, factory: :user
+	end
+	factory :groupMessage, class: :message do
+		message{Faker::Name.name}
+        user
+        association :messageable, factory: :appointment
 	end
 	 
 	factory :institution do 
@@ -82,9 +90,10 @@ FactoryGirl.define do
 		description{Faker::Name.name}
 	end
 	#create activity
-	factory :activity do |f|
-		f.association :user
-	#	association :trackable, factory: :user
-		f.action "create"
+	factory :activity do 
+		association :user
+		association :trackable, factory: :user
+        message {"some informative message about action taking place"}
+		action "an HTTP action"
 	end
 end

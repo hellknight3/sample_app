@@ -1,4 +1,7 @@
 SampleApp::Application.routes.draw do
+  get "activities/new"
+  get "activities/index"
+  get "activity/index"
 	resources :institutions do
 	end
 

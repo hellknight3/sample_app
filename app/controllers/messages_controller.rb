@@ -1,7 +1,9 @@
 class MessagesController < ApplicationController
-  def show
-	@user=current_user
-  end
+  # show currently not used for messages
+# def show
+#	@user=current_user
+#  end
+
   def index
 	@users = Message.where("messageable_type = ? and( user_id = ? or messageable_id = ?)",'User', current_user.id,current_user.id).pluck("Distinct messageable_id, user_id")
 	@users.each do |user|
