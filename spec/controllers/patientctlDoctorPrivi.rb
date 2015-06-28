@@ -3,13 +3,13 @@ require 'spec_helper'
 #test doctor access to a patients information
 describe PatientsController, type: :controller do
 	before(:each) do
-		@patient = FactoryGirl.create(:patient)
-		@doctor = FactoryGirl.create(:doctor)
-		controller.current_user = @doctor.user
+		@patient = FactoryGirl.create(:userPatient)
+		@doctor = FactoryGirl.create(:userDoctor)
+		controller.current_user = @doctor
 	end
 #test show of a patient which hasnt been assigned to the doctor
 	it "should not allow the doctor to view patient" do
-		get :show, {'id' =>@doctor.id}, {'user_id'=> @patient.id}
+		get :show, {'id' =>@doctor.profile.id}, {'user_id'=> @patient.id}
 		expect(response).to_not be_success
 	end
 
@@ -36,7 +36,7 @@ describe PatientsController, type: :controller do
 	end
 # test update
 	it "should not be allowed to updat the patient" do
-		get :update, {'id' => @patient.id, 'patient' => {:weight=> 2} }
+		get :update, {'id' => @patient.profile.id, 'patient' => {:weight=> 2} }
 		expect(flash[:notice]).to eq("you do not have permission to do that.")
 		expect(response).to_not be_success
 	end
