@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe PoolsController, type: controller do
 	before(:each) do 
-		@admin = FactoryGirl.create(:admin)
-		sign_in @admin
+		@admin = FactoryGirl.create(:userAdmin)
 		controller.current_user = @admin 
 		@pool = FactoryGirl.create(:pool)
 	end	

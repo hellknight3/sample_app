@@ -197,7 +197,7 @@ class DoctorsController < ApplicationController
 			end
 
 # this needs to be fixed so that only accepted patients can view the doctor profile
-			unless current_user?(@doctor.user) || is_admin #|| (defined?(@patient) && @patient.accepted)
+			unless current_user?(@doctor.user) || is_admin ||is_doctor # (defined?(@patient) && @patient.accepted)
 				@doctor = nil
 				flash[:alert] = "You do not have permission do view this doctor."
 				redirect_to(root_url) 

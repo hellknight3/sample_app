@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DoctorsController, type: :controller do
 	before(:each) do
-		@doctor = FactoryGirl.create(:doctor)
+		@doctor = FactoryGirl.create(:userDoctor)
 	end
 
 	it "show_doctor as admin" do
@@ -200,42 +200,42 @@ describe DoctorsController, type: :controller do
 	end
 private
 	def edit_action
-		get :edit, 'id' => @doctor.id
+		get :edit, 'id' => @doctor.profile.id
 	end
 	def update_action
-		get :update, 'doctor' => {:func => "addPool"}, user: attributes_for(:user), 'id' => @doctor.id
+		get :update, 'doctor' => {:func => "addPool"}, user: attributes_for(:userDoctor), 'id' => @doctor.profile.id
 	end 
 	def new_action
 		get :new
 	end
 	def create_action
-		get :create, doctor: attributes_for(:doctor), user: attributes_for(:user)  
+		get :create, doctor: attributes_for(:doctor), user: attributes_for(:userDoctor)  
 	end
 	def check
-		assert_equal @doctor, assigns(:doctor)
+		assert_equal @doctor.profile , assigns(:doctor)
 	end
 
 	def check_not()
-		assert_not_equal @doctor, assigns(:doctor)
+		assert_not_equal @doctor.profile, assigns(:doctor)
 	end
 	def show_action 
-		get :show, {'id' => @doctor.id}, {'user_id'=> @user.id}
+		get :show, {'id' => @doctor.profile.id}, {'user_id'=> @user.id}
 	end
 	def patient
-		@user = FactoryGirl.create(:patient)
-		controller.current_user = @user.user
+		@user = FactoryGirl.create(:userPatient)
+		controller.current_user = @user
 	end
 	def admin
-		@user = FactoryGirl.create(:admin)
-		controller.current_user = @user.user
+		@user = FactoryGirl.create(:userAdmin)
+		controller.current_user = @user
 	end
 	def director 
-		@user = FactoryGirl.create(:admin)
-		@user.director = true
-		controller.current_user = @user.user
+		@user = FactoryGirl.create(:userAdmin)
+		@user.profile.director = true
+		controller.current_user = @user
 		controller.stub(:is_director).and_return(true)
 	end
 	def index_action
-		get :index, {'id' => @doctor.id}
+		get :index, {'id' => @doctor.profile.id}
 	end
 end

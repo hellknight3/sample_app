@@ -14,15 +14,26 @@ describe User do
 	it { should respond_to(:password_confirmation)}
 	it { should respond_to(:remember_token)}
 	it { should respond_to(:authenticate)}
-	it {should be_valid}
+#	it {should be_valid}
 	it {should respond_to(:authenticate)}
 	
-	#check user object can be created
-	describe "has a valid factory" do
-		before {@user=build(:user)}
-
-		it { should be_valid }
+	it "has a valid profile" do
+		FactoryGirl.build(:user, profile_type: nil).should_not be_valid
 	end
+
+
+	it "has a valid profile" do
+                FactoryGirl.build(:user, profile_type: "Admin", profile_id: 1).should be_valid
+        end
+it "has a valid profile" do
+                FactoryGirl.build(:user, profile_type: Doctor, profile_id: 2).should be_valid
+        end
+
+it "has a valid profile" do
+                FactoryGirl.build(:user, profile_type: Patient, profile_id: 3).should be_valid
+        end
+
+=begin
 	#check user is invalid without a name
 	it "is invalid without a name" do 
 		build(:user, name: nil).should_not be_valid
@@ -100,5 +111,5 @@ describe User do
 		testUser = create(:user)
 		testUser.remember_token{should_not be_blank}
 		
-	end
+=end end
 end

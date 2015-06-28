@@ -3,9 +3,9 @@ require 'faker'
 
 describe PatientsController, type: :controller do
 	before(:each) do
-		@admin = FactoryGirl.create(:admin)
-		controller.current_user = @admin.user
-		@patient = FactoryGirl.create(:patient)
+		@admin = FactoryGirl.create(:userAdmin)
+		controller.current_user = @admin
+		@patient = FactoryGirl.create(:userPatient)
 	end 
 
 	it "show patient as admin" do
@@ -19,13 +19,13 @@ describe PatientsController, type: :controller do
 	end	
 	
 	it "show patient as director" do
-		@admin.director = true
+		@admin.profile.director = true
 		show_action()
 		check
 	end
 	
 	it "redirect_show_patient, as director"do
-		@admin.director = true		
+		@admin.profile.director = true		
 		show_action()
 		expect(response).to be_success
 	end
@@ -40,13 +40,13 @@ describe PatientsController, type: :controller do
 	end
 	
 	it "new_patient as director" do
-		@admin.director = true
+		@admin.profile.director = true
 		new_action()
 		expect(response).to be_success
 	end
 
 	it "create_patient as director"do
-		@admin.director = true
+		@admin.profile.director = true
 		expect{create_action()}.to change(Patient, :count).by(1)
 	end
 
@@ -62,13 +62,13 @@ describe PatientsController, type: :controller do
 	end
 	
 	it "create_patient_flash director" do
-		@admin.director = true
+		@admin.profile.director = true
 		create_action()
 		expect(flash[:notice]).to eq("successfully added patient")
 	end
 	
 	it "create_patient_redirection director" do
-		@admin.director = true		
+		@admin.profile.director = true		
 		create_action()
 		expect(response).to redirect_to :action => :edit, :id => 2
 	end
@@ -80,7 +80,7 @@ describe PatientsController, type: :controller do
 	end
 
 	it "edit_patient as director" do
-		@admin.director = true
+		@admin.profile.director = true
 		edit_action()
 		expect(response).to be_success
 	end
@@ -94,11 +94,11 @@ test this with the privileges
 =end
 private 
 	def check
-		assert_equal @patient, assigns(:patient)
+		assert_equal @patient.profile, assigns(:patient)
 	end
 
 	def show_action	
-		get :show, {'id' => @patient.id}, {'user_id' => @admin.id}
+		get :show, {'id' => @patient.profile.id}, {'user_id' => @admin.id}
 	end
 
 	def new_action
@@ -110,11 +110,11 @@ private
 	end
 	
 	def edit_action
-		get :edit, id: @patient.id
+		get :edit, id: @patient.profile.id
 	end
 	
 	def update_action
-		get :update, 'patient' => { :func => "addPool"}, user: attributes_for(:user), 'id' => @patient.id
+		get :update, 'patient' => { :func => "addPool"}, user: attributes_for(:user), 'id' => @patient.profile.id
 
 	end
 end
