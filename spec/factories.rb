@@ -136,9 +136,9 @@ end
 	end
 	#create activity
 	factory :activity do 
-+		association :user
-+		association :trackable, factory: :user
-+        message {"some informative message about action taking place"}
-+		action "an HTTP action"
+		association :user
+		association :trackable, factory: :user
+        message {"some informative message about action taking place"}
+		action "an HTTP action"
  	end
 end

@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20150626223219) do
     t.string   "trackable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "message"
   end
 
   add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type"
