@@ -5,8 +5,19 @@ class UsersController < ApplicationController
 	before_action :signed_in_user, only: [:index,:edit, :update]
 	before_action :correct_user, only: [:edit, :update]
 	def index
-		@users=User.paginate(page: params[:page])
+     if defined? params[:search]
+		unless is_director
+			@users = User.where('name LIKE ? and profile_type = ?',"%#{params[:search]}%",params[:user_type]).order("name ASC").paginate(page: params[:page])
+		else
+			if params[:user_type] != Patient	
+			@users = User.where('name LIKE ? and profile_type = ?',"%#{params[:search]}%",params[:user_type]).order("name ASC").paginate(page: params[:page])
+			else
+				flash[:notice] = "You do not have permission to view patients"
+			end
+		end
 	end
+     redirect_to root_url
+    end
 	def show
 		@user = User.find(params[:id])
 	end
@@ -29,8 +40,33 @@ class UsersController < ApplicationController
 	@user = User.find(params[:id])
 	end
 	def update
+      
 		@user = User.find(params[:id])
-		if @user.update_attributes(user_params)
+		if defined?(params[:user][:func]) && is_admin
+            if(params[:user][:func] == "addPool")
+              @pool = Pool.find(params[:user][:pool_id])
+               if @pool.users.include?(current_user) || is_director?(current_user)
+                    @perm = Permission.new	
+  	    			@perm.user_id = @user.id
+    				@perm.pool_id = params[:user][:pool_id]
+			
+                  if @perm.save
+			    		flash[:notice]="permissions updated"
+    				else
+	    				flash[:alert]="a problem occurred updating the users permissions"
+		    		end
+              else
+              flash[:notice] = "You do not have permission to add users to this pool"
+              end
+                  redirect_to @user
+             elsif params[:user][:func] == "removePool"
+              	Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:user][:pool_id]).delete_all
+				flash[:notice]="removed admins permission from pool"
+				redirect_to @user
+            else
+              render 'edit'
+            end
+		elsif @user.update_attributes(user_params) && current_user
 			flash[:success]="Profile updated"
 			redirect_to @user
 		else
@@ -50,7 +86,11 @@ class UsersController < ApplicationController
 		end
 		def correct_user
 			@user = User.find(params[:id])
-			redirect_to(root_url) unless current_user?(@user)
-		end
+			redirect_to(root_url) unless current_user?(@user) || is_admin
+            if is_director?(current_user) && is_patient?(@user)
+                flash[:notice] = "You do not have permissions to modify patient permissions"
+                	redirect_to(root_url) 
+            end
+        end
 		
 end

@@ -105,14 +105,213 @@ describe UsersController, type: :controller  do
 		patient()
 	  not_update()
     end
+it "should not update permissions"do
+      @userTest = FactoryGirl.create(:userPatient)
+      admin()
+      pool() 
+      addPool()
+      checkPoolnot()
+      expect(flash[:notice]).to eq "You do not have permission to add users to this pool"
+  end
+
+  it "should not update permissions"do
+    @userTest = FactoryGirl.create(:userPatient)
+    doctor()
+    pool
+    addPool()
+    success_not
+    expect(response).to redirect_to root_url
+end
+  it "should not update permissions"do
+    @userTest = FactoryGirl.create(:userPatient)
+    patient()
+    pool
+    addPool()
+    success_not
+    expect(response).to redirect_to root_url
+end
+ 
+it "should add user to pool" do
+  @userTest = FactoryGirl.create(:userPatient)
+  director()
+  pool()
+  @perm = Permission.new
+  @perm.user_id = @user.id
+  @perm.pool_id = @pool.id
+  @perm.save
+  addPool()
+  success_not()
+  expect(response).to redirect_to root_url
+end
+it "should add user to pool" do
+  @userTest = FactoryGirl.create(:userPatient)
+  admin()
+  pool()
+  @perm = Permission.new
+  @perm.user_id = @user.id
+  @perm.pool_id = @pool.id
+  @perm.save
+  addPool()
+  checkPool()
+end
+
+it "should add user to pool" do
+  @userTest = FactoryGirl.create(:userAdmin)
+  director()
+  pool()
+  addPool()
+  checkPool()
+end
+it "should add user to pool" do
+  @userTest = FactoryGirl.create(:userPatient)
+  admin()
+  pool()
+  @perm = Permission.new
+  @perm.user_id = @user.id
+  @perm.pool_id = @pool.id
+  @perm.save
+  removePool()
+  checkRvm()
+end
+  it "should not update permissions"do
+    @userTest = FactoryGirl.create(:userPatient)
+    doctor()
+    pool
+    removePool()
+    success_not
+    expect(response).to redirect_to root_url
+end
+  it "should not update permissions"do
+    @userTest = FactoryGirl.create(:userPatient)
+    patient()
+    pool
+    removePool()
+    success_not
+    expect(response).to redirect_to root_url
+end
+ 
+it "should add user to pool" do
+  @userTest = FactoryGirl.create(:userPatient)
+  director()
+  pool()
+  @perm = Permission.new
+  @perm.user_id = @user.id
+  @perm.pool_id = @pool.id
+  @perm.save
+  addPool()
+  removePool()
+  success_not
+ expect(response).to redirect_to root_url
+end
+
+it "should add user to pool" do
+  @userTest = FactoryGirl.create(:userAdmin)
+  director()
+  pool()
+  addPool()
+  removePool()
+end
+
+it "should index users" do
+  @userTest = FactoryGirl.create(:userDoctor)
+    admin()
+    index()
+    @number = 1
+    checkIndex()
+end 
+
+it "should index users" do
+  @userTest = FactoryGirl.create(:userPatient)
+    admin()
+    index()
+    @number = 1
+    checkIndex()
+end
+it "should index users" do
+  @userTest = FactoryGirl.create(:userDoctor)
+    director()
+    index()
+    @number = 1
+    checkIndex()
+end
+it "should index users" do
+  @userTest = FactoryGirl.create(:userAdmin)
+    director()
+    index()
+    assigns(:users).count.should eq(2)
+end
+it "should index users" do
+    @userTest = FactoryGirl.create(:userPatient)
+    doctor()
+    index()
+    @number = 1
+    checkIndex()
+end
+it "should index users" do
+  @userTest = FactoryGirl.create(:userAdmin)
+    doctor()
+    index()
+    @number = 1
+    checkIndex()
+end
+it "should index users" do
+  @userTest = FactoryGirl.create(:userDoctor)
+    doctor()
+    index()
+    assigns(:users).count.should eq(2)
+end
 
 
+it "should index users" do
+  @userTest = FactoryGirl.create(:userAdmin)
+    admin()
+    index()
+    assigns(:users).count.should eq(2)
+end
 
+it "should index users" do
+  @userTest = FactoryGirl.create(:userPatient)
+    director()
+    index()
+    success_not()
+end
+it "shouldnt index users" do
+    patient
+  @userTest = FactoryGirl.create(:userDoctor)
+    index()
+    success_not()
+end
 
 private
+def checkIndex
+  assigns(:users).count.should eq(@number)
+  expect(assigns(:users)).to eq([@userTest])
+end
+def checkRvm
+ @perm= Permission.where("user_id = ? AND pool_id = ?",@user.id, @pool.id)
+ @perm.empty?
+end
+def removePool
+    get :update, 'user' => {:func => "removePool", :pool_id => @pool.id}, 'id' => @userTest.id
+end
+def success_not
+  expect(response).to_not be_success
+end
+def checkPoolnot
+  assert_equal nil, assigns(:perm)
+end
+def pool
+  @pool = FactoryGirl.create(:pool)
+end
+def checkPool
+  assert_equal @pool.id, assigns(:perm).pool_id
+end
+def addPool
+    get :update, 'user' => {:func => "addPool", :pool_id => @pool.id}, 'id' => @userTest.id
+end
 def not_update()
  
-  expect{update()}.to raise_error(ActionController::UrlGenerationError,'No route matches {:action=>"update", :controller=>"users", :id=>"1", :user=>{:name=>"Bob", :password=>"foobar", :email=>"me@gmail.com", :password_confirmation=>"foobar"}}')
+  expect{update()}.to_not raise_error(ActionController::UrlGenerationError,'No route matches {:action=>"update", :controller=>"users", :id=>"1", :user=>{:name=>"Bob", :password=>"foobar", :email=>"me@gmail.com", :password_confirmation=>"foobar"}}')
 end
 def update
   get :update, 'user' => {:name =>"Bob", :password=>"foobar", :email=>"me@gmail.com", :password_confirmation=>"foobar"}, 'id' => @userTest.id
@@ -128,7 +327,7 @@ def not_new
   expect{get :new}.to raise_error(ActionController::UrlGenerationError,'No route matches {:action=>"new", :controller=>"users"}')
 end
 def not_index
-    expect{index()}.to raise_error(ActionController::UrlGenerationError,'No route matches {:action=>"index", :controller=>"users", :id=>"1", :user_id=>"2"}')
+    expect{index()}.to_not raise_error(ActionController::UrlGenerationError,'No route matches {:action=>"index", :controller=>"users", :id=>"1", :user_id=>"2"}')
 end
 
 def not_show
@@ -144,7 +343,7 @@ def check_not
 	assert_not_equal @userTest, assigns(:user)
 end
 def index
-	get :index, 'id' => @userTest.id, 'user_id' => @user.id
+	get :index, 'user_type' => @userTest.profile_type, 'search' => @search
 end
 
 def admin
@@ -159,7 +358,9 @@ end
 
 def director
 	admin()
-	@admin.profile.director = true
+	@user.profile.director = true
+    controller.stub(:is_director?).and_return(true)
+    controller.stub(:is_director).and_return(true)
 end
 
 def patient
