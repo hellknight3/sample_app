@@ -125,6 +125,7 @@ end
 		name{Faker::Name.name}
 		description{Faker::Name.name}
         start_time{DateTime.now.to_date}
+        end_time{}
 	end
 	
 	factory :message do
@@ -137,6 +138,10 @@ end
 		name{Faker::Name.name}
 		description{Faker::Name.name}
 	end
+    factory :appointmentMembership do
+      pool
+      appointment
+    end 
 	#create activity
 	factory :activity do 
 		association :user
