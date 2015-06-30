@@ -47,5 +47,32 @@ end
 Then(/^they should be on the edit appointments page$/) do
   expect(page).to have_content("Edit #{@trackable.name}")
 end
+Given(/^they have (\d+) (.*?) appointments$/) do |number,status|
+    @endtime=nil
+    @startTime = DateTime.now.to_date
+  if status == "Closed"
+    @endtime=DateTime.now.to_date
+  elsif status == "Future"
+    @startTime-=5
+  end
+  number.to_i.times do 
+    @trackable = FactoryGirl.create(:appointment,:start_time => @startTime,:end_time => @endTime)
+    @message = FactoryGirl.create(:message,:user => @user,:messageable => @trackable)
+  end
+  
+end
+
+When(/^they view their (.*?) appointments$/) do |status|
+  visit appointments_path({:appointment => status})
+end
+
+Then(/^they should see their (\d+) (.*?) appointments$/) do |number, status|
+  @appointments = Message.where("user_id=#{@user.id}").joins("inner join appointments on messages.messageable_id = appointments.id").select(:messageable_id,:messageable_type,:user_id,:name).distinct
+  @result = expect(@appointments.count).to eq number.to_i
+  @appointments.each do |app|
+    @result &&= expect(page).to have_content(app.name)
+  end
+  @result 
+end
 
 

@@ -124,6 +124,7 @@ end
 	factory :appointment do
 		name{Faker::Name.name}
 		description{Faker::Name.name}
+        start_time{DateTime.now.to_date}
 	end
 	
 	factory :message do
