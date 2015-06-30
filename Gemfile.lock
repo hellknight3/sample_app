@@ -1,3 +1,18 @@
+GIT
+  remote: git://github.com/bmabey/database_cleaner.git
+  revision: ccf49bd3bfc1ba39630709b28191d045a95138bc
+  specs:
+    database_cleaner (1.4.1)
+
+GIT
+  remote: git://github.com/brynary/webrat.git
+  revision: 1263639e24ce0f5e2eeeae614f10f900f498d92a
+  specs:
+    webrat (0.7.5)
+      nokogiri (>= 1.2.0)
+      rack (>= 1.0)
+      rack-test (>= 0.5.3)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -206,6 +221,7 @@ DEPENDENCIES
   coffee-rails (= 4.0.1)
   coffee-script-source (= 1.8.0)
   cucumber-rails (= 1.4.0)
+  database_cleaner!
   factory_girl_rails (= 4.2.0)
   faker (= 1.4.3)
   jbuilder (= 1.0.2)
@@ -227,6 +243,7 @@ DEPENDENCIES
   turbolinks (= 1.1.1)
   uglifier (= 2.1.1)
   wdm (= 0.1.0)
+  webrat!
   will_paginate (= 3.0.4)
 
 BUNDLED WITH

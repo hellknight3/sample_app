@@ -1,0 +1,19 @@
+<%provide(:title, "Edit appointment")%>
+<h1> Edit <%=@appointment.name%></h1>
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6">
+    <%=simple_form_for(@appointment) do |f|%>
+      <%=f.input :name %><br />
+      <%=f.input :description, as: :text%>
+      <%=f.input :start_time%>
+      <%=f.submit "Update Appointment", class: "btn btn-large btn-primary"%>
+    <% end %>
+  
+  
+  
+  </div>
+  <div class="col-md-3"></div>
+
+</div>
+

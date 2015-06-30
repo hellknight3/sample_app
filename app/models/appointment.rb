@@ -9,5 +9,5 @@ class Appointment < ActiveRecord::Base
 	belongs_to :pool
 	validates :name,  presence: true
 	validates :description, presence: true
-    validates :pool, presence: true
+    #validates :pool, presence: true
 end

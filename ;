@@ -1,0 +1,23 @@
+When(/^they submit a valid appointment$/) do
+  fill_in "Description", :with =>  "hello"
+  fill_in "Name", :with => "testValidAppointment"
+  #fill_in "Start time", :with => Time.now
+  click_button "Create Appointment"
+end
+
+Then(/^a log file should be generated$/) do
+
+end
+
+Then(/^an appointment should be created$/) do
+  @app=Appointment.where("Name = 'testValidAppointment'").first
+  @app.description.should eq "hello"
+end
+Given(/^a doctor is logged in$/) do
+  @user = FactoryGirl.create(:userDoctor)
+  sign_in @user
+end
+
+Given(/^the doctor visits the new appointments path$/) do
+  visit new_appointment_path
+end

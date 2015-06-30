@@ -83,7 +83,7 @@ FactoryGirl.define do
 	end
 	#create an admin
 	factory :admin do |f|
-
+      director{false}
      #   f.after_create {|a| FactoryGirl(:user, :profile => a)}
       #  userAdmin
       #   after(:build) do |admin|
@@ -128,6 +128,8 @@ end
 	
 	factory :message do
 		message{Faker::Name.name}
+        user
+        association :messageable, factory: :user
 	end
 	 
 	factory :institution do 
@@ -136,9 +138,9 @@ end
 	end
 	#create activity
 	factory :activity do 
-+		association :user
-+		association :trackable, factory: :user
-+        message {"some informative message about action taking place"}
-+		action "an HTTP action"
+		association :user
+		association :trackable, factory: :user
+        message {"some informative message about action taking place"}
+		action "an HTTP action"
  	end
 end
