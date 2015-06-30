@@ -75,4 +75,20 @@ Then(/^they should see their (\d+) (.*?) appointments$/) do |number, status|
   @result 
 end
 
+When(/^they view the appointment$/) do
+  visit appointments_path(@trackable)
+end
+
+Then(/^they should see the appointments pools$/) do
+    pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then(/^they should see who is participating in the appointment$/) do
+    pending # Write code here that turns the phrase above into concrete actions
+end
+
+Then(/^they should see the appointments properies$/) do
+    pending # Write code here that turns the phrase above into concrete actions
+end
+
 
