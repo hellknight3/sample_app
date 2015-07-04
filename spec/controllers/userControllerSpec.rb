@@ -211,7 +211,6 @@ it "should add user to pool" do
   addPool()
   removePool()
 end
-
 it "should index users" do
   @userTest = FactoryGirl.create(:userDoctor)
     admin()
@@ -244,7 +243,7 @@ it "should index users" do
     @userTest = FactoryGirl.create(:userPatient)
     doctor()
     index()
-    @number = 1
+    @number = 0
     checkIndex()
 end
 it "should index users" do
@@ -282,6 +281,77 @@ it "shouldnt index users" do
     success_not()
 end
 
+it "should return one user" do 
+    @userTest = FactoryGirl.create(:userPatient)
+    @userTest1 = FactoryGirl.create(:userPatient)
+    @userTest2 = FactoryGirl.create(:userPatient)
+    @userTest3 = FactoryGirl.create(:userPatient)
+    admin()
+    get :index, 'search'=>@userTest.name, 'user_type'=> Patient, 'id' =>@userTest.id, 'id_user'=> @user.id
+    @number =1
+    checkIndex
+end
+it "should return one user" do 
+    @userTest = FactoryGirl.create(:userPatient)
+    @userTest1 = FactoryGirl.create(:userPatient)
+    @userTest2 = FactoryGirl.create(:userPatient)
+    @userTest3 = FactoryGirl.create(:userPatient)
+    director()
+    get :index, 'search'=>@userTest.name, 'user_type'=> Patient, 'id' =>@userTest.id, 'id_user'=> @user.id
+    success_not()
+end
+
+it "should return one user" do 
+    @userTest = FactoryGirl.create(:userDoctor)
+    @userTest1 = FactoryGirl.create(:userDoctor)
+    @userTest2 = FactoryGirl.create(:userDoctor)
+    @userTest3 = FactoryGirl.create(:userDoctor)
+    admin()
+    get :index, 'search'=>@userTest.name, 'user_type'=> Doctor, 'id' =>@userTest.id, 'id_user'=> @user.id
+    @number =1
+    checkIndex
+end
+
+
+it "should return one user" do 
+    @userTest = FactoryGirl.create(:userPatient)
+    @userTest1 = FactoryGirl.create(:userPatient)
+    @userTest2 = FactoryGirl.create(:userPatient)
+    @userTest3 = FactoryGirl.create(:userPatient)
+    @userTest3.name = @userTest.name
+    doctor()
+    pool()
+    @perm = Permission.new
+    @perm.user_id = @user.id
+    @perm.pool_id = @pool.id
+    @perm.save
+     @perm = Permission.new
+    @perm.user_id = @userTest.id
+    @perm.pool_id = @pool.id
+    @perm.save
+    @newRelationship=DocRelationship.new
+	@newRelationship.doctor_id = @user.profile.id
+	@newRelationship.patient_id= @userTest.profile.id
+    @newRelationship.accepted= true
+    @newRelationship.save
+    puts @newRelationship.inspect
+
+    get :index, 'search'=>@userTest.name, 'user_type'=> Patient, 'id' =>@userTest.id, 'id_user'=> @user.id
+    @number =0
+    checkIndex
+end
+
+
+it "should return one user" do 
+    @userTest = FactoryGirl.create(:userPatient)
+    @userTest1 = FactoryGirl.create(:userPatient)
+    @userTest2 = FactoryGirl.create(:userDoctor)
+    @userTest3 = FactoryGirl.create(:userAdmin)
+    admin()
+    get :index,'user_type'=> Patient, 'id' =>@userTest.id, 'id_user'=> @user.id
+    @number =2
+  assigns(:users).count.should eq(@number)
+end
 private
 def checkIndex
   assigns(:users).count.should eq(@number)
@@ -354,6 +424,7 @@ end
 def doctor
 	@user = FactoryGirl.create(:userDoctor)
 	controller.current_user = @user
+    controller.stub(:is_doctor).and_return(true)
 end
 
 def director

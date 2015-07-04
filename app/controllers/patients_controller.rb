@@ -65,7 +65,7 @@ class PatientsController < ApplicationController
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
 		if defined?(params[:patient][:func]) &&params[:patient][:func] != nil
 		
-		if(params[:patient][:func] == "addDoc")
+=begin		if(params[:patient][:func] == "addDoc")
 		
 				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
 				if @docRelationship
@@ -115,7 +115,7 @@ class PatientsController < ApplicationController
 			else 
 			flash[:alert]="problem updating"
 			redirect_to @patient
-			end
+=end			end
 		else	
 							
 			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
@@ -125,11 +125,16 @@ class PatientsController < ApplicationController
 						 flash[:alert]="Password and Password Confirmation must match"
                                         	render 'edit'
 					else	
-				
-						@user = @patient.user
-						@user.update(user_params)
+                         if params[:user][:password_confirmation] != ""
+                        #passes the attributes from the form to the user_params function
+			i    	    @user.update_attributes(user_params)
+                         else
+                           values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
+                            @user.update_attributes(values)
+ 
 						flash[:notice]="successfully updated your profile."
 						redirect_to @patient
+                         end
 					end
 				else
 					user = @patient.user
