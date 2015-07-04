@@ -54,6 +54,15 @@ FactoryGirl.define do
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
     #    end
     end
+  factory :userDirector, class: User do 
+		#assign randomly generated values to the attributes
+		#expect for the pw 
+		name{Faker::Name.name}
+		password'foobar'
+		email{Faker::Internet.email}
+        password_confirmation'foobar'		
+        association :profile, factory: :admin, director: true
+  end
 
 	#create a pool
 	factory :pool do 

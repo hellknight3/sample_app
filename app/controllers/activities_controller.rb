@@ -1,9 +1,12 @@
 class ActivitiesController < ApplicationController
   def index
-  end
-  def create
-    Activity.new(activity_params)
-    if @activity.save
+    if params[:user_id]
+      @activeModel=User.find(params[:user_id])
+      if params[:view] == "Actions"
+        @activities=Activity.where(:trackable => @activeModel)
+      else
+        @activities=Activity.where(:user_id => @activeModel)
+      end
     end
   end
 end

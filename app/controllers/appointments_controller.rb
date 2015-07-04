@@ -4,6 +4,7 @@ class AppointmentsController < ApplicationController
   def new
 	  @user = current_user
 	  @appointment = Appointment.new
+      @pools = @user.pools
   end
 
   def create
@@ -62,10 +63,12 @@ def update
 		if(params[:appointment][:func] == "destroy")
 			Appointment.find(params[:appointment][:appointment_id]).destroy
 			flash[:notice]="Successfully destroyed appointment"
+
 			redirect_to appointments_path
 		elsif(params[:appointment][:func] == "close")
 			@appointment=Appointment.find(params[:id])
 			@appointment.update_attribute(:end_time, params[:appointment][:end_time])
+
 			redirect_to appointments_path({Appointment: "Open"})
         elsif(defined?(params[:appointment][:name]))
           @appointment=Appointment.find(params[:id])
@@ -81,9 +84,7 @@ end
   
   private
   def appointment_params
-	
 	params.require(:appointment).permit(:name, :description,:start_time)
-	
   end
 	def message_params
 		params.require(:message).permit!

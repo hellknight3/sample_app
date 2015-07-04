@@ -5,6 +5,7 @@ Feature: creating an appointment
     When they submit a valid appointment
     Then an appointment should be created
     And a log entry with action create should be generated
+    And atleast one pool should be associated with the appointment
 
   Scenario: a doctor creates an invalid appointment
     Given a Doctor is logged in

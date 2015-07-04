@@ -31,12 +31,14 @@ end
 		@permission.user_id =current_user.id
 		@permission.pool_id = @pool.id
 		if @permission.save
+          @activity = Activity.create(:user => current_user,:trackable => @pool,:action => "CREATE")
 		  flash[:notice] = "Pool successfully created"
 		  redirect_to @pool
 		else
 			flash[:alert] = "Pool failed to be created"
 		end
 	  else
+        flash[:alert] = "There was an error creating the pool, check that your information correct and try again"
 		render 'new'	 
 	  end
   end
@@ -55,9 +57,6 @@ end
 	
 	end
   end
-  
-
-
   private
   def pool_params
 	params.require(:pool).permit(:name, :description, :specialization)
@@ -65,7 +64,8 @@ end
   def signed_in_as_admin
   	if signed_in?
 		unless is_admin
-			redirect_to signin_url, notice: "You do not have permission to do that."
+          flash[:alert] = "You do not have permission to create or edit pools."
+          redirect_to pools_path
 		end
 	else
 		store_location

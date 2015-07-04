@@ -28,7 +28,7 @@ group :test do
   gem 'selenium-webdriver', '2.35.1'
   gem 'capybara', '2.1.0'
   gem 'factory_girl_rails', '4.2.0'
-  gem 'cucumber-rails', '1.4.0', :require => false
+  gem 'cucumber-rails', :require => false, git: 'https://github.com/cucumber/cucumber-rails.git'
   gem 'stud'
   gem 'webrat', github: 'brynary/webrat'
   gem 'database_cleaner', github: 'bmabey/database_cleaner'

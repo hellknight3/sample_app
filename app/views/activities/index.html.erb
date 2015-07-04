@@ -1,2 +1,22 @@
-<h1>Activities#index</h1>
-<p>Find me in app/views/activities/index.html.erb</p>
+<h1><%=@activeModel.name%></h1>
+<%=link_to "User Activity", user_activities_path(@activeModel,{:view => "Activity"}),class: "btn btn-default, btn-primary"%>
+<%=link_to "Actions on User", user_activities_path(@activeModel,{:view => "Actions"}),class: "btn btn-default, btn-primary"%>
+<br/><br/>
+<table class="table">
+  <tr>
+    <th>Model</th>
+  <th>Action </th>
+  <th>Occured at</th>
+  <th></th>
+    </tr>
+<%@activities.each do |activity|%>
+  <tr>
+    <td><%=activity.trackable_type%></td>
+    <td>
+  <%=activity.action%>
+    </td>
+    <td><%=activity.created_at%></td>
+    <td><%=activity.trackable.name%></td>
+  </tr>
+<%end%>
+</table>
