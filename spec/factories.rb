@@ -83,7 +83,7 @@ FactoryGirl.define do
 	end
 	#create an admin
 	factory :admin do |f|
-
+      director{false}
      #   f.after_create {|a| FactoryGirl(:user, :profile => a)}
       #  userAdmin
       #   after(:build) do |admin|
@@ -124,16 +124,24 @@ end
 	factory :appointment do
 		name{Faker::Name.name}
 		description{Faker::Name.name}
+        start_time{DateTime.now.to_date}
+        end_time{}
 	end
 	
 	factory :message do
 		message{Faker::Name.name}
+        user
+        association :messageable, factory: :user
 	end
 	 
 	factory :institution do 
 		name{Faker::Name.name}
 		description{Faker::Name.name}
 	end
+    factory :appointmentMembership do
+      pool
+      appointment
+    end 
 	#create activity
 	factory :activity do 
 		association :user

@@ -1,8 +1,7 @@
-<h1>Compose New Message</h1>
+<h1>Create New Appointment</h1>
 
 
 <%= simple_form_for(@appointment) do |f| %>
-	<%= render 'shared/error_messages' %>
 	<%= f.input :name %><br />
 	<%if defined?(params[:patient_id])%>
 		<%= f.hidden_field :patient_id, :value => params[:patient_id] %>

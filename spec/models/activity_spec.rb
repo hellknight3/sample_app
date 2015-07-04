@@ -15,10 +15,10 @@ describe Activity do
     @activity.action = nil
     @activity.should_not be_valid 
   end
-  it "should have a message" do
-    @activity.message=nil
-    @activity.should_not be_valid 
-  end
+  #it "should have a message" do
+  #  @activity.message=nil
+  #  @activity.should_not be_valid 
+  #end
   it "should have the object it is tracking" do
     @activity.trackable=nil
     @activity.should_not be_valid 

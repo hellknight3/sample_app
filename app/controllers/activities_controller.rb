@@ -1,7 +1,9 @@
 class ActivitiesController < ApplicationController
-  def new
-  end
-
   def index
+  end
+  def create
+    Activity.new(activity_params)
+    if @activity.save
+    end
   end
 end
