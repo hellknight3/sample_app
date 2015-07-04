@@ -9,7 +9,7 @@
 					<% if signed_in? %>
 						<li><%= link_to "Messages", messages_path %></li>
 						<%if is_admin %>
-							<li><%= link_to "Users", admins_path({user_type: "Admin"}) %></li>
+							<li><%= link_to "Users", users_path({user_type: "Admin"}) %></li>
 							<li><%= link_to "Pools", pools_path({pools: "Personal"}) %></li>
 							<!--<li><%= link_to "Exercises", exercises_path %></li>-->
 							<li><%= link_to "Institution", institutions_path%> </li>					

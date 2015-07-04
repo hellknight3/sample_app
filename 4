@@ -3,9 +3,9 @@ class AdminsController < ApplicationController
 	#this will then run before every POST action that exists after -> :new, :create, :index, :edit, :update
 	before_action :signed_in_director, only: [:new, :create]
 	before_action :signed_in_admin, only: [:index]
-#	before_action :correct_user, only: [:show]
+	before_action :correct_user, only: [:show]
 	before_action :signed_in, only: [:show, :edit, :update, :new,:create,:index]
-#	before_action :is_current_user, only: [:edit, :update]
+	before_action :is_current_user, only: [:edit, :update]
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
 	def show

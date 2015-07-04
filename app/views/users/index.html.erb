@@ -1,0 +1,92 @@
+<h1>Listing <%=params[:user_type].pluralize%></h1>
+<div class="row">
+		<div class="col-md-2"></div>
+		<div class="col-md-8">
+<div class="panel panel-default">
+  <div class="panel-body">
+	<%# link_to 'Administrators', users_path({user_type: "Admin"})%> 
+	<%# link_to 'Doctors', users_path({user_type: "Doctor"})%> 
+	<%#unless is_director%>
+	 <%# link_to 'Patients', users_path({user_type: "Patient"})%>
+	<%#end%>
+	</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+		<th></th>
+		<th></th>
+		<th></th>
+      </tr>
+  </thead>
+
+	<div class="panel-body left-header">
+		<%= link_to 'Admins', users_path({user_type: "Admin"}), class: adminPage%> 
+		<%= link_to 'Doctors', users_path({user_type: "Doctor"}), class: doctorPage%> 
+		<%unless is_director%>
+			<%= link_to 'Patients', users_path({user_type: "Patient"}), class: patientPage%>
+		<%end%>
+	</div>
+	<div class="right-header">
+		<%if is_director?(current_user) %>  
+			<%= link_to 'New Admin', new_admin_path,{class: "btn btn-success"} %> 
+		<% end %>
+		<%= link_to 'New Doctor', new_doctor_path ,{class: "btn btn-success"}%> 
+		<%= link_to 'New Patient', new_patient_path({user_type: "Patient"}),{class: "btn btn-success"}  %>
+	</div>
+<table class="table table-hover">
+
+  <tbody>	
+  <%if params[:user_type]=="Patient" %>
+	<%unless is_director%>
+			<%temp=true%>
+		<%else%>
+			<%temp=false%>
+		<%end%>
+	<%else%>
+		<%temp=true%>
+  <%end%>
+	<%if defined?(params[:user_type]) && temp%>
+		<%= form_tag users_path, :method => 'get' do %>
+			<%= hidden_field_tag 'user_type', params[:user_type] %>
+		 <p>
+			<%= text_field_tag :search, params[:search]%>
+			<%=submit_tag "Search", :name => nil%>
+		</p>
+		<% end %>
+		<% @users.each do |user| %>
+			<%#unless user.profile_type.nil?%>
+				<tr>
+				
+				<tr class="active" data-link="<%= show_user(user.profile_type,user.profile_type.constantize.find(user.profile_id))%>">
+				
+				<td><%= user.name%></td>
+			
+				<%unless is_director?(user)%>
+					<td></td>
+				<%else%>
+					<td>Director</td>
+				<%end%>
+			
+				<!--<td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id),{class: "btn btn-primary"} %></td>-->
+				
+		
+					<td><%= link_to 'Edit', edit_user_path(user.id),{class: "btn btn-warning"}  %></td>
+			
+				
+				</tr>
+			<%#end%> 
+		  
+		<%end%>
+		  
+    <% end %>
+  </tbody>
+</table>
+<%=will_paginate%>
+</div>
+<div class="col-md-2"></div>
+		
+
+</div>
+</div>

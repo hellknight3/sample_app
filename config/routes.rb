@@ -4,7 +4,7 @@ SampleApp::Application.routes.draw do
   get "activity/index"
 	resources :institutions do
 	end
-    resources :users, only: [:update, :index]
+    resources :users, only: [:update, :index,:edit]
     resources :users do
       resources :activities, only: [:index]
     end

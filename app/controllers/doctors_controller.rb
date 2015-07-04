@@ -84,7 +84,7 @@ class DoctorsController < ApplicationController
 				#removes the doctors id from the patient with the request
 				#sets the accepted value of the patient from the current doctor to false
 				redirect_to doctors_path(id: @doctor,patient_status: "Pending")
-			elsif(params[:doctor][:func] == "addPool")
+=begin            elsif(params[:doctor][:func] == "addPool")
 				@user = @doctor.user
 				@perm = Permission.new
 				@perm.user_id = @user.id
@@ -99,7 +99,7 @@ class DoctorsController < ApplicationController
 				@user = @doctor.user			
 				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:doctor][:pool_id]).delete_all
 				flash[:notice]="removed doctors' permission from pool"
-				redirect_to edit_doctor_path(params[:id])
+=end				redirect_to edit_doctor_path(params[:id])
 			end
 		else
 				@user = @doctor.user
