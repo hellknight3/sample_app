@@ -65,7 +65,7 @@ class PatientsController < ApplicationController
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
 		if defined?(params[:patient][:func]) &&params[:patient][:func] != nil
 		
-=begin		if(params[:patient][:func] == "addDoc")
+		if(params[:patient][:func] == "addDoc")
 		
 				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
 				if @docRelationship
@@ -115,7 +115,7 @@ class PatientsController < ApplicationController
 			else 
 			flash[:alert]="problem updating"
 			redirect_to @patient
-=end			end
+		end
 		else	
 							
 			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
