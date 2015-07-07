@@ -24,7 +24,7 @@
 				<%= label :user, :password_confirmation, "Confirmation"%>
 				<%= password_field :user, :password_confirmation, class: "form-control"%>
 				<%if defined?(spec_user)%>
-					<%if spec_user="Patient"%>
+					<%if spec_user=="Patient"%>
 						<%=f.input :emergencyContact%>
 						<%=f.input :emergencyPhoneNumber%>
 						<%=f.input :dateOfBirth%>
@@ -35,8 +35,11 @@
 					<%end%>
 				<%end%>
 				
-				
+                <%if new%>	
+                  <%= f.button :submit,"Create #{user_type.class}", {class: "btn btn-success"} %>
+              <%else%>
 				<%= f.button :submit,"Update Profile", {class: "btn btn-success"} %>
+              <%end%>
 			<% end %>
 		</div>
 		<div class="col-md-3"></div>

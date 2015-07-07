@@ -21,15 +21,22 @@ class PatientsController < ApplicationController
 	def create
 		#creates the patient based on the allowed patient parameters
 		@patient =Patient.new(patient_params)
+		#tries to save the patient to the database
+		if @patient.save
 		#creates a user and attaches it to the patient with the user parameter restrictions required
 		#since the association exists between user and patient, build_user handles the whole process, but acts like a new command
 		@user = @patient.build_user(user_params)
-		#tries to save the patient to the database
-		if @patient.save
+        if @user.save
 			#flashes a success message for the admin		
 			flash[:notice] ="successfully added patient"
 			#redirects to the pool index page
-			redirect_to edit_patient_path(@patient)
+            Activity.create(:user => current_user,:trackable => @patient,:action => "CREATE",:message => "Created patient #{@user.name}")
+      		redirect_to edit_patient_path(@patient)
+        else
+          @patient.delete
+            flash[:alert]="error creating patient"
+            render 'new'
+        end
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
@@ -63,60 +70,7 @@ class PatientsController < ApplicationController
 		@patient = Patient.find(params[:id])
 		#gets the user from the patient that was found
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
-		if defined?(params[:patient][:func]) &&params[:patient][:func] != nil
 		
-=begin		if(params[:patient][:func] == "addDoc")
-		
-				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
-				if @docRelationship
-					@docRelationship.update_attribute(:accepted, nil)
-				else
-					@newRelationship=DocRelationship.new
-					@newRelationship.doctor_id = params[:patient][:doctor_id]
-					@newRelationship.patient_id= params[:patient][:patient_id]
-					@newRelationship.accepted= nil
-					if @newRelationship.save
-						flash[:notice] ="added doctor"
-					end
-				end
-				redirect_to edit_patient_path(@patient,{settings: "AvailableDocs"})
-			elsif(params[:patient][:func] == "removeDoc")
-				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:patient][:doctor_id], params[:patient][:patient_id]).first
-				if @docRelationship
-					@docRelationship.update_attribute(:accepted, false)
-				else
-					@newRelationship=DocRelationship.new
-					@newRelationship.doctor_id= params[:doctor][:doctor_id]
-					@newRelationship.patient_id= params[:doctor][:patient_id]
-					@newRelationship.accepted= false
-					if @newRelationship.save
-						flash[:notice] ="added doctor"
-					end
-				end
-				redirect_to edit_patient_path(@patient, {settings: "AvailableDocs"})
-			elsif(params[:patient][:func] == "addPool")
-				puts "here"
-				@perm = Permission.new
-				@perm.user_id = @user.id
-				@perm.pool_id = params[:patient][:pool_id]
-				if @perm.save
-					flash[:notice]="permissions updated"
-				else
-					flash[:alert]="a problem occurred updating the users permissions"
-				end
-				redirect_to edit_patient_path(@patient,{settings: "AdjustPools"})
-			elsif(params[:patient][:func] == "removePool")			
-				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:patient][:pool_id]).delete_all
-				flash[:notice]="removed patients' permission from pool"
-				redirect_to edit_patient_path(params[:id],{settings: "AdjustPools"})
-			elsif(params[:patient][:func] == "addNotes")
-				@patient.update_attribute(:doctorNotes, params[:patient][:doctorNotes])
-				redirect_to @patient
-			else 
-			flash[:alert]="problem updating"
-			redirect_to @patient
-=end			end
-		else	
 							
 			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
 			 if(params[:user][:email].match(VALID_EMAIL_REGEX))
@@ -130,8 +84,10 @@ class PatientsController < ApplicationController
 			i    	    @user.update_attributes(user_params)
                          else
                            values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
-                            @user.update_attributes(values)
- 
+                            if @user.update_attributes(values)
+                              Activity.create(:user => current_user,:trackable => @patient,:action => "UPDATE") 
+                            end
+                            
 						flash[:notice]="successfully updated your profile."
 						redirect_to @patient
                          end
@@ -161,7 +117,6 @@ class PatientsController < ApplicationController
 				flash[:alert]="error updating your profile."
 				render 'edit'
 			end	
-		end
 		
 	end
 	private
@@ -180,11 +135,22 @@ class PatientsController < ApplicationController
 				redirect_to signin_url, notice: "Please sign in."
 			end
 		end
+        def go_to_home
+          if is_admin
+            admin_path(current_user.profile_id)
+          elsif is_patient
+            patient_path(current_user.profile_id)
+
+          elsif is_doctor
+            doctor_path(current_user.profile_id)
+          end
+
+        end
 		def signed_in_admin
 			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analy sis
-				unless is_admin #checks if the currently logged in user is an Admin
+				unless is_admin && !is_director #checks if the currently logged in user is an Admin
 				
-				redirect_to signin_url, notice: "You do not have permission to do that."
+				redirect_to go_to_home, alert: "You do not have permission to do that."
 				end
 			else
 				store_location

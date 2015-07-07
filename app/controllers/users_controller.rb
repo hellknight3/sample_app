@@ -49,7 +49,7 @@ class UsersController < ApplicationController
 	def edit
 	@user = User.find(params[:id])
     unless is_director
-        @pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
+        @pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq
     else
       @pools = Pool.all
     end
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
 			@SelDocs=@SelDocs.where("profile_type = 'Doctor' and doc_relationships.patient_id = ?", params[:id])
 			@SelDocs=@SelDocs.select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted")
 			@SelDocs=@SelDocs.order("permissions.user_id ASC").uniq
-			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq.all
+			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq
 			@doctors =  @SelDocs | @SelRelations
 			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq	
     end	
@@ -67,7 +67,37 @@ class UsersController < ApplicationController
       
 		@user = User.find(params[:id])
 		if defined?(params[:user][:func]) && is_admin
-            if(params[:user][:func] == "addPool")
+          if(params[:user][:func] == "addDoc")
+		
+				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:user][:doctor_id], params[:user][:patient_id]).first
+				if @docRelationship
+					@docRelationship.update_attribute(:accepted, nil)
+				else
+					@newRelationship=DocRelationship.new
+					@newRelationship.doctor_id = params[:user][:doctor_id]
+					@newRelationship.patient_id= params[:user][:patient_id]
+					@newRelationship.accepted= nil
+					if @newRelationship.save
+						flash[:notice] ="added doctor"
+					end
+				end
+				redirect_to edit_user_path(@user,{settings: "AvailableDocs"})
+			elsif(params[:user][:func] == "removeDoc")
+				@docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:user][:doctor_id], params[:user][:patient_id]).first
+				if @docRelationship
+					@docRelationship.update_attribute(:accepted, false)
+				else
+					@newRelationship=DocRelationship.new
+					@newRelationship.doctor_id= params[:doctor][:doctor_id]
+					@newRelationship.patient_id= params[:doctor][:patient_id]
+					@newRelationship.accepted= false
+					if @newRelationship.save
+						flash[:notice] ="added doctor"
+					end
+				end
+				redirect_to edit_user_path(@user, {settings: "AvailableDocs"})
+	
+            elsif(params[:user][:func] == "addPool")
               @pool = Pool.find(params[:user][:pool_id])
                if @pool.users.include?(current_user) || is_director?(current_user)
                     @perm = Permission.new	

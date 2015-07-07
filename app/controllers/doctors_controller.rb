@@ -20,10 +20,9 @@ class DoctorsController < ApplicationController
 		@acceptedStatus=nil
 		end
 		if @acceptedStatus.nil?
-		@patients=Patient.joins("INNER JOIN doc_relationships ON patients.id = doc_relationships.patient_id").where("doctor_id= ? and accepted is null",@doctor.id).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, patients.id").all #@doctor.patients.paginate(page: params[:page])
-		
+		@patients=Patient.joins("INNER JOIN doc_relationships ON patients.id = doc_relationships.patient_id INNER JOIN users on patients.id = users.profile_id AND users.profile_type='Patient'").where("doctor_id= ? and accepted is null",@doctor.id).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, patients.id") #@doctor.patients.paginate(page: params[:page])
 		else
-		@patients=Patient.joins("INNER JOIN doc_relationships ON patients.id = doc_relationships.patient_id").where("doctor_id= ? and accepted = ?",@doctor.id,@acceptedStatus).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, patients.id").all #@doctor.patients.paginate(page: params[:page])
+		@patients=Patient.joins("INNER JOIN doc_relationships ON patients.id = doc_relationships.patient_id").where("doctor_id= ? and accepted = ?",@doctor.id,@acceptedStatus).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, patients.id") #@doctor.patients.paginate(page: params[:page])
 		end
 		#@docRelation=@doctor.doc_relationships
 	end
