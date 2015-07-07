@@ -71,6 +71,15 @@ class PatientsController < ApplicationController
 		#gets the user from the patient that was found
 		#checks to see what button was pressed in the displayed list, the add and remove are strictly for the Admins interaction with the edit page, the update is for when a patient wants to change his information
 		
+	    if defined?(params[:patient][:func])
+		  if(params[:patient][:func] == "addNotes")
+			@patient.update_attribute(:doctorNotes, params[:patient][:doctorNotes])
+			redirect_to @patient
+	      else 
+			flash[:alert]="problem updating"
+			redirect_to @patient
+		  end
+		else	
 							
 			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
 			 if(params[:user][:email].match(VALID_EMAIL_REGEX))
@@ -105,7 +114,7 @@ class PatientsController < ApplicationController
 			end
 
 				
-			elsif defined?(params[:patient][:weight])
+		  elsif defined?(params[:patient][:weight])
 				if @patient.update_attributes(patient_params)				
 					flash[:notice]="successfully updated your profile."
 					redirect_to @patient	
@@ -117,6 +126,7 @@ class PatientsController < ApplicationController
 				flash[:alert]="error updating your profile."
 				render 'edit'
 			end	
+        end
 		
 	end
 	private
