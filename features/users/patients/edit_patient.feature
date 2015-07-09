@@ -29,13 +29,11 @@ Feature: editting a patient
     And they should receive a success message
     And a log entry with action update should be generated
 
-  @wip
   Scenario: when a patient edits another patient
     Given a Patient is logged in
     And a Patient exist
     When they edit a patient
     Then they should receive an error message
-
 
   Scenario: when a doctor edits a patient
     Given a Doctor is logged in

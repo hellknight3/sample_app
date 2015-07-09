@@ -10,9 +10,9 @@ SampleApp::Application.routes.draw do
     end
 
 
-	resources :admins do
+	resources :admins, only: [:new,:create,:edit,:update,:show]
 		
-	end
+
 	resources :patients do
 	end
 	resources :doctors do

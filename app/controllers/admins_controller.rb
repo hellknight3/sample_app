@@ -2,18 +2,17 @@ class AdminsController < ApplicationController
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create, :index, :edit, :update
 	before_action :signed_in_director, only: [:new, :create]
-	before_action :signed_in_admin, only: [:index]
+	#before_action :signed_in_admin, only: [:index]
 #	before_action :correct_user, only: [:show]
-	before_action :signed_in, only: [:show, :edit, :update, :new,:create,:index]
+	before_action :signed_in, only: [:show, :edit, :update, :new,:create]#,:index]
 #	before_action :is_current_user, only: [:edit, :update]
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
 	def show
-	
 		@admin = Admin.find(params[:id]) 
 		@user = @admin.user
 	end
-	def index
+	#def index
 	
 	#puts all of the admins into a browsable list
 	#the list has a default length of 30 entries per page 
@@ -31,7 +30,7 @@ class AdminsController < ApplicationController
 			end
 		end
 =end	end
-	end
+	#end
 	def new
 		#creates temp variables for the new form to use for the views
 		@admin =Admin.new
@@ -64,28 +63,8 @@ class AdminsController < ApplicationController
 
 	end
 	def update
-		@admin = Admin.find(params[:id])
-	@user = @admin.user
-=begin
-		if defined?(params[:admin][:func])
-
-			if(params[:admin][:func] == "addPool")
-				@perm = Permission.new	
-				@perm.user_id = @user.id
-				@perm.pool_id = params[:admin][:pool_id]
-				if @perm.save
-					flash[:notice]="permissions updated"
-				else
-					flash[:alert]="a problem occurred updating the users permissions"
-				end
-				redirect_to edit_admin_path(@admin)
-			elsif(params[:admin][:func] == "removePool")
-				
-				Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:admin][:pool_id]).delete_all
-				flash[:notice]="removed admins permission from pool"
-				redirect_to edit_admin_path(params[:id])
-			end
-=end		else
+	  @admin = Admin.find(params[:id])
+	  @user = @admin.user
 			if @user.authenticate(params[:user][:old_password])
 				#passes the attributes from the form to the admin_params function
 				if(params[:user][:email].match(VALID_EMAIL_REGEX))
@@ -96,13 +75,14 @@ class AdminsController < ApplicationController
                                             else
 					                		  @admin.update_attributes(admin_params)
                                               if params[:user][:password_confirmation] != ""
-	                                                  	
+	           puts "hello"                                       	
                                           	    #passes the attributes from the form to the user_params function
 						                	    @user.update_attributes(user_params)
                                               else
                                                 values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
-					                	      	@admin.update_attributes(admin_params)
-                                                @user.update_attributes(values)
+					                	      	if @admin.update_attributes(admin_params) && @user.update_attributes(values)
+                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "UPDATE")
+                                                end
                                               
                                               end
 
@@ -125,7 +105,6 @@ class AdminsController < ApplicationController
 				flash[:alert]="Old password is not current"
                                 render 'edit'
 			end
-	#	end
 	end
 	def get
 		@admin = User.where(params[:name])
@@ -134,11 +113,15 @@ class AdminsController < ApplicationController
 	#params
 	#used to specify which attributes of the model should be accepted
 		def user_params
-			params.require(:user).permit(:name, :email, :password, :password_confirmation)
+			params.require(:user).permit(:name, :email, :password,:password_confirmation)
 	
         end
 		def admin_params
-			
+          if params[:admin]
+            puts "hello"
+          params.require(:admin)
+          end
+
 		end
 		#before filters
 		#functions called at the start of various actions. to see which is called by what function check first few lines of this code with before_action

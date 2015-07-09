@@ -22,18 +22,6 @@ Then(/^a patient should be created$/) do
   @trackable.should_not be_nil
 end
 
-Then(/^they should receive a success message$/) do
-  expect(page).to have_selector('div.alert.alert-success')
-end
-
-Then(/^they should be on their home page$/) do
-  expect(page).to have_selector("img.gravatar")
-end
-
-Given(/^a Patient exists$/) do
-  @patient=FactoryGirl.create(:userPatient)
-end
-
 When(/^they edit a patient setting (.*?)$/) do |setting|
   if setting == "doctor"
     visit edit_user_path(@patient,{:settings => "AvailableDocs"})
@@ -63,12 +51,29 @@ end
 Then(/^the patient should be changed$/) do
   User.find(current_user.id).name.should eq "foobar"
 end
-Given(/^a Patient exist$/) do
+Given(/^a Patient exist(?:|s)$/) do
   @patient=FactoryGirl.create(:userPatient)
+  @trackable=@patient.profile
 end
 
 When(/^they edit a patient$/) do
   visit edit_patient_path(@patient.profile_id)
+end
+When(/^they view the patient$/) do
+  visit patient_path(@patient.profile_id)
+end
+
+Given(/^the Doctor has a patient$/) do
+  DocRelationship.create(:doctor => current_user.profile,:patient => @patient.profile)
+end
+
+Then(/^they should be on the patients page$/) do
+  expect(page).to have_content(@patient.name)
+end
+
+
+Then(/^they should see their profile page$/) do
+  expect(page).to have_content(current_user.profile.weight)
 end
 
 

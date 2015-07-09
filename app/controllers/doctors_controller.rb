@@ -43,13 +43,17 @@ class DoctorsController < ApplicationController
 		#creates the doctor based on the allowed doctor parameters
 		@doctor =Doctor.new(doctor_params)
 		#creates a user and attaches it to the doctor with the user parameter restrictions required
-		@user = @doctor.build_user(user_params)
 		#tries to save the doctor to the database
 		if @doctor.save		
+		@user = @doctor.build_user(user_params)
+        if @user.save
 			#flashes a success message for the doctor		
-			flash[:notice]="Doctor save successfully."
+			flash[:notice]="Doctor saved successfully."
 			#redirects to the pools index page
-			redirect_to edit_doctor_path(@doctor)
+			redirect_to users_path({:user_type => "Doctor"})
+        else
+          render 'new'
+        end
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
@@ -157,8 +161,9 @@ class DoctorsController < ApplicationController
 		end
 		def signed_in_admin
 			if signed_in?#checks if the user is currently signed in, the function is housed in the sessions helper for in depth analysis
-				unless is_admin#checks if the currently logged in user is an Admin
-				redirect_to signin_url, notice: "You do not have permission to do that." #signin_url is implicitly defined in the config/routes.rb file
+				unless is_admin && !is_director#checks if the currently logged in user is an Admin
+                flash[:alert]="you do not have permission to create a doctor."
+                  redirect_to go_to_home
 				end
 			else
 				store_location

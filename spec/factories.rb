@@ -120,11 +120,16 @@ end
         end_time{}
 	end
 	
-	factory :message do
+	factory :directMessage do
 		message{Faker::Name.name}
-        user
-        association :messageable, factory: :user
+        userPatient
+        association :messageable, factory: :userDoctor
 	end
+	factory :groupMessage do
+		message{Faker::Name.name}
+        userPatient
+        association :messageable, factory: :appointment
+    end
 	 
 	factory :institution do 
 		name{Faker::Name.name}
@@ -135,9 +140,9 @@ end
       appointment
     end 
 	#create activity
-	factory :activity do 
-		association :user
-		association :trackable, factory: :user
+	factory :activity, class: Activity do 
+		association :user, factory: :userPatient
+		association :trackable, factory: :userPatient
         message {"some informative message about action taking place"}
 		action "an HTTP action"
  	end

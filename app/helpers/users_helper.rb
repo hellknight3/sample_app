@@ -6,3 +6,14 @@ module UsersHelper
 	end
 	
 end
+ def go_to_home
+          if is_admin
+            admin_path(current_user.profile_id)
+          elsif is_patient
+            patient_path(current_user.profile_id)
+
+          elsif is_doctor
+            doctor_path(current_user.profile_id)
+          end
+
+        end

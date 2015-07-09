@@ -10,6 +10,7 @@ class PatientsController < ApplicationController
 		#shows the current users properties
 		@patient = Patient.find(params[:id])
 		@user = @patient.user
+                              Activity.create(:user => current_user,:trackable => @patient,:action => "SHOW") 
 		@doctors=Doctor.joins("INNER JOIN doc_relationships ON doctors.id = doc_relationships.doctor_id").where("patient_id= ? and accepted = ?",@patient.id,true).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, doctors.id")#@doctor.patients.paginate(page: params[:page])
 
 	end
@@ -23,20 +24,20 @@ class PatientsController < ApplicationController
 		@patient =Patient.new(patient_params)
 		#tries to save the patient to the database
 		if @patient.save
-		#creates a user and attaches it to the patient with the user parameter restrictions required
-		#since the association exists between user and patient, build_user handles the whole process, but acts like a new command
-		@user = @patient.build_user(user_params)
-        if @user.save
-			#flashes a success message for the admin		
-			flash[:notice] ="successfully added patient"
-			#redirects to the pool index page
-            Activity.create(:user => current_user,:trackable => @patient,:action => "CREATE",:message => "Created patient #{@user.name}")
-      		redirect_to edit_patient_path(@patient)
-        else
-          @patient.delete
-            flash[:alert]="error creating patient"
-            render 'new'
-        end
+          #creates a user and attaches it to the patient with the user parameter restrictions required
+          #since the association exists between user and patient, build_user handles the whole process, but acts like a new command
+          @user = @patient.build_user(user_params)
+          if @user.save
+              #flashes a success message for the admin		
+              flash[:notice] ="successfully added patient"
+              #redirects to the pool index page
+              Activity.create(:user => current_user,:trackable => @patient,:action => "CREATE",:message => "Created patient #{@user.name}")
+              redirect_to edit_user_path(@patient.user)
+          else
+              @patient.delete
+              flash[:alert]="error creating patient"
+              render 'new'
+          end
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'
@@ -90,7 +91,7 @@ class PatientsController < ApplicationController
 					else	
                          if params[:user][:password_confirmation] != ""
                         #passes the attributes from the form to the user_params function
-			i    	    @user.update_attributes(user_params)
+			    	    @user.update_attributes(user_params)
                          else
                            values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
                             if @user.update_attributes(values)
@@ -104,6 +105,7 @@ class PatientsController < ApplicationController
 				else
 					user = @patient.user
               	                 	 @user.update(user_params)
+                              Activity.create(:user => current_user,:trackable => @patient,:action => "UPDATE") 
                 	                flash[:notice]="successfully updated your profile."
                         	        redirect_to @patient
 
@@ -145,18 +147,7 @@ class PatientsController < ApplicationController
 				redirect_to signin_url, notice: "Please sign in."
 			end
 		end
-        def go_to_home
-          if is_admin
-            admin_path(current_user.profile_id)
-          elsif is_patient
-            patient_path(current_user.profile_id)
-
-          elsif is_doctor
-            doctor_path(current_user.profile_id)
-          end
-
-        end
-		def signed_in_admin
+       		def signed_in_admin
 			if signed_in? #checks if the user is currently signed in, the function is housed in the sessions helper for in depth analy sis
 				unless is_admin && !is_director #checks if the currently logged in user is an Admin
 				
@@ -174,10 +165,10 @@ class PatientsController < ApplicationController
 			#compares that user created above to the currently logged in user
 			@docRelation=DocRelationship.where("doctor_id=? and patient_id=?",current_user.profile_id,@profile.id).size
 	
-			unless current_user?(@user) ||(is_admin && !is_director) || (@docRelation >0 && current_user.profile_type =="Doctor")
-		
-		#	flash[:alert]="you do not have permission to do that. " 
-			redirect_to(admins_path({user_type: "Admin"}), notice: "you do not have permission to do that.")
+			unless current_user?(@user) || (@docRelation >0 && current_user.profile_type =="Doctor")
+			flash[:alert]="you do not have permission to do that. " 
+            redirect_to go_to_home, alert: "permissions denied" 
+			#redirect_to(admins_path({user_type: "Admin"}), alert: "you do not have permission to do that.")
 			end
 	
 		end

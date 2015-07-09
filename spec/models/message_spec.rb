@@ -22,7 +22,7 @@ describe Message do
     FactoryGirl.build(:groupMessage).should be_valid
   end
   it "should not be sent to self" do
-    @user = FactoryGirl.create(:user)
+    @user = FactoryGirl.create(:userPatient)
     @message = FactoryGirl.build(:directMessage, :user => @user,:messageable => @user).should_not be_valid
   end
 end

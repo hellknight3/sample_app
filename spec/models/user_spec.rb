@@ -22,15 +22,15 @@ describe User do
 	end
 
 
-	it "has a valid profile" do
-                FactoryGirl.build(:user, profile_type: "Admin", profile_id: 1).should be_valid
+	it "has a valid admin profile" do
+                FactoryGirl.build(:userAdmin).should be_valid
         end
-it "has a valid profile" do
-                FactoryGirl.build(:user, profile_type: Doctor, profile_id: 2).should be_valid
+it "has a valid doctor profile" do
+                FactoryGirl.build(:userDoctor).should be_valid
         end
 
-it "has a valid profile" do
-                FactoryGirl.build(:user, profile_type: Patient, profile_id: 3).should be_valid
+it "has a valid patient profile" do
+                FactoryGirl.build(:userPatient).should be_valid
         end
 
 =begin

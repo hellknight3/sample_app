@@ -11,3 +11,18 @@ Given(/^they edit themselves$/) do
   end
 end
 
+When(/^they view themselves$/) do
+  if current_user.profile_type == "Admin"
+    @trackable=current_user.profile
+    visit admin_path(current_user.profile_id)
+  elsif current_user.profile_type == "Doctor"
+    @trackable=current_user.profile
+    visit doctor_path(current_user.profile_id)
+  elsif current_user.profile_type == "Patient"
+    @trackable=current_user.profile
+    visit patient_path(current_user.profile_id)
+  end
+end
+Then(/^they should be on their (?:profile|home(?:| ))page$/) do
+  expect(page).to have_selector("img.gravatar")
+end
