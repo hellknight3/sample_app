@@ -120,14 +120,14 @@ end
         end_time{}
 	end
 	
-	factory :directMessage do
+	factory :directMessage, class: Message do
 		message{Faker::Name.name}
-        userPatient
+        association :user, factory: :userPatient
         association :messageable, factory: :userDoctor
 	end
-	factory :groupMessage do
+	factory :groupMessage, class: Message do
 		message{Faker::Name.name}
-        userPatient
+        association :user, factory: :userPatient
         association :messageable, factory: :appointment
     end
 	 
