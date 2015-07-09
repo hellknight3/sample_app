@@ -32,8 +32,12 @@ class MessagesController < ApplicationController
 		#, :messageable_type => User.name, :messageable_id=>params[:messageable_id]}])
 		
 	end
-	@users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
-	
+    if(current_user.profile_type == "Doctor") 
+    @users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
+    else
+      
+    @users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("users.profile_type == 'Doctor'").uniq.all
+    end
   
   end
 

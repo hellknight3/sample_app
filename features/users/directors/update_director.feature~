@@ -1,5 +1,5 @@
 Feature: updating a director
- 
+  @wip
   Scenario: a director edits themselves
     Given a Director is logged in
     And they edit themselves 
