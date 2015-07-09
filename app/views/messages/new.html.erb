@@ -1,4 +1,5 @@
 <h1>Conversation history</h1>
+<script src="messages.js"></script>
 <div class="message-history">
 	<% @messages.each do |message| %>
 		<%if is_patient?(message.user)%>
