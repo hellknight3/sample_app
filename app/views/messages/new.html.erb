@@ -1,5 +1,4 @@
 <h1>Conversation history</h1>
-<script src="messages.js"></script>
 <div class="message-history">
 	<% @messages.each do |message| %>
 		<%if is_patient?(message.user)%>
@@ -8,8 +7,16 @@
 			<div class="panel panel-default other" >
 		<%end%>
 		<div class="panel-heading">
-			<ul>
-				<li class="header-left"><%=message.user.name%></li>
+          <ul>
+            <%if (is_patient?(message.user)) %>
+                 <% if(is_doctor())%>
+                   <li class="header-left"><%=message.user.name%></li>
+                   <%else%>
+                    <li class="header-left"><%= "user" + message.user.id.to_s%></li>
+                   <%end%>
+            <%else%>
+                <li class="header-left"><%=message.user.name%></li>
+            <%end%>
 				<%if message.has_attribute?(:updated_at)%>
 					<li class="header-right">
 						<%=message.updated_at%>
@@ -17,8 +24,18 @@
 				<%end%>
 			</ul>	
 		</div>
-		<div class="panel-body">
-			<%=message.message%>
+
+        <div class="panel-body">
+          <%if(is_doctor)%>
+              <%=message.message%>
+            <%else%>
+            <%if is_patient?(message.user) && current_user.id!= message.user.id%>
+              <%=message.user.id.to_s + " added to conversation"%> 
+              
+            <%else%>
+              <%=message.message%>
+            <%end%>
+          <%end%>
 		</div>
 		</div>
 	<%end%>

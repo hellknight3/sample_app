@@ -26,6 +26,27 @@ Given(/^they have an appointment$/) do
   @trackable = FactoryGirl.create(:appointment)
   @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
 end
+Given(/^they have an appointment with multiple participants$/) do
+  @trackable = FactoryGirl.create(:appointment)
+  @contain = Array.new
+  @message1 = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
+  @user1 = FactoryGirl.create(:userPatient)
+   @user2 = FactoryGirl.create(:userPatient)
+  @user3 = FactoryGirl.create(:userPatient)
+  @contain.push(@user);
+  if(@user.profile_type != "Doctor")
+  @user4 = FactoryGirl.create(:userDoctor)
+  @message4 = FactoryGirl.create(:groupMessage,:user => @user4,:messageable => @trackable)
+  @contain.push(@user4);
+  end
+  @message3 = FactoryGirl.create(:groupMessage,:user => @user3,:messageable => @trackable)
+  @message2 = FactoryGirl.create(:groupMessage,:user => @user2,:messageable => @trackable)
+  @message = FactoryGirl.create(:groupMessage,:user => @user1,:messageable => @trackable)
+  @contain.push(@user3); 
+  @contain.push(@user2)
+  @contain.push(@user1);
+end
+
 
 Given(/^they visit the edit appointments path$/) do
   visit edit_appointment_path(@trackable.id)
@@ -79,12 +100,37 @@ When(/^they view the appointment$/) do
   visit appointments_path(@trackable)
 end
 
+When(/^they view the appointment messages$/) do
+  visit new_message_path({:messageable_id => @trackable.id, :messageable_type => "Appointment"})
+end
+
+Then(/^they should see the doctor who is participating$/) do
+   
+  @contain.each do |user|
+    if(user.profile_type == "Doctor")
+      expect(page).to have_content(user.name)
+    end
+  end
+end
+
+Then(/^they should not see the patients names who are participating$/) do
+  @contain.each do |user|  
+  if(user.profile_type != "Doctor" && user.name != @user.name)
+      expect(page).to_not have_content(user.name)
+    end
+  end
+end
+
+
 Then(/^they should see the appointments pools$/) do
     pending # Write code here that turns the phrase above into concrete actions
 end
 
 Then(/^they should see who is participating in the appointment$/) do
-    pending # Write code here that turns the phrase above into concrete actions
+  
+  @contain.each  do |user|
+    expect(page).to have_content(user.name)  
+  end
 end
 
 Then(/^they should see the appointments properies$/) do
