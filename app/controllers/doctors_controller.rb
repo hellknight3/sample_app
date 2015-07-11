@@ -1,7 +1,7 @@
 class DoctorsController < ApplicationController
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create
-	before_action :signed_in, only: [:show,:edit, :update]
+	before_action :signed_in, only: [:show,:edit, :update,:new,:create,:index]
 	before_action :signed_in_admin, only: [:new, :create]
 	before_action :correct_user, only: [:edit, :update]
 	before_action :correct_doctor, only: [:index]
@@ -49,6 +49,7 @@ class DoctorsController < ApplicationController
         if @user.save
 			#flashes a success message for the doctor		
 			flash[:notice]="Doctor saved successfully."
+            Activity.create(:user => current_user,:trackable => @doctor,:action => "CREATE")
 			#redirects to the pools index page
 			redirect_to users_path({:user_type => "Doctor"})
         else
@@ -182,18 +183,20 @@ class DoctorsController < ApplicationController
 				redirect_to(root_url) 
 			end
 		end
+
 		def correct_doctor
-			if is_patient || is_director
+			if is_patient || is_director || is_admin
 				 flash[:alert] = "You do not have permission do view this doctors patients."
-                                redirect_back_or(signin_url)
+                               redirect_to go_to_home
 			elsif is_doctor
 				@doctor =Doctor.find(params[:id])
 				unless current_user?(@doctor.user) 
 					flash[:alert] = "You do not have permission do view this doctors patients."
-					redirect_back_or(signin_url)
+					redirect_to go_to_home
 				end
 			end
 		end
+
 		def viewable
 			@doctor =Doctor.find(params[:id])
 			if is_patient

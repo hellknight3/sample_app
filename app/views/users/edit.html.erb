@@ -10,7 +10,7 @@
 	<%if is_admin%>
 		 <%= render partial: "shared/updatePermissions", locals: {user: @user, pools: @pools}%>
 	<%end%>
-	<%= link_to 'Show', @user %> 
+	<%# link_to 'Show', @user %> 
 <%elsif @user.profile_type == "Admin"%>
 
 	<% provide(:title, "Edit admin") %>
@@ -26,7 +26,7 @@
 	</br>
 <%elsif @user.profile_type == "Patient"%>
 
-	<%= link_to 'Profile', @user, {class: "btn btn-primary"} %>
+	<%# link_to 'Profile', @user, {class: "btn btn-primary"} %>
 	<% provide(:title, "Edit patient") %>
 
 	<%if is_admin || is_doctor%>
@@ -54,7 +54,7 @@
 				<%end%>
 			</div>
 			<div class="right-header">
-				<%= link_to 'View Profile', @patient, {class: "btn btn-primary", style: "margin-left:-15px;"} %> 
+				<%= link_to 'View Profile', go_to_home(@user), {class: "btn btn-primary", style: "margin-left:-15px;"} %> 
 			</div>
 		</div>
 		<div class="col-md-3"></div>

@@ -49,16 +49,16 @@ class UsersController < ApplicationController
 	def edit
 	@user = User.find(params[:id])
     unless is_director
-        @pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq.all
+        @pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq
     else
-      @pools = Pool.all
+      @pools = Pool
     end
 	if(is_admin && @user.profile_type = "Patient")
 			@SelDocs= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id INNER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id')
 			@SelDocs=@SelDocs.where("profile_type = 'Doctor' and doc_relationships.patient_id = ?", params[:id])
 			@SelDocs=@SelDocs.select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted")
 			@SelDocs=@SelDocs.order("permissions.user_id ASC").uniq
-			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq.all
+			@SelRelations= User.joins('INNER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id LEFT OUTER JOIN doc_relationships ON users.profile_id = doc_relationships.doctor_id').where("profile_type = 'Doctor' ").select("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").order("permissions.user_id ASC").group("permissions.user_id, users.name, users.profile_id,users.profile_type, users.id,doc_relationships.doctor_id,doc_relationships.patient_id,doc_relationships.accepted").uniq
 			@doctors =  @SelDocs | @SelRelations
 			@pools = Pool.joins(:permissions).where("user_id = ?", current_user.id).uniq	
     end	
@@ -75,8 +75,10 @@ class UsersController < ApplicationController
     				@perm.pool_id = params[:user][:pool_id]
 			
                   if @perm.save
+                      Activity.create(:user => current_user,:trackable => @pool,:action => "ADD PERMISSION", :message => "added the pool #{@pool.name} to #{@user.name}") 
 			    		flash[:notice]="permissions updated"
                       	flash[:notice]="removed admins permission from pool"
+                        
     				else
 	    				flash[:alert]="a problem occurred updating the users permissions"
 		    		end
@@ -86,10 +88,48 @@ class UsersController < ApplicationController
               end
 		        	redirect_to edit_user_path(params[:id])
              elsif params[:user][:func] == "removePool"
-              	Permission.where("user_id = ? AND pool_id = ?",@user.id, params[:user][:pool_id]).delete_all
+               @pool=Pool.find(params[:user][:pool_id])
+              	Permission.where("user_id = ? AND pool_id = ?",@user.id, @pool.id).delete_all
+
+                Activity.create(:user => current_user,:trackable => @pool,:action => "REMOVE PERMISSION",:message => "#{current_user.name} removed pool #{@pool.name} from #{@user.name}")
 				flash[:notice]="removed admins permission from pool"
 				redirect_to edit_user_path(params[:id])
-            else
+              elsif(params[:user][:func] == "addDoc")
+                 
+                       @docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:user][:doctor_id], params[:user][:patient_id]).first
+                     if @docRelationship
+                                 @docRelationship.update_attribute(:accepted, nil)
+                                   @doctor=Doctor.find(params[:user][:doctor_id])
+                                   @patient=User.find(params[:user][:patient_id]).profile
+                                              Activity.create(:user => current_user, :trackable => @patient,:action => "ADD DOCTOR",:message => "#{current_user.name} added #{@doctor.user.name} as #{@patient.user.name}'s doctor")
+                               else
+                                 @newRelationship=DocRelationship.new
+                                 @newRelationship.doctor_id = params[:user][:doctor_id]
+                                 @newRelationship.patient_id= params[:user][:patient_id]
+                                 @newRelationship.accepted= nil
+                                 if @newRelationship.save
+                                   @doctor=Doctor.find(params[:user][:doctor_id])
+                                   @patient=User.find(params[:user][:patient_id]).profile
+                                              Activity.create(:user => current_user, :trackable => @patient,:action => "ADD DOCTOR",:message => "#{current_user.name} added #{@doctor.user.name} as #{@patient.user.name}'s doctor")
+                                               flash[:notice] ="added doctor to #{@user.name}"
+                                             end
+                               end
+                     redirect_to edit_user_path(params[:id],{settings: "AvailableDocs"})
+                   elsif(params[:user][:func] == "removeDoc")
+                     @docRelationship=DocRelationship.where('doctor_id=? and patient_id=?', params[:user][:doctor_id], params[:user][:patient_id]).first
+                     if @docRelationship
+                                 @docRelationship.update_attribute(:accepted, false)
+                               else
+                                 @newRelationship=DocRelationship.new
+                                 @newRelationship.doctor_id= params[:user][:doctor_id]
+                                 @newRelationship.patient_id= params[:user][:patient_id]
+                                 @newRelationship.accepted= false
+                                 if @newRelationship.save
+                                               flash[:notice] ="removed doctor"
+                                             end
+                               end
+                     redirect_to edit_user_path(params[:id], {settings: "AvailableDocs"})
+             else
               render 'edit'
             end
 		elsif @user.update_attributes(user_params) && current_user

@@ -24,7 +24,7 @@ Then(/^they should be on the new appointments page$/) do
 end
 Given(/^they have an appointment$/) do
   @trackable = FactoryGirl.create(:appointment)
-  @message = FactoryGirl.create(:message,:user => @user,:messageable => @trackable)
+  @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
 end
 
 Given(/^they visit the edit appointments path$/) do
@@ -57,7 +57,7 @@ Given(/^they have (\d+) (.*?) appointments$/) do |number,status|
   end
   number.to_i.times do 
     @trackable = FactoryGirl.create(:appointment,:start_time => @startTime,:end_time => @endTime)
-    @message = FactoryGirl.create(:message,:user => @user,:messageable => @trackable)
+    @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
   end
   
 end

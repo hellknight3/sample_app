@@ -5,6 +5,7 @@ class AdminsController < ApplicationController
 	#before_action :signed_in_admin, only: [:index]
 #	before_action :correct_user, only: [:show]
 	before_action :signed_in, only: [:show, :edit, :update, :new,:create]#,:index]
+    before_action :protect_admin_edit, only: [:edit,:update]
 #	before_action :is_current_user, only: [:edit, :update]
 	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -40,17 +41,26 @@ class AdminsController < ApplicationController
 		#creates the admin based on the allowed admin parameters
 		@admin =Admin.new(admin_params)
 		#creates a user and attaches it to the admin with the user parameter restrictions required
-		@user = @admin.build_user(user_params)
 		@admin.director =false
-        puts @admin.profile 
         #tries to save the admin to the database
         if  @admin.save
+
+		  @user = @admin.build_user(user_params)
+            if @user.save 
+              
+              Activity.create(:user => current_user,:trackable => @admin,:action => "CREATE ADMIN")
 			#flashes a success message for the admin
 			flash[:notice] = "Admin save successfully."
 			#redirects to the newly created admins' page
-			redirect_to edit_admin_path(@admin)
+			redirect_to edit_user_path(@user)
+            else
+              @admin.delete
+              flash[:alert]="problem creating an admin."
+              render "new"
+            end
 		else
 			#reloads the new page so that the forms can have the correct information
+            flash[:alert]="problem creating admin."
 			render 'new'
 		end
 	end
@@ -80,8 +90,8 @@ class AdminsController < ApplicationController
 						                	    @user.update_attributes(user_params)
                                               else
                                                 values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
-					                	      	if @admin.update_attributes(admin_params) && @user.update_attributes(values)
-                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "UPDATE")
+					                	      	if @user.update_attributes(values) #&& @admin.update_attributes(admin_params)  
+                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "UPDATE ADMIN")
                                                 end
                                               
                                               end
@@ -117,10 +127,6 @@ class AdminsController < ApplicationController
 	
         end
 		def admin_params
-          if params[:admin]
-            puts "hello"
-          params.require(:admin)
-          end
 
 		end
 		#before filters
@@ -141,8 +147,9 @@ class AdminsController < ApplicationController
 		end
 		def signed_in_director
 				unless is_director #checks if the currently logged in user is an Admin
-					store_location
-					redirect_to signin_url, notice: "You do not have permission to do that."
+
+                  flash[:alert]="you do not have permission to create an admin."
+                  redirect_to go_to_home
 				end
 		end
 		
@@ -161,4 +168,17 @@ class AdminsController < ApplicationController
 				redirect_to(root_url)
 			end
 		end
+        def protect_admin_edit
+          @admin = Admin.find(params[:id])
+          if current_user.profile_id != @admin.id
+            if @admin.director
+              flash[:alert]="You do not have the permission to edit this director." 
+            else
+              flash[:alert]="You do not have the permission to edit this admin." 
+            end
+
+         redirect_to go_to_home 
+
+          end
+        end
 end

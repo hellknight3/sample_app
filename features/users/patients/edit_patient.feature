@@ -6,7 +6,11 @@ Feature: editting a patient
     When they edit a patient setting pool
     Then they should be able to add pools
     When they add a pool
-    Then they should be able to remove pools
+    Then a log entry with the action add permission should be generated
+    And they should be able to remove pools
+    When they remove a pool
+    Then they should be able to add pools
+    And a log entry with the action remove permission should be generated
 
   Scenario: when an admin adds doctors to patient 
     Given an Admin is logged in
@@ -19,7 +23,9 @@ Feature: editting a patient
     Then they should be able to add doctors
     When they add a doctor
     Then they should see it pending
-    #And they should be able to remove doctors
+    And a Patient is being logged
+    And a log entry with the action add doctor should be generated
+    #And they should be able to remove doctors #will be pending may want to add remove aswell
 
   Scenario: when a patient edits self
     Given a Patient is logged in

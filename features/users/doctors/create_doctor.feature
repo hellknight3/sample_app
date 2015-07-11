@@ -6,7 +6,7 @@ Feature: creating a doctor
     Then a doctor should be created
     And they should receive a success message
     And they should be on the user index page Doctors
-    And a log entry with the action create is generated
+    And a log entry with the action create should be generated
 
   Scenario: when a director creates a doctor
     Given a Director is logged in
@@ -19,7 +19,6 @@ Feature: creating a doctor
     When they visit the new doctors path
     Then they should receive an error message
     And they should be on their homepage
-
   Scenario: when a doctor creates a doctor
     Given a Doctor is logged in
     When they visit the new doctors path

@@ -80,9 +80,6 @@ Given(/^the (?:Patient|Doctor|Admin) has a pool$/) do
   Permission.create(:user => current_user,:pool => @trackable)
 end
 
-When(/^they add a pool$/) do
-  click_button "Add to pool"
-end
 
 Then(/^they should be able to (.*?) pools$/) do |action|
   if action == "add"
@@ -93,7 +90,10 @@ Then(/^they should be able to (.*?) pools$/) do |action|
 end
 
 Given(/^the patient has the same pool$/) do
-  Permission.create(:user => @patient,:pool => @trackable)
+  Permission.create(:user => @patient.user,:pool => @trackable)
+end
+Given(/^the doctor has the same pool$/) do
+  Permission.create(:user => @doctor.user,:pool => @trackable)
 end
 
 When(/^they add a doctor$/) do

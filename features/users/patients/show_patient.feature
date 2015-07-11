@@ -23,6 +23,7 @@ Feature: viewing a patients properties
     And the Doctor has a patient
     When they view the patient
     Then they should be on the patients page
+    And a Patient is being logged
     And a log entry with the action show should be generated
 
   Scenario: a patient views themselves

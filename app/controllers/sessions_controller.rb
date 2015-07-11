@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  before_filter :signed_in, only: [:destroy]
 	def new
 	end
 	def create
@@ -22,4 +23,12 @@ class SessionsController < ApplicationController
 		sign_out
 		redirect_to root_url
 	end
+    private
+    def signed_in
+      if current_user.nil?
+        redirect_to root_url
+
+      end
+
+    end
 end

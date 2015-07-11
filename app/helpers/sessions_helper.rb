@@ -24,25 +24,25 @@ module SessionsHelper
 	def current_user?(user)
 		user==current_user
 	end
-	def is_doctor?(user)
+	def is_doctor?(user=current_user)
 		user.profile_type=="Doctor"
 	end
 	def is_doctor
 		is_doctor?(current_user)==true
 	end
-	def is_admin?(user)		
+	def is_admin?(user=current_user)		
 		user.profile_type=="Admin"
 	end
 	def is_admin
 		is_admin?(current_user)==true
 	end
-	def is_patient?(user)
+	def is_patient?(user=current_user)
 		user.profile_type=="Patient"
 	end
 	def is_patient
 		is_patient?(current_user)==true
 	end
-	def is_director?(user)
+	def is_director?(user=current_user)
 		 if is_admin?(user)
 			Admin.find(user.profile_id).director==true
 		else

@@ -5,6 +5,7 @@ Feature: creating a patient
     When they submit valid patient information
     Then a patient should be created
     And they should receive a success message
+    And a Patient is being logged
     And a log entry with action create should be generated
   
   Scenario: when a doctor tries to create a patient
