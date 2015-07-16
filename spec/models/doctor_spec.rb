@@ -1,7 +1,9 @@
 require 'spec_helper'
 
-describe User do
+describe Doctor do
 	#check that a doctor object can be created
+    it{should have_many(:activities)} 
+
 	it "has a valid factory" do
 		create(:doctor).should be_valid
 	end

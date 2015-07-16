@@ -2,12 +2,13 @@ SampleApp::Application.routes.draw do
   get "activities/create"
   get "activities/index"
   get "activity/index"
-	resources :institutions do
-	end
-    resources :users, only: [:update, :index,:edit]
-    resources :users do
+
+    concern :trackable do
       resources :activities, only: [:index]
     end
+	resources :institutions do
+	end
+    resources :users, only: [:update, :index,:edit], concerns: :trackable
 
 
 	resources :admins, only: [:new,:create,:edit,:update,:show]

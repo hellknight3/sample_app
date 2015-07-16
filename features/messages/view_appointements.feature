@@ -5,7 +5,6 @@ Feature: view appointment name scrubbing
     When they view the appointment messages
     Then they should see who is participating in the appointment
 
-  @wip
   Scenario: patient views appointment with multiple patients
     Given a Patient is logged in
     And they have an appointment with multiple participants

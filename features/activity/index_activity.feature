@@ -1,23 +1,33 @@
-Feature: viewing activities
-  Scenario: a director views the recent activities
-    Given a Director is logged in
-    And there have been some appointment activities
-    When they view the appointment activities index
-    Then they should see the recent appointment activities
-
-    @wip
-  Scenario: an Admin views the recent activities
-    Given an Admin is logged in
-    When they visit the activities path
+Feature: viewing user's activities
+  Scenario Outline: a director views the recent activities of a user
+    Given a <role> is logged in
+    And the <role> <action>s a <modelsFactory>
+    And the user logs out
+    And a Director is logged in
+    When they view the <role>'s activities
+    Then they should see the recent activities
+  Examples:
+      |role|action|modelsFactory|
+      |Doctor|create|appointment|
+      |Admin|create|Doctor| 
+      |Admin|create|Patient|
+      |Director|create|Admin|
+      |Doctor|view|appointment|
+    
+  #--------------access permissions-----------------
+  Scenario Outline: only some roles have access to the activities page
+    Given an <role> is logged in
+    And a Patient exists 
+    When they view a Patient's activities
     Then they should get an error message
+    And they should be on their homepage
+  Examples:
+    |role|
+    |Admin|
+    |Doctor|
+    |Patient|
 
-  Scenario: a Doctor views the recent activities
-    Given a Doctor is logged in
-    When they visit the activities path
-    Then they should get an error message
-
-  Scenario: a Patient view the recent activities
-    Given a Patient is logged in
-    When they visit the activities path
-    Then they should get an error message
-
+  Scenario: some one needs to be logged in
+    Given a Patient exists
+    When they view a Patient's activities
+    Then they should be on the signin page

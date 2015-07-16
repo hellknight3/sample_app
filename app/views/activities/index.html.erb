@@ -16,7 +16,12 @@
   <%=activity.action%>
     </td>
     <td><%=activity.created_at%></td>
-    <td><%=activity.trackable.name%></td>
+    <%if isProfile?(activity.trackable_type)%>  
+      <td><%=activity.trackable.user.name%></td>
+    <%else%>
+      <td><%=activity.trackable.name%></td>
+    <%end%>
+
   </tr>
 <%end%>
 </table>

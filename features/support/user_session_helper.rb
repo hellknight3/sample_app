@@ -10,7 +10,7 @@ module UserSessionHelper
    click_button 'Sign in'
    page.should have_content('Sign out')
   end
-  def logout
+  def sign_out
     click_link 'Sign out'
   end
 
