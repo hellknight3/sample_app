@@ -67,7 +67,7 @@ FactoryGirl.define do
 	#create a pool
 	factory :pool do 
 		#assign randomly generated values to the attributes
-		institution
+		#institution
 		name{Faker::Name.name}
 		description{Faker::Name.name}
 		specialization{Faker::Name.name}
@@ -131,7 +131,7 @@ end
         association :messageable, factory: :appointment
     end
 	 
-	factory :institution do 
+	factory :institution, class: Institution do 
 		name{Faker::Name.name}
 		description{Faker::Name.name}
 	end

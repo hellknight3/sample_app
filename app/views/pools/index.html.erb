@@ -28,7 +28,7 @@
 		  <tr class="warning not-active ">
 			<td><%= pool.name %></td>
 			<!--<td><%= pool.description %></td>-->
-			<!--<td><%= pool.institution %></td>-->
+			<!--<td><%# pool.institution %></td>-->
 			<td><%= pool.specialization %></td>
 			<td></td>
 			<td></td>
@@ -49,7 +49,7 @@
 			<tr class="active" data-link="<%= pool_path(myPool)%>">
 				<td><%=link_to myPool.name, pool_path(myPool) %></td>
 				<!--<td><%= myPool.description %></td>-->
-				<!--<td><%= myPool.institution %></td>-->
+				<!--<td><%# myPool.institution %></td>-->
 				<td><%= myPool.specialization %></td>
 				<td><%# link_to 'Show', myPool,{class: "btn btn-primary"} %></td>
 				<%if is_admin%>

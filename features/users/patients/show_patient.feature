@@ -1,22 +1,4 @@
 Feature: viewing a patients properties
-  Scenario: an admin views a patient
-   Given an Admin is logged in 
-   And a Patient exists
-   When they view the patient
-   Then they should get an error message
-
-  Scenario: an doctor views a patient
-   Given a Doctor is logged in 
-   And a Patient exists
-   When they view the patient
-   Then they should get an error message
-
-  Scenario: a patient views a patient
-   Given a Patient is logged in 
-   And a Patient exists
-   When they view the patient
-   Then they should get an error message
-
   Scenario: a doctor views his patient
     Given a Doctor is logged in
     And a Patient exists
@@ -30,3 +12,14 @@ Feature: viewing a patients properties
     Given a Patient is logged in
     When they view themselves
     Then they should see their profile page
+
+  Scenario Outline: only permitted users should be able to see a patients information
+   Given an <role> is logged in 
+   And a Patient exists
+   When they view the patient
+   Then they should get an error message
+    Examples:
+      |role|
+      |Admin|
+      |Doctor|
+      |Patient|

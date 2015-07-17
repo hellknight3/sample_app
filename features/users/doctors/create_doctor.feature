@@ -8,19 +8,13 @@ Feature: creating a doctor
     And they should be on the user index page Doctors
     And a log entry with the action create should be generated
 
-  Scenario: when a director creates a doctor
+  Scenario Outline: only an admin should be able to create a doctor
     Given a Director is logged in
     When they visit the new doctors path
     Then they should receive an error message
     And they should be on their homepage
-
-  Scenario: when a patient creates a doctor
-    Given a Patient is logged in
-    When they visit the new doctors path
-    Then they should receive an error message
-    And they should be on their homepage
-  Scenario: when a doctor creates a doctor
-    Given a Doctor is logged in
-    When they visit the new doctors path
-    Then they should receive an error message
-    And they should be on their homepage
+    Examples:
+      |role|
+      |Director|
+      |Patient|
+      |Doctor|

@@ -8,30 +8,16 @@ Feature: updating a admin
     And they should be on their home page
     And a log entry with the action update admin should be generated
 
-  Scenario: an admin edits another admins personal information
-    Given an Admin is logged in
-    And an Admin exists
-    When they try to edit another admin
-    Then they should receive an error message
-    And they should be on their profile page
-    
-  Scenario: a director edits an admin an admins personal information
-    Given an Director is logged in
+  Scenario Outline: only an admin should be able to edit their own information 
+    Given an <role> is logged in
     And an Admin exists
     When they try to edit an admin
     Then they should receive an error message
     And they should be on their profile page
+    Examples:
+      |role|
+      |Admin|
+      |Patient|
+      |Doctor|
+      #|Director|
 
-  Scenario: a doctor edits an admins personal information
-    Given a Doctor is logged in
-    And an Admin exists
-    When they try to edit an admin
-    Then they should receive an error message
-    And they should be on their profile page
-
-  Scenario: a patient edits an admin personal information
-    Given a Patient is logged in
-    And an Admin exists
-    When they try to edit an admin
-    Then they should receive an error message
-    And they should be on their profile page

@@ -14,7 +14,11 @@ end
 When(/^they view the (.*?) activities index$/) do |model|
   visit user_activities_path(current_user)
 end
-When(/^they view (?:a|the) (.*?)'s activities$/) do |tracked_model|
+Given(/^a Patient was previously logged in$/) do
+  @previousUser=@patient
+end
+
+When(/^they view (?:an?|the) (.*?)'s activities$/) do |tracked_model|
   if tracked_model=="Patient"
     visit user_activities_path(@previousUser) 
   elsif tracked_model=="Doctor"
@@ -44,10 +48,10 @@ Then(/^they should see the recent activities$/) do
     expect(page).to have_content(@activity.trackable.name)
   end
 end
-Given(/^the (?:Doctor|Admin|Patient|Director) (.*?)s a (.*?)$/) do |action,trackedModel|
+Given(/^the (?:Doctor|Admin|Patient|Director) (.{3}.*?)s a (.*?)$/) do |action,trackedModel|
   #@doctor=FactoryGirl.create(trackedModel).profile
-  @previousUser=current_user
   @trackable = createTrackedModel(trackedModel)
+  @previousUser=current_user
   @activity = Activity.create(:user => current_user,:trackable => @trackable,:action => action)
 end
 

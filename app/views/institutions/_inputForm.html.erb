@@ -1,11 +1,11 @@
 <div class = "row">
 	<div class="col-md-3"></div>
 	<div class="col-md-6">
-		<%= simple_form_for @insitution do |f|%>
+		<%= simple_form_for @institution do |f|%>
 			<%=f.input :name%>
-			<%=f.input :description, as :text%>
-			<%=f.buttom :submit, {class :"btn btn-primary} %>
+			<%=f.input :description, as: :text%>
+			<%=f.button :submit, {class: "btn btn-primary"} %>
 		<%end%>
 	</div>
-	<div class = "cold-md-3"></div>
+	<div class = "col-md-3"></div>
 </div>

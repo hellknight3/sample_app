@@ -8,21 +8,13 @@ Feature: creating a patient
     And a Patient is being logged
     And a log entry with action create should be generated
   
-  Scenario: when a doctor tries to create a patient
-    Given a Doctor is logged in
+  Scenario Outline: only an admin should be able to create a patient
+    Given a <role> is logged in
     When they visit a new patient path
     Then they should receive an error message
     And they should be on their home page
-
-  Scenario: when a patient tries to create a patient
-    Given a Patient is logged in
-    When they visit a new patient path
-    Then they should receive an error message
-    And they should be on their home page
-
-  Scenario: when a director tries to create a patient
-    Given a Director is logged in
-    When they visit a new patient path
-    Then they should receive an error message
-    And they should be on their home page
-
+    Examples:
+      |role|
+      |Director|
+      |Doctor|
+      |Patient|

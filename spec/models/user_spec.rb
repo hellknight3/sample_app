@@ -16,6 +16,10 @@ describe User do
 	it { should respond_to(:authenticate)}
 #	it {should be_valid}
 	it {should respond_to(:authenticate)}
+    it {should respond_to(:institutions)}
+    it {should have_many(:institution_memberships)}
+    it {should have_many(:institutions)}
+
 	
 	it "has a valid profile" do
 		FactoryGirl.build(:user, profile_type: nil).should_not be_valid

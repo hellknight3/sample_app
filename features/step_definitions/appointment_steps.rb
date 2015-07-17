@@ -26,25 +26,17 @@ Given(/^they have an appointment$/) do
   @trackable = FactoryGirl.create(:appointment)
   @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
 end
-Given(/^they have an appointment with multiple participants$/) do
+Given(/^they have an appointment with (\d*) participants$/) do |participants|
   @trackable = FactoryGirl.create(:appointment)
-  @contain = Array.new
-  @message1 = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
-  @user1 = FactoryGirl.create(:userPatient)
-   @user2 = FactoryGirl.create(:userPatient)
-  @user3 = FactoryGirl.create(:userPatient)
-  @contain.push(@user);
-  if(@user.profile_type != "Doctor")
-  @user4 = FactoryGirl.create(:userDoctor)
-  @message4 = FactoryGirl.create(:groupMessage,:user => @user4,:messageable => @trackable)
-  @contain.push(@user4);
+  @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
+  participants.to_i.times do
+    @user = FactoryGirl.create(:userPatient)
+    @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
   end
-  @message3 = FactoryGirl.create(:groupMessage,:user => @user3,:messageable => @trackable)
-  @message2 = FactoryGirl.create(:groupMessage,:user => @user2,:messageable => @trackable)
-  @message = FactoryGirl.create(:groupMessage,:user => @user1,:messageable => @trackable)
-  @contain.push(@user3); 
-  @contain.push(@user2)
-  @contain.push(@user1);
+  if(current_user.profile_type != "Doctor")
+    @user = FactoryGirl.create(:userDoctor)
+    @message = FactoryGirl.create(:groupMessage,:user => @user,:messageable => @trackable)
+  end
 end
 
 
@@ -105,18 +97,22 @@ When(/^they view the appointment messages$/) do
 end
 
 Then(/^they should see the doctor who is participating$/) do
-   
-  @contain.each do |user|
-    if(user.profile_type == "Doctor")
-      expect(page).to have_content(user.name)
+  @messages=Message.where(:messageable => @trackable)
+  @messages.each do |message|
+  #@contain.each do |user|
+    if(message.user.profile_type == "Doctor")
+      expect(page).to have_content(message.user.name)
     end
+  #end
+   
   end
 end
 
 Then(/^they should not see the patients names who are participating$/) do
-  @contain.each do |user|  
-  if(user.profile_type != "Doctor" && user.name != @user.name)
-      expect(page).to_not have_content(user.name)
+  @messages=Message.where(:messageable => @trackable)
+  @messages.each do |message|
+  if(message.user.profile_type != "Doctor" && message.user.name != current_user.name)
+      expect(page).to_not have_content(message.user.name)
     end
   end
 end
@@ -127,9 +123,9 @@ Then(/^they should see the appointments pools$/) do
 end
 
 Then(/^they should see who is participating in the appointment$/) do
-  
-  @contain.each  do |user|
-    expect(page).to have_content(user.name)  
+  @messages=Message.where(:messageable => @trackable)
+  @messages.each do |message|
+    expect(page).to have_content(message.user.name)  
   end
 end
 

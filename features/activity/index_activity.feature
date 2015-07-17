@@ -18,6 +18,7 @@ Feature: viewing user's activities
   Scenario Outline: only some roles have access to the activities page
     Given an <role> is logged in
     And a Patient exists 
+    And a Patient was previously logged in
     When they view a Patient's activities
     Then they should get an error message
     And they should be on their homepage

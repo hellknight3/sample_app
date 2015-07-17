@@ -25,18 +25,18 @@ class MessagesController < ApplicationController
 	@user=current_user
 	@message=Message.new
 	if (params[:messageable_type] == Appointment.name)
-		@messages=Message.where("messageable_type = ? and messageable_id = ?",'Appointment', params[:messageable_id]).select(:messageable_id, :user_id,:message).all
+		@messages=Message.where("messageable_type = ? and messageable_id = ?",'Appointment', params[:messageable_id]).select(:messageable_id, :user_id,:message)
 		@appointment=Appointment.find(params[:messageable_id])
 	else
-		@messages=Message.where("((messageable_id = ? and user_id = ?)   or (user_id = ? and messageable_id = ?)) and messageable_type = ?",current_user.id,params[:messageable_id],current_user.id,params[:messageable_id],User.name).all
+		@messages=Message.where("((messageable_id = ? and user_id = ?)   or (user_id = ? and messageable_id = ?)) and messageable_type = ?",current_user.id,params[:messageable_id],current_user.id,params[:messageable_id],User.name)
 		#, :messageable_type => User.name, :messageable_id=>params[:messageable_id]}])
 		
 	end
     if(current_user.profile_type == "Doctor") 
-    @users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq.all
+    @users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').uniq
     else
       
-    @users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("users.profile_type == 'Doctor'").uniq.all
+    @users=User.joins('LEFT OUTER JOIN permissions ON users.id = permissions.user_id INNER JOIN pools ON pools.id = permissions.pool_id').where("users.profile_type = 'Doctor'").uniq
     end
   
   end

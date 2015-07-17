@@ -2,7 +2,7 @@ Given(/^(?:the (?:doctor|patient|admin)|they) visits the new pools path$/) do
   visit new_pool_path
 end
 
-Given(/^they have (\d+) pool(?:|s)$/) do |numPools|
+Given(/^they have (\d+) pools?$/) do |numPools|
   numPools.to_i.times do
     @trackable= FactoryGirl.create(:pool)
     Permission.create(:user => current_user,:pool => @trackable) 
@@ -75,7 +75,7 @@ Then(/^the pool should be changed$/) do
   Pool.find(@trackable).name.should eq "new name"
 end
 
-Given(/^the (?:Patient|Doctor|Admin) has a pool$/) do
+ Given(/^the (?:Patient|Doctor|Admin) has a pool$/) do
   @trackable = FactoryGirl.create(:pool)
   Permission.create(:user => current_user,:pool => @trackable)
 end

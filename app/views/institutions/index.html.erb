@@ -1,41 +1,55 @@
 <div class= "row">
   <div class="col-md-2"></div>
-                <div class="col-md-8">
-<h1>Pools</h1>
-<div class="panel panel-default">
-                <div class="panel-body left-header">
-                        <%= link_to 'My Institutions', institutions_path %>
-                </div>
-                <div class="right-header">
+    <div class="col-md-8">
+      <%if params[:institutions].nil? or params[:institutions] == "My Institutions"%>
+      <h1>My Institutions</h1>
+    <%else%>
+      <h1>Other Institutions</h1>
+    <%end%>
+      <div class="panel panel-default">
+        <div class="panel-body left-header">
+          <%= link_to 'My Institutions', institutions_path, {class: "btn btn-primary"} %>
+        </div>
 
-<table class="table table-hover">
-        <thead class="active">
-                <th>Name</th>
-                <th>Description</th>
-                <th></th>
-                <th></th>
-        </thead>
-        <tbody>
-        <%if params[:inst]=="Other"%>
-                <% @inst.each do |inst| %>
-                  <tr class="warning not-active ">
-                        <td><%= inst.name %></td>
-                        <td><%= inst.description %></td>
-                        <td></td>
-                        <td></td>
-                        </tr>
-		<%end%>
-                    <%if is_director%>
-                         <td><%= link_to 'Edit', edit_institution_path,{class: "btn btn-warning"} %></td>
-                    <%else%>
-                         <td></td>
-                    <%end%>
-                        </tr>
+        <div class="right-header"></div>
+      </div>
+      <br />
+      <br />
+      <%if @institution.empty? %>
+        <%if params[:institutions].nil?%>
+          <h5>You do not have any institutions associated with you</h5>
+        <%else%>
+          <h5>there seems to be a problem finding any other institutions</h5>
         <%end%>
-        </tbody>
-</table>
-<%=will_paginate%>
-</div>
+      <%else%>
+        <table class="table table-hover">
+          <thead class="active">
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th></th>
+                  <th></th>
+          </thead>
+          <tbody>
+            <%if params[:institution]=="Other"%>
+            <%else%>
+              <% @institution.each do |inst| %>
+                <tr class="warning not-active ">
+                      <td><%= inst.name %></td>
+                      <td><%= inst.description %></td>
+                      <td></td>
+                  <%if is_director%>
+                       <td><%= link_to 'Edit', edit_institution_path,{class: "btn btn-warning"} %></td>
+                  <%else%>
+                       <td></td>
+                  <%end%>
+                      </tr>
+              <%end%>
+            <%end%>
+          </tbody>
+        </table>
+        <%=will_paginate%>
+      <%end%>
+    </div>
 <div class="col-md-2"></div>
 </div>
 </div>

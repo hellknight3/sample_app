@@ -13,6 +13,8 @@ class User < ActiveRecord::Base
 	
 	has_many :users, :through => :messages, :source => :messageable,
     :source_type => "User"
+    has_many :institution_memberships, as: :memberable
+    has_many :institutions, :through => :insitution_memberships, :source => :memberable,:source_type => "User"
 
 	before_save { self.email = email.downcase}
 	before_create :create_remember_token

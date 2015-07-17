@@ -35,21 +35,14 @@ Feature: editting a patient
     And they should receive a success message
     And a log entry with action update should be generated
 
-  Scenario: when a patient edits another patient
-    Given a Patient is logged in
+  Scenario Outline: only admins and patients should be change patient information
+    Given a <role> is logged in
     And a Patient exist
     When they edit a patient
     Then they should receive an error message
-
-  Scenario: when a doctor edits a patient
-    Given a Doctor is logged in
-    And a Patient exists
-    When they edit a patient
-    Then they should receive an error message
-    
-  Scenario: when a director edits a patient
-    Given a Director is logged in
-    And a Patient exists
-    When they edit a patient
-    Then they should receive an error message
-
+    And they should be on their profile page
+    Examples:
+      |role|
+      |Director|
+      |Doctor|
+      |Patient|

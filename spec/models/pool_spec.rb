@@ -9,13 +9,15 @@ describe Pool do
 	it {should respond_to(:name)}
 	it {should respond_to(:specialization)}
 	it {should respond_to(:description)}
-	it {should respond_to(:institution)}
+	it {should respond_to(:institutions)}
     it {should respond_to(:appointment_memberships)}
     it {should respond_to(:appointments)}
     it {should have_many(:appointment_memberships)}
     it {should have_many(:appointments)}
     it {should have_many(:users)}
     it {should have_many(:permissions)}
+    it {should have_many(:institution_memberships)}
+    it {should have_many(:institutions)}
     
 	#check is pool object can be created
 	it "has a valid factory" do
