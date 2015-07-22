@@ -47,8 +47,9 @@ class AdminsController < ApplicationController
 
 		  @user = @admin.build_user(user_params)
             if @user.save 
+            InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
               
-              Activity.create(:user => current_user,:trackable => @admin,:action => "CREATE ADMIN")
+              Activity.create(:user => current_user,:trackable => @admin,:action => "Created Admin")
 			#flashes a success message for the admin
 			flash[:notice] = "Admin save successfully."
 			#redirects to the newly created admins' page
@@ -88,10 +89,11 @@ class AdminsController < ApplicationController
 	           puts "hello"                                       	
                                           	    #passes the attributes from the form to the user_params function
 						                	    @user.update_attributes(user_params)
+                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "Updated Profile")
                                               else
                                                 values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
 					                	      	if @user.update_attributes(values) #&& @admin.update_attributes(admin_params)  
-                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "UPDATE ADMIN")
+                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "Updated Admin")
                                                 end
                                               
                                               end

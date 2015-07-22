@@ -1,6 +1,12 @@
 namespace :db do
 	desc "Fill database with sample data"
 	task populate: :environment do
+      puts "creating institution"
+      1.times do |n|
+        name=Faker::Name.name
+        description=Faker::Name.name 
+        institution=Institution.create!(:name => name, :description => description)
+      end
 		puts "creating admin"
 		1.times do |n|
 			name=Faker::Name.name
@@ -104,6 +110,11 @@ namespace :db do
 		Permission.create!(user_id: 2,
 		pool_id: n+1)
 		end
+        puts "adding users to institutions"
+        User.all.each do |user|
+          institution=Institution.first
+          InstitutionMembership.create!(:institution => institution,:memberable => user)
+        end
 		Message.create!(
 		message: "hello",
 		user_id: 1,

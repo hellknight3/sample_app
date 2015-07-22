@@ -1,6 +1,6 @@
 <h1><%=@activeModel.name%></h1>
-<%=link_to "User Activity", user_activities_path(@activeModel,{:view => "Activity"}),class: "btn btn-default, btn-primary"%>
-<%=link_to "Actions on User", user_activities_path(@activeModel,{:view => "Actions"}),class: "btn btn-default, btn-primary"%>
+<%=link_to "User Activity", user_activities_path(@activeModel,{:view => "Activity"}),class: userActivitiesButton%>
+<%=link_to "Actions on User", user_activities_path(@activeModel,{:view => "Actions"}),class: userActionsButton%>
 <br/><br/>
 <table class="table">
   <tr>

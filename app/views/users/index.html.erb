@@ -69,7 +69,10 @@
 					<td>Director</td>
 				<%end%>
 			
-				<!--<td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id),{class: "btn btn-primary"} %></td>-->
+                <%if is_director?%>
+				<td><%= link_to 'Activities', user_activities_path(user),{class: "btn btn-primary"} %></td>
+              <%end%>
+<!--<td><%= link_to 'Show', user.profile_type.constantize.find(user.profile_id),{class: "btn btn-primary"} %></td>-->
 				
 		
 					<td><%= link_to 'Edit', edit_user_path(user.id),{class: "btn btn-warning"}  %></td>

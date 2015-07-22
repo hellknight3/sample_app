@@ -8,13 +8,16 @@
 <p></p>
 	<ul class="list-group">
 	<li class="list-group-item list-group-item-info">List of pools with this insitution</li>
-	<%#@pools.each do |pool|%>
-		
-		<li class="list-group-item"><%#pool.name%></li>
-		
-	<%#end%>
+	<%@pools.each do |pool|%>
+		<li class="list-group-item"><%=pool.name%></li>
+	<%end%>
 	</ul>
 </table>
+<div>
+  <h4> News Bulletin</h4>
+
+
+  <div>
 </div>
 <div class="col-md-3"></div>
 </div>

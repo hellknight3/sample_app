@@ -7,6 +7,7 @@ Feature: creating a doctor
     And they should receive a success message
     And they should be on the user index page Doctors
     And a log entry with the action create should be generated
+    And they should have an institution
 
   Scenario Outline: only an admin should be able to create a doctor
     Given a Director is logged in

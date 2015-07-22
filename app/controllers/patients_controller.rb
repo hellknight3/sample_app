@@ -31,6 +31,7 @@ class PatientsController < ApplicationController
               #flashes a success message for the admin		
               flash[:notice] ="successfully added patient"
               #redirects to the pool index page
+            InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
               Activity.create(:user => current_user,:trackable => @patient,:action => "CREATE",:message => "Created patient #{@user.name}")
               redirect_to edit_user_path(@patient.user)
           else

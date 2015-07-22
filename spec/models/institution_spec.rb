@@ -3,8 +3,10 @@ require 'spec_helper'
 describe Institution do
     it{should respond_to(:name)}
     it{should respond_to(:description)}
+    it{should respond_to(:defaultMessageNumber)}
     it{should have_many(:pools)}
     it{should have_many(:users)}
+    it {should have_many(:messages)}
 	it "has a valid factory" do
 		create(:institution).should be_valid
 	end

@@ -5,7 +5,6 @@ Feature: editing pools
     When they visit the edit pools path
     Then they should see...
     
-    @wip
   Scenario: an admin edits a pool
     Given an Admin is logged in 
     And they have 1 pool

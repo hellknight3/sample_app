@@ -8,7 +8,8 @@
     <%end%>
       <div class="panel panel-default">
         <div class="panel-body left-header">
-          <%= link_to 'My Institutions', institutions_path, {class: "btn btn-primary"} %>
+          <%= link_to 'My Institutions', institutions_path({:institution => "My"}), {class: isMyInstitution} %>
+          <%= link_to 'Other Institutions', institutions_path({:institution => "Other"}), {class: isOtherInstitution} %>
         </div>
 
         <div class="right-header"></div>
@@ -16,7 +17,7 @@
       <br />
       <br />
       <%if @institution.empty? %>
-        <%if params[:institutions].nil?%>
+        <%if params[:institution].nil?%>
           <h5>You do not have any institutions associated with you</h5>
         <%else%>
           <h5>there seems to be a problem finding any other institutions</h5>
@@ -32,22 +33,23 @@
           <tbody>
             <%if params[:institution]=="Other"%>
             <%else%>
-              <% @institution.each do |inst| %>
-                <tr class="warning not-active ">
-                      <td><%= inst.name %></td>
-                      <td><%= inst.description %></td>
+              <% @institution.each do |institution| %>
+				<tr class="active" data-link="<%= institution_path(institution)%>">
+                      <td><%= institution.name %></td>
+                      <td><%= institution.description %></td>
                       <td></td>
                   <%if is_director%>
-                       <td><%= link_to 'Edit', edit_institution_path,{class: "btn btn-warning"} %></td>
+                       <td><%= link_to 'Edit', institution_path(institution),{class: "btn btn-warning"} %></td>
+                       <td><%= link_to 'Edit', edit_institution_path(institution),{class: "btn btn-warning"} %></td>
                   <%else%>
                        <td></td>
                   <%end%>
                       </tr>
               <%end%>
+        <%#will_paginate %>
             <%end%>
           </tbody>
         </table>
-        <%=will_paginate%>
       <%end%>
     </div>
 <div class="col-md-2"></div>

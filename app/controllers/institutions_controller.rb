@@ -5,7 +5,13 @@ class InstitutionsController < ApplicationController
 	before_action :signed_in, only: [:index,:show]
 
 def index
+  if params[:institution].nil? || params[:institution] == "My"
 	@institution = Institution.joins(:institution_memberships).where("institution_memberships.memberable_id = #{current_user.id} AND institution_memberships.memberable_type = 'User'").paginate(:page => params[:page])
+  elsif params[:institution] == "Other"
+	@institution = Institution.joins(:institution_memberships).where("institution_memberships.memberable_id = #{current_user.id} AND institution_memberships.memberable_type = 'User'").all
+    @institution= Institution.joins(:institution_memberships) - @institution
+    #@institution= @instituion.paginate(:page => params[:page])
+  end
 end
 
 def new
@@ -27,16 +33,20 @@ def show
 	#get the insitutions
         @institution = Institution.find(params[:id])
         #get pools in institutions
-        #@pools = @inst.pools
+        @pools = @institution.pools
+		@news = @institution.messages
 end
 
 def edit
-	@inst = Institution.find(params[:id])
+	@institution = Institution.find(params[:id])
 end
 def update
-	@inst = Institution.find(params[:id])
-	if @inst.update_attributes(institution_params)
-                redirect_to  @inst	
+	@institution = Institution.find(params[:id])
+	if @institution.update_attributes(institution_params)
+
+      flash[:notice]= "successfully updated the institutions information"
+      Activity.create(:user => current_user,:trackable => @institution, :action => "Updated Institution")
+                redirect_to  @institution
 	else
                 flash[:warning]=""
         render 'edit'

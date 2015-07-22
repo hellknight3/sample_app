@@ -7,6 +7,7 @@ Feature: creating a patient
     And they should receive a success message
     And a Patient is being logged
     And a log entry with action create should be generated
+    And they should have an institution
   
   Scenario Outline: only an admin should be able to create a patient
     Given a <role> is logged in

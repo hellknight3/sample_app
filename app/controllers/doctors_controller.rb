@@ -50,6 +50,8 @@ class DoctorsController < ApplicationController
 			#flashes a success message for the doctor		
 			flash[:notice]="Doctor saved successfully."
             Activity.create(:user => current_user,:trackable => @doctor,:action => "CREATE")
+            
+            InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
 			#redirects to the pools index page
 			redirect_to users_path({:user_type => "Doctor"})
         else

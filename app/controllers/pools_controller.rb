@@ -31,7 +31,9 @@ end
 		@permission.user_id =current_user.id
 		@permission.pool_id = @pool.id
 		if @permission.save
-          @activity = Activity.create(:user => current_user,:trackable => @pool,:action => "CREATE")
+          @activity = Activity.create(:user => current_user,:trackable => @pool,:action => "Created pool")
+          #InstitutionMembership.create(:institution => current_user.institutions.first,:memberable => @pool)
+            #InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @pool)
 		  flash[:notice] = "Pool successfully created"
 		  redirect_to @pool
 		else
