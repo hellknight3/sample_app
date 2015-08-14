@@ -2,7 +2,7 @@ SampleApp::Application.routes.draw do
   get "activities/create"
   get "activities/index"
   get "activity/index"
-
+  
     concern :trackable do
       resources :activities, only: [:index]
     end
@@ -27,14 +27,14 @@ SampleApp::Application.routes.draw do
 	resources :questions 
 	resources :answers
 	resources :notes
-	
+    resources :user_verifications	
 	resources :messages
 	#resources :users
-	resources :sessions, only: [:new, :create, :destroy]
-	root 'sessions#new'
+	resources :user_sessions, only: [:new, :create, :destroy]
+	root 'user_sessions#new'
 	#match '/signup', to: 'users#new', via: 'get'
-	match '/signin', to: 'sessions#new', via: 'get'
-	match '/signout', to: 'sessions#destroy', via: 'delete'
+	match '/signin', to: 'user_sessions#new', via: 'get'
+	match '/signout', to: 'user_sessions#destroy', via: 'delete'
 	match '/help', to: "static_pages#help", via: 'get'
 	match '/about', to: "static_pages#about", via: 'get'
 	match '/news', to: "static_pages#news", via: 'get'

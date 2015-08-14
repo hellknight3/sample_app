@@ -1,5 +1,6 @@
 class NotesController < ApplicationController
-	
+  respond_to :html, :js	
+
 	def index
 		@patient=Patient.find(params[:patient_id])
 		@note=Note.new

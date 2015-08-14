@@ -6,7 +6,7 @@ Feature: updating a director
     Then the director should be updated
     And a success message should be displayed
     And they should be on their home page
-    And a log entry with the action update admin should be generated
+    And a log entry with the action updated admin should be generated
 
   Scenario Outline: only a director can edit themselves
     Given a <role> is logged in

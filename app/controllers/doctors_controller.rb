@@ -45,18 +45,18 @@ class DoctorsController < ApplicationController
 		#creates a user and attaches it to the doctor with the user parameter restrictions required
 		#tries to save the doctor to the database
 		if @doctor.save		
-		@user = @doctor.build_user(user_params)
-        if @user.save
+          @user = @doctor.build_user(user_params)
+          if @user.save
 			#flashes a success message for the doctor		
 			flash[:notice]="Doctor saved successfully."
-            Activity.create(:user => current_user,:trackable => @doctor,:action => "CREATE")
+            Activity.create(:user => current_user,:trackable => @doctor,:action => "Created Doctor")
             
             InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
 			#redirects to the pools index page
 			redirect_to users_path({:user_type => "Doctor"})
-        else
-          render 'new'
-        end
+          else
+            render 'new'
+          end
 		else
 			#reloads the new page so that the forms can have the correct information
 			render 'new'

@@ -1,0 +1,38 @@
+ <% @messages.each do |message| %>
+  <%unless message.nil?%>
+    <% @appointment=Appointment.find(message.messageable_id)%>
+      <tr class="active" data-link="<%=new_message_path({messageable_id: @appointment.id, messageable_type: Appointment.name})%>">
+        <td><%=@appointment.name%></td>
+        <td><%=@appointment.description%></td>	
+        <td><%=@appointment.start_time%></td>
+        
+        <%if params[:Appointment]==nil || params[:Appointment]=="Open"%>
+          <td>
+            <%= form_for(@appointment) do |f| %>
+              <%= hidden_field :appointment, :end_time, :value => DateTime.now %>
+              <%= hidden_field :appointment, :func, :value => "close" %>
+              <%= f.submit "Close appointment", class: "btn btn-large btn-warning" %>
+            <%end%>
+          </td>
+        <%else%>
+          <td><%=@appointment.end_time%></td>
+        <%end%>
+          
+      </tr>
+  <%end%>
+<%end%>
+<%if @messages.size==0%>
+    <tr class="warning">
+      <td>You currently have no 
+        <%if params[:Appointment] == nil%>
+          <%="open" %>
+        <%else %>
+          <%=params[:Appointment].downcase%>
+        <%end%>
+      appoinments
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+<%end%>

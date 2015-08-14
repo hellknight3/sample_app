@@ -6,7 +6,7 @@ Feature: viewing a patients properties
     When they view the patient
     Then they should be on the patients page
     And a Patient is being logged
-    And a log entry with the action show should be generated
+    And a log entry with the action viewed profile should be generated
 
   Scenario: a patient views themselves
     Given a Patient is logged in

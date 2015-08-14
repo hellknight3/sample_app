@@ -9,5 +9,9 @@ end
 Given(/^the user logs out$/) do
   sign_out
 end
+Then(/^they should not be verified$/) do
+  @trackable.user.verified.should eq false
+end
+
 
 

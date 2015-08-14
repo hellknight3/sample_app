@@ -5,7 +5,7 @@ Feature: creating a pool
     When they submit a valid pool
     Then a pool should be created
     And the admin should be in the pool
-    And a log entry with action create should be generated 
+    And a log entry with action created pool should be generated 
 
   Scenario: an admin tries to create an invalid pool
     Given an Admin is logged in

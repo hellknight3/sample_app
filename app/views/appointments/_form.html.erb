@@ -1,0 +1,29 @@
+<%= simple_form_for @appointment, remote: true, html: {class: "form-hotizontal", style: "display:inline;"} do |f| %>
+  <div class="modal-body">
+    <ul class="errors"></ul>
+    <div class="control-group">
+      <%= f.label :name, class: "control-label" %>
+      <div class="controls">
+        <%=f.text_field :name%>
+      </div>  
+
+    </div>
+	<%if defined?(params[:patient_id])%>
+		<%= f.hidden_field :patient_id, :value => params[:patient_id] %>
+	<%end%>
+    	
+    <div class="control-group">
+      <%= f.label :description, class: "control-label" %>
+      <div class="controls">
+        <%=f.text_field :description%>
+      </div>  
+    </div>
+	<%=f.input :start_time%>
+    <%#f.input :pools%>
+    <div class="modal-footer">
+	  <%= f.submit class: "btn btn-large btn-primary" %>
+      <%= link_to "Cancel", "#", class: "btn", data: {dismiss:"modal"}%>
+    </div>
+  </div>
+<% end %>
+

@@ -7,7 +7,7 @@ Feature: creating an admin
     Then they should receive a success message
     And the admin should be created
     And they should be on the edit user page
-    And a log entry with the action create admin should be generated
+    And a log entry with the action created admin should be generated
     And they should have an institution
 
   Scenario Outline: when an user other than a director creates an admin

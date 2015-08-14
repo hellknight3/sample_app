@@ -9,6 +9,8 @@ FactoryGirl.define do
 		password'foobar'
 		email{Faker::Internet.email}
         password_confirmation'foobar'		
+        active true
+        verified true
         association :profile, factory: :patient
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -21,6 +23,8 @@ FactoryGirl.define do
 		password'foobar'
 		email{Faker::Internet.email}
         password_confirmation'foobar'		
+        active true
+        verified true
 #        association :profile, factory: :doctor
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -36,6 +40,8 @@ FactoryGirl.define do
 		password'foobar'
 		email{Faker::Internet.email}
         password_confirmation'foobar'		
+        active true
+        verified true
         association :profile, factory: :doctor
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -49,6 +55,8 @@ FactoryGirl.define do
 		password'foobar'
 		email{Faker::Internet.email}
         password_confirmation'foobar'		
+        active true
+        verified true
         association :profile, factory: :admin
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -61,6 +69,8 @@ FactoryGirl.define do
 		password'foobar'
 		email{Faker::Internet.email}
         password_confirmation'foobar'		
+        active true
+        verified true
         association :profile, factory: :admin, director: true
   end
 

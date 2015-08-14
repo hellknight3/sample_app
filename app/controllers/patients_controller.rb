@@ -10,7 +10,7 @@ class PatientsController < ApplicationController
 		#shows the current users properties
 		@patient = Patient.find(params[:id])
 		@user = @patient.user
-                              Activity.create(:user => current_user,:trackable => @patient,:action => "SHOW") 
+        Activity.create(:user => current_user,:trackable => @patient,:action => "viewed profile") 
 		@doctors=Doctor.joins("INNER JOIN doc_relationships ON doctors.id = doc_relationships.doctor_id").where("patient_id= ? and accepted = ?",@patient.id,true).select("doc_relationships.accepted,doc_relationships.patient_id,doc_relationships.doctor_id, doctors.id")#@doctor.patients.paginate(page: params[:page])
 
 	end
@@ -28,12 +28,20 @@ class PatientsController < ApplicationController
           #since the association exists between user and patient, build_user handles the whole process, but acts like a new command
           @user = @patient.build_user(user_params)
           if @user.save
-              #flashes a success message for the admin		
-              flash[:notice] ="successfully added patient"
+            if signed_in?
+              flash[:notice]= "Successfully signed up the user, an email has been delivered to them with instructions on how to complete their registration"
               #redirects to the pool index page
-            InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
-              Activity.create(:user => current_user,:trackable => @patient,:action => "CREATE",:message => "Created patient #{@user.name}")
+              
+              @user.deliver_verification_instructions!
+              InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
+              Activity.create(:user => current_user,:trackable => @patient,:action => "Created Patient",:message => "Created patient #{@user.name}")
               redirect_to edit_user_path(@patient.user)
+            else
+              flash[:notice] = "Thanks for signing up, we've delivered an email to you with instructions on how to complete your registration!"
+              @user.deliver_verification_instructions!
+              Activity.create(:user => @user,:trackable => @patient,:action => "Patient signed up",:message => "Patient signed up: #{@user.name}")
+              redirect_to root_url
+            end
           else
               @patient.delete
               flash[:alert]="error creating patient"
@@ -83,7 +91,7 @@ class PatientsController < ApplicationController
 		  end
 		else	
 							
-			if defined?(params[:user][:old_password]) && @user.authenticate(params[:user][:old_password])
+			if defined?(params[:user][:old_password]) && @user.valid_password?(params[:user][:old_password])
 			 if(params[:user][:email].match(VALID_EMAIL_REGEX))
 				if defined?(params[:user][:password]) || defined?(params[:user][:password_confirmation])
 					if (params[:user][:password] != params[:user][:password_confirmation])
@@ -96,7 +104,7 @@ class PatientsController < ApplicationController
                          else
                            values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
                             if @user.update_attributes(values)
-                              Activity.create(:user => current_user,:trackable => @patient,:action => "UPDATE") 
+                              Activity.create(:user => current_user,:trackable => @patient,:action => "Updated Profile") 
                             end
                             
 						flash[:notice]="successfully updated your profile."
@@ -106,7 +114,7 @@ class PatientsController < ApplicationController
 				else
 					user = @patient.user
               	                 	 @user.update(user_params)
-                              Activity.create(:user => current_user,:trackable => @patient,:action => "UPDATE") 
+                              Activity.create(:user => current_user,:trackable => @patient,:action => "Updated Profile") 
                 	                flash[:notice]="successfully updated your profile."
                         	        redirect_to @patient
 

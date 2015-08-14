@@ -6,7 +6,7 @@ Feature: updating a admin
     Then the admin should be updated
     And a success message should be displayed
     And they should be on their home page
-    And a log entry with the action update admin should be generated
+    And a log entry with the action updated admin should be generated
 
   Scenario Outline: only an admin should be able to edit their own information 
     Given an <role> is logged in

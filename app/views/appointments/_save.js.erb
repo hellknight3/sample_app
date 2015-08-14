@@ -1,0 +1,8 @@
+$("ul.errors").html("")
+<% if @appointment.errors.any? %>
+  <% @appointment.errors.full_messages.each do |message| %>
+    $("ul.errors").append($("<li />").html("<%=message.html_safe%>"))
+  <%end%>
+<%else%>
+  $(window.location.replace("/messages/new?messageable_id=<%= @appointment.id %>&messageable_type=Appointment"))
+<%end%>

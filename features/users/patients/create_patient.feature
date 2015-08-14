@@ -1,4 +1,5 @@
 Feature: creating a patient
+  @wip
   Scenario: when an admin creates a patient
     Given a Admin is logged in
     And they visit a new patient path
@@ -6,8 +7,9 @@ Feature: creating a patient
     Then a patient should be created
     And they should receive a success message
     And a Patient is being logged
-    And a log entry with action create should be generated
+    And a log entry with action created patient should be generated
     And they should have an institution
+    And they should not be verified
   
   Scenario Outline: only an admin should be able to create a patient
     Given a <role> is logged in

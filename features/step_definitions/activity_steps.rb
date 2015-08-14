@@ -20,6 +20,7 @@ end
 
 When(/^they view (?:an?|the) (.*?)'s activities$/) do |tracked_model|
   if tracked_model=="Patient"
+    @previousUser||=@patient
     visit user_activities_path(@previousUser) 
   elsif tracked_model=="Doctor"
     visit user_activities_path(@previousUser) 

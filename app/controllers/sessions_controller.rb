@@ -1,3 +1,4 @@
+=begin
 class SessionsController < ApplicationController
   before_filter :signed_in, only: [:destroy]
 	def new
@@ -32,3 +33,4 @@ class SessionsController < ApplicationController
 
     end
 end
+=end

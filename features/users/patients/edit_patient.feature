@@ -24,7 +24,7 @@ Feature: editting a patient
     When they add a doctor
     Then they should see it pending
     And a Patient is being logged
-    And a log entry with the action add doctor should be generated
+    And a log entry with the action added doctor should be generated
     #And they should be able to remove doctors #will be pending may want to add remove aswell
 
   Scenario: when a patient edits self
@@ -33,7 +33,7 @@ Feature: editting a patient
     When the patient updates their profile
     Then the patient should be changed
     And they should receive a success message
-    And a log entry with action update should be generated
+    And a log entry with action updated profile should be generated
 
   Scenario Outline: only admins and patients should be change patient information
     Given a <role> is logged in

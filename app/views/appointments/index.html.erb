@@ -1,68 +1,32 @@
 <h1>My Appointments</h1>
 <div class="panel panel-default">	
-		<div class="panel-body left-header">
-			<%= link_to 'Open Appointments', appointments_path({Appointment: "Open"}), {class: openAppointmentPage}%> 
-			<%= link_to 'Future Appointments', appointments_path({Appointment: "Future"}), {class: futureAppointmentPage}%> 
-			<%= link_to 'Closed Appointments', appointments_path({Appointment: "Closed"}), {class: closedAppointmentPage}%> 
-		</div>
-		<div class="right-header">
-		<%unless is_patient%>
-			<%= link_to 'New Appointment', new_appointment_path, {class: "btn btn-success"}%> 
-		<%end%>
-		</div>
-<table class="table table-hover">
-  <thead>
-   
-	<th class="sorting-asc">name</th>
-	<th>description</th>
-	<th>Start time</th>
-	<th>End time</th>
-	
-	
-  </thead>
+  <div class="panel-body left-header">
+      <%= link_to 'Open Appointments', appointments_path({Appointment: "Open"}), {class: openAppointmentPage}%> 
+      <%= link_to 'Future Appointments', appointments_path({Appointment: "Future"}), {class: futureAppointmentPage}%> 
+      <%= link_to 'Closed Appointments', appointments_path({Appointment: "Closed"}), {class: closedAppointmentPage}%> 
+  </div>
+  <div class="right-header">
+    <%unless is_patient%>
+      <%= link_to 'New Appointment', new_appointment_path, remote: true, class: "btn btn-success"%> 
+    <%end%>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <th class="sorting-asc">name</th>
+      <th>description</th>
+      <th>Start time</th>
+      <th>End time</th>
+    </thead>
 
-  <tbody>
-
-    <% @messages.each do |message| %>
-		<%unless message.nil?%>
-			<% @appointment=Appointment.find(message.messageable_id)%>
-				<tr class="active" data-link="<%=new_message_path({messageable_id: @appointment.id, messageable_type: Appointment.name})%>">
-					<td><%=@appointment.name%></td>
-					<td><%=@appointment.description%></td>	
-					<td><%=@appointment.start_time%></td>
-					
-					<%if params[:Appointment]==nil || params[:Appointment]=="Open"%>
-					<td>
-					<%= form_for(@appointment) do |f| %>
-						<%= hidden_field :appointment, :end_time, :value => DateTime.now %>
-						<%= hidden_field :appointment, :func, :value => "close" %>
-						<%= f.submit "Close appointment", class: "btn btn-large btn-warning" %>
-						<%end%>
-					</td>
-					<%else%>
-					<td>
-					<%=@appointment.end_time%>
-					</td>
-					<%end%>
-					
-				</tr>
-			<%end%>
-	<%end%>
-	<%if @messages.size==0%>
-		<tr class="warning">
-		<td>You currently have no <%if params[:Appointment] == nil%>
-			<%="Open" %>
-		<%else %>
-			<%=params[:Appointment].downcase%>
-		<%end%>
-		appoinments
-		</td>
-		<td></td>
-		<td></td>
-		<td></td>
-		</tr>
-	<%end%>
+    <tbody class="appointment-index">
+      <%= render "index"%>
     </tbody>
-    </table>
+  </table>
 
+</div>
+<div id="appointment-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div id="inner-appointment-modal" class="modal-content">
+    </div>
+  </div>
 </div>

@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  acts_as_authentic do |c|
+    c.crypto_provider = Authlogic::CryptoProviders::BCrypt
+  end
 	belongs_to :profile, polymorphic: true
 	validates_presence_of :profile
 	has_many :permissions
@@ -17,24 +20,17 @@ class User < ActiveRecord::Base
     has_many :institutions, :through => :institution_memberships, :source => :memberable,:source_type => "User"
 
 	before_save { self.email = email.downcase}
-	before_create :create_remember_token
 	validates :name, presence: true, length:{maximum: 50}
-	VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-	validates :email, presence: true, format: {with: VALID_EMAIL_REGEX}, 
-		uniqueness: { case_sensitive: false }
-	has_secure_password
-	validates :password,confirmation: true, length: { minimum: 6, maximum: 50 }
 	
-
-	def User.new_remember_token
-		SecureRandom.urlsafe_base64
-	end
-	def User.digest(token)
-		Digest::SHA1.hexdigest(token.to_s)
-	end
+    def deliver_verification_instructions!
+      reset_perishable_token!
+      Notifier.verification_instructions(self).deliver
+    end
+    def verify!
+      self.verified = true
+      self.save
+    end
 
 	private
-		def create_remember_token
-			self.remember_token = User.digest(User.new_remember_token)
-		end
+      
 end

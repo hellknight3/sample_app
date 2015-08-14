@@ -28,24 +28,7 @@ class UsersController < ApplicationController
           render 'index'
 	end
     end
-	def show
-		@user = User.find(params[:id])
-	end
-	def new
-		@user = User.new
-	end
-	def create
-		@user = User.new(user_params)
-		if @user.save
-			sign_in @user
-			flash[:success] = "Welcome to the Sample App!"
-			redirect_to @user
-		else
-			render 'new'
-		end
-
-
-	end
+    
 	def edit
 	@user = User.find(params[:id])
     unless is_director
@@ -101,7 +84,7 @@ class UsersController < ApplicationController
                                  @docRelationship.update_attribute(:accepted, nil)
                                    @doctor=Doctor.find(params[:user][:doctor_id])
                                    @patient=User.find(params[:user][:patient_id]).profile
-                                              Activity.create(:user => current_user, :trackable => @patient,:action => "ADD DOCTOR",:message => "#{current_user.name} added #{@doctor.user.name} as #{@patient.user.name}'s doctor")
+                                              Activity.create(:user => current_user, :trackable => @patient,:action => "Added Doctor",:message => "#{current_user.name} added #{@doctor.user.name} as #{@patient.user.name}'s doctor")
                                else
                                  @newRelationship=DocRelationship.new
                                  @newRelationship.doctor_id = params[:user][:doctor_id]
@@ -110,7 +93,7 @@ class UsersController < ApplicationController
                                  if @newRelationship.save
                                    @doctor=Doctor.find(params[:user][:doctor_id])
                                    @patient=User.find(params[:user][:patient_id]).profile
-                                              Activity.create(:user => current_user, :trackable => @patient,:action => "ADD DOCTOR",:message => "#{current_user.name} added #{@doctor.user.name} as #{@patient.user.name}'s doctor")
+                                              Activity.create(:user => current_user, :trackable => @patient,:action => "Added Doctor",:message => "#{current_user.name} added #{@doctor.user.name} as #{@patient.user.name}'s doctor")
                                                flash[:notice] ="added doctor to #{@user.name}"
                                              end
                                end

@@ -17,6 +17,8 @@ namespace :db do
 				     email: email,
 				     password: password,
 				     password_confirmation: password)
+            admin.user.active=true
+            admin.user.verified=true
 			unless admin.save
 				puts "error creating admin"
 			end
@@ -31,6 +33,8 @@ namespace :db do
 				     email: email,
 				     password: password,
 				     password_confirmation: password)
+            admin.user.active=true
+            admin.user.verified=true
 			unless admin.save
 				puts "error creating director"
 			end
@@ -45,6 +49,8 @@ namespace :db do
 				     email: email,
 				     password: password,
 				     password_confirmation: password)
+            doctor.user.active=true
+            doctor.user.verified=true
 			unless doctor.save
 				puts "error creating doctor"
 			end
@@ -77,6 +83,8 @@ namespace :db do
 				     email: email,
 				     password: password,
 				     password_confirmation: password)
+            patient.user.active=true
+            patient.user.verified=true
 			unless patient.save
 				puts "error creating patient"
 			end

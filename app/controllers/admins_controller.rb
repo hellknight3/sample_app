@@ -76,47 +76,44 @@ class AdminsController < ApplicationController
 	def update
 	  @admin = Admin.find(params[:id])
 	  @user = @admin.user
-			if @user.authenticate(params[:user][:old_password])
-				#passes the attributes from the form to the admin_params function
-				if(params[:user][:email].match(VALID_EMAIL_REGEX))
-					 if defined?(params[:user][:password]) || defined?(params[:user][:password_confirmation])
-                                       		 if (params[:user][:password] != params[:user][:password_confirmation])
-                                                	 flash[:alert]="Password and Password Confirmation must match"
-                                               		 render 'edit'
-                                            else
-					                		  @admin.update_attributes(admin_params)
-                                              if params[:user][:password_confirmation] != ""
-	           puts "hello"                                       	
-                                          	    #passes the attributes from the form to the user_params function
-						                	    @user.update_attributes(user_params)
-                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "Updated Profile")
-                                              else
-                                                values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
-					                	      	if @user.update_attributes(values) #&& @admin.update_attributes(admin_params)  
-                                                  Activity.create(:user => current_user, :trackable => @admin,:action => "Updated Admin")
-                                                end
-                                              
-                                              end
-
-                                            flash[:notice]="successfully updated your profile."
-		                					redirect_to @admin
-			
-						end
-					else
-						@admin.update_attributes(admin_params)
-        #passes the attributes from the form to the user_params function
-                                                        @user.update_attributes(user_params)
-                                                        flash[:notice]="successfully updated your profile."
-                                                        redirect_to @admin
-					end
-				else
-					flash[:alert]="Please enter a valid email"
-					render 'edit'
-				end
-			else
-				flash[:alert]="Old password is not current"
-                                render 'edit'
-			end
+        if @user.valid_password?(params[:user][:old_password])
+          #passes the attributes from the form to the admin_params function
+          #if(params[:user][:email].match(VALID_EMAIL_REGEX))
+            if defined?(params[:user][:password]) || defined?(params[:user][:password_confirmation])
+              if (params[:user][:password] != params[:user][:password_confirmation])
+                flash[:alert]="Password and Password Confirmation must match"
+                render 'edit'
+              else
+                @admin.update_attributes(admin_params)
+                if params[:user][:password_confirmation] != ""
+                  #passes the attributes from the form to the user_params function
+                  @user.update_attributes(user_params)
+                  Activity.create(:user => current_user, :trackable => @admin,:action => "Updated Profile")
+                else
+                  values = {:name => params[:user][:name], :password_confirmation => params[:user][:old_password], :email => params[:user][:email], :password => params[:user][:old_password]}
+                  if @user.update_attributes(values) #&& @admin.update_attributes(admin_params)  
+                    Activity.create(:user => current_user, :trackable => @admin,:action => "Updated Admin")
+                  end
+                                  
+                end
+                flash[:notice]="successfully updated your profile."
+                redirect_to @admin
+              end
+            else
+              @admin.update_attributes(admin_params)
+#passes the attributes from the form to the user_params function
+              @user.update_attributes(user_params)
+              flash[:notice]="successfully updated your profile."
+              redirect_to @admin
+            end
+          #else
+          #  flash[:alert]="Please enter a valid email"
+          #  render 'edit'
+          #end
+        else
+          flash[:alert]="Old password is not correct"
+          render 'edit'
+        end
 	end
 	def get
 		@admin = User.where(params[:name])

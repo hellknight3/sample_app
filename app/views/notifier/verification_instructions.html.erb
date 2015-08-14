@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+          <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+            </head>
+              <body>
+                    <h1>Hi <%= @user.name %></h1>
+
+                        <p>
+Thank you for signing up for this site. Please click the following link to verify your email address:
+
+<%= @verification_url %>
+
+If the above URL does not work, try copying and pasting it into your browser. If you continue to have problems, please feel free to contact us.
+                                  </p>
+                                    </body>
+</html>
