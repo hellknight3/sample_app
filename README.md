@@ -13,3 +13,5 @@ admin: admin@example.org
 doctor: exampleDoc-1@example.org
 patient: examplePat-1@example.org
 all passwords are 'foobar'
+
+this is currently hosted at http://mental-wellness-app.herokuapp.com/
