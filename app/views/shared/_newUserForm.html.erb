@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= simple_form_for(profile) do |f| %>
+      <%= render 'shared/error_messages' %>
+      <%=label :user, :name %>
+      <%=text_field :user, :name, class: "form-control" %>
+
+      <%= label :user, :email %>
+      <%= text_field :user, :email, class: "form-control"%>
+
+      <%if signed_in?%>
+        <%= f.button :submit,"Invite #{profile.class}", {class: "btn btn-success"} %>
+      <%else%>
+        <%= f.button :submit,"Sign up", {class: "btn btn-success"} %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+

@@ -1,4 +1,9 @@
-<% provide(:title, 'New patient') %>
-<h1>New patient</h1>
-<%=render partial: "shared/inputForm", locals: {user: @user, user_type: @patient,spec_user: "Patient", new: true}%>
+<%if signed_in?%>
+  <% provide(:title, 'New patient') %>
+  <h1>New patient</h1>
+<%else%>
+  <% provide(:title, 'Sign up') %>
+  <h1>Sign up</h1>
+<%end%>
+<%=render partial: "shared/newUserForm", locals: {user: @user, profile: @patient}%>
 

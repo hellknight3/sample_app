@@ -11,6 +11,7 @@ FactoryGirl.define do
         password_confirmation'foobar'		
         active true
         verified true
+        approved true
         association :profile, factory: :patient
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -25,6 +26,7 @@ FactoryGirl.define do
         password_confirmation'foobar'		
         active true
         verified true
+        approved true
 #        association :profile, factory: :doctor
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -42,6 +44,7 @@ FactoryGirl.define do
         password_confirmation'foobar'		
         active true
         verified true
+        approved true
         association :profile, factory: :doctor
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -57,6 +60,7 @@ FactoryGirl.define do
         password_confirmation'foobar'		
         active true
         verified true
+        approved true
         association :profile, factory: :admin
         #    after(:build) do |user|
 	 #      profile.user ||= FactoryGirl.build(:user, :profile => profile)
@@ -71,6 +75,7 @@ FactoryGirl.define do
         password_confirmation'foobar'		
         active true
         verified true
+        approved true
         association :profile, factory: :admin, director: true
   end
 

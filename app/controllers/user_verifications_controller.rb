@@ -1,4 +1,4 @@
-class UserVerificationsControllerController < ApplicationController
+class UserVerificationsController < ApplicationController
   before_filter :load_user_using_perishable_token
 
   def show

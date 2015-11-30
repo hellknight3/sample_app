@@ -4,7 +4,7 @@ class PatientsController < ApplicationController
 	#performs a before action, in other words it will run the script defined at the start method-> :signed_in_admin
 	#this will then run before every POST action that exists after -> :new, :create, :edit, :update
 	before_action :signed_in, only: [:edit, :update]
-	before_action :signed_in_admin, only: [:new, :create]
+	#before_action :signed_in_admin, only: [:new, :create]
 	before_action :correct_user, only: [:show,:edit, :update]
 	def show
 		#shows the current users properties
@@ -20,38 +20,35 @@ class PatientsController < ApplicationController
 		@user = User.new
 	end
 	def create
-		#creates the patient based on the allowed patient parameters
-		@patient =Patient.new(patient_params)
-		#tries to save the patient to the database
-		if @patient.save
-          #creates a user and attaches it to the patient with the user parameter restrictions required
-          #since the association exists between user and patient, build_user handles the whole process, but acts like a new command
-          @user = @patient.build_user(user_params)
-          if @user.save
-            if signed_in?
-              flash[:notice]= "Successfully signed up the user, an email has been delivered to them with instructions on how to complete their registration"
-              #redirects to the pool index page
-              
-              @user.deliver_verification_instructions!
-              InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
-              Activity.create(:user => current_user,:trackable => @patient,:action => "Created Patient",:message => "Created patient #{@user.name}")
-              redirect_to edit_user_path(@patient.user)
-            else
-              flash[:notice] = "Thanks for signing up, we've delivered an email to you with instructions on how to complete your registration!"
-              @user.deliver_verification_instructions!
-              Activity.create(:user => @user,:trackable => @patient,:action => "Patient signed up",:message => "Patient signed up: #{@user.name}")
-              redirect_to root_url
-            end
-          else
-              @patient.delete
-              flash[:alert]="error creating patient"
-              render 'new'
-          end
-		else
-			#reloads the new page so that the forms can have the correct information
-			render 'new'
-		end
-	end
+      @patient =Patient.create
+      @user = @patient.build_user(user_params)
+      #creates a random password for the user to input
+      if params[:user][:password].nil?
+        temp_password=('0'..'z').to_a.shuffle.first(8).join
+        @user.password=temp_password
+        @user.password_confirmation=temp_password
+      end
+
+      if @user.save
+        if signed_in? && defined?(temp_password) #assumes that only logged in users can only send invitations, without setting a password 
+          flash[:notice]= "Successfully invited the user, an email has been delivered to them with instructions on how to complete their registration"
+          @user.activate!
+          @user.deliver_invitation_instructions!(temp_password)
+          #InstitutionMembership.create(:institution => current_user.institutions.first, :memberable => @user)
+          Activity.create(:user => current_user,:trackable => @patient,:action => "Invited Patient",:message => "#{current_user.name} invited patient #{@user.name}")
+          redirect_to edit_user_path(@patient.user)
+        else
+          flash[:notice] = "Thanks for signing up, we've delivered an email to you with instructions on how to complete your registration!"
+          @user.deliver_verification_instructions!
+          Activity.create(:user => @user,:trackable => @patient,:action => "Patient signed up",:message => "Patient signed up: #{@user.name}")
+          redirect_to root_url
+        end
+      else
+          @patient.delete
+          flash[:alert]="error creating patient"
+          render 'new'
+      end
+    end
 	def edit
 		#finds the user that is defined in the param hash and finds that user
 		@patient = Patient.find(params[:id])

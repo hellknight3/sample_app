@@ -19,6 +19,7 @@ namespace :db do
 				     password_confirmation: password)
             admin.user.active=true
             admin.user.verified=true
+            admin.user.approved=true
 			unless admin.save
 				puts "error creating admin"
 			end
@@ -35,6 +36,7 @@ namespace :db do
 				     password_confirmation: password)
             admin.user.active=true
             admin.user.verified=true
+            admin.user.approved=true
 			unless admin.save
 				puts "error creating director"
 			end
@@ -51,6 +53,7 @@ namespace :db do
 				     password_confirmation: password)
             doctor.user.active=true
             doctor.user.verified=true
+            doctor.user.approved=true
 			unless doctor.save
 				puts "error creating doctor"
 			end
@@ -85,6 +88,7 @@ namespace :db do
 				     password_confirmation: password)
             patient.user.active=true
             patient.user.verified=true
+            patient.user.approved=true
 			unless patient.save
 				puts "error creating patient"
 			end

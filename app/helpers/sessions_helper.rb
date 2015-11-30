@@ -43,8 +43,8 @@ module SessionsHelper
 		is_patient?(current_user)==true
 	end
 	def is_director?(user=current_user)
-		 if is_admin?(user)
-			Admin.find(user.profile_id).director==true
+		if is_admin?(user)
+		  Admin.find(user.profile_id).director==true
 		else
 			false
 		end

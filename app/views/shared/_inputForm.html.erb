@@ -1,47 +1,24 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= simple_form_for(user_type) do |f| %>
+      <%= render 'shared/error_messages' %>
+      
+      <%=label :user, :name %>
+      <%=text_field :user, :name, class: "form-control" %>
 
-<%if user==current_user || new%>
+      <%= label :user, :email %>
+      <%= text_field :user, :email, class: "form-control"%>
 
-	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-		
-			<%= simple_form_for(user_type) do |f| %>
-			
-				<%= render 'shared/error_messages' %>
-				<p>To modify account information it is required to input your current password under old password</p>
-				<%=label :user, :name %>
-				<%=text_field :user, :name, class: "form-control" %>
+      <%=label :user, :old_password %>
+      <%=password_field :user, :old_password, class: "form-control"%>
 
-				<%= label :user, :email %>
-				<%= text_field :user, :email, class: "form-control"%>
-				<%unless new%>
-					<%=label :user, :old_password %>
-					<%=password_field :user, :old_password, class: "form-control"%>
-				<%end%>
-				<%=label :user, :password %>
-				<%=password_field :user, :password, class: "form-control"%>
+      <%=label :user, :password %>
+      <%=password_field :user, :password, class: "form-control"%>
 
-				<%= label :user, :password_confirmation, "Confirmation"%>
-				<%= password_field :user, :password_confirmation, class: "form-control"%>
-				<%if defined?(spec_user)%>
-					<%if spec_user=="Patient"%>
-						<%=f.input :emergencyContact%>
-						<%=f.input :emergencyPhoneNumber%>
-						<%=f.input :dateOfBirth%>
-						<%=f.input :familyDoctor%>
-						<%=f.input :phoneNumber%>
-						<%=f.input :weight%>
-						<%=f.input :height%>
-					<%end%>
-				<%end%>
-				
-                <%if new%>	
-                  <%= f.button :submit,"Create #{user_type.class}", {class: "btn btn-success"} %>
-              <%else%>
-				<%= f.button :submit,"Update Profile", {class: "btn btn-success"} %>
-              <%end%>
-			<% end %>
-		</div>
-		<div class="col-md-3"></div>
-	</div>
-<%end%>
+      <%= label :user, :password_confirmation, "Confirmation"%>
+      <%= password_field :user, :password_confirmation, class: "form-control"%>
+      
+      <%= f.button :submit,"Update Profile", {class: "btn btn-success"} %>
+    <% end %>
+  </div>
+</div>

@@ -26,8 +26,23 @@ class User < ActiveRecord::Base
       reset_perishable_token!
       Notifier.verification_instructions(self).deliver
     end
+    
+    def deliver_invitation_instructions!(temp_password)
+      Notifier.invitation_instructions(self, temp_password).deliver
+    end
+
     def verify!
       self.verified = true
+      self.active = true
+      self.approved = true
+      self.save
+    end
+    def activate!
+      self.active = true
+      self.save
+    end
+    def approve!
+      self.approved = true
       self.save
     end
 
